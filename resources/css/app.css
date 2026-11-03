@@ -1,7 +1,18 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
-@source "../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php";
-@source "../../storage/framework/views/*.php";
-@source "../**/*.blade.php";
-@source "../**/*.js";
-@source "../**/*.vue";
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+
+@theme {
+    /* Warna kustom dari desain Figma */
+  --color-brand-dark: #0b2921;
+  --color-brand-primary: #0f5132;
+  --color-brand-light: #f4f9f4;
+  --color-brand-accent: #b74a1c;
+  --color-brand-text: #1a1a1a;
+  --color-brand-muted: #6b7280;
+
+  /* Font kustom */
+  --font-sans: "Plus Jakarta Sans", sans-serif;
+  --font-serif: "Playfair Display", serif;
+}
