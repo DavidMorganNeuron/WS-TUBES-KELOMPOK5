@@ -19,39 +19,36 @@ class TurtleParserTest extends TestCase
 
     public function test_it_parses_destinations_from_the_local_turtle_file(): void
     {
-        $rows = $this->parser->parseFile('database/ontology/pariwisata-sumut.ttl');
+        $rows = $this->parser->parseFile('database/ontology/wisata_sumut_v2.ttl');
 
-        $this->assertCount(18, $rows);
-        $this->assertSame('DST-0001', $rows[0]['idDestinasi']);
-        $this->assertSame('Air Terjun Sipiso-Piso', $rows[0]['namaDestinasi']);
+        $this->assertCount(285, $rows);
+        $this->assertSame('ws-001', $rows[0]['idDestinasi']);
+        $this->assertSame('Air Terjun Bolon', $rows[0]['namaDestinasi']);
     }
 
-    public function test_it_preserves_multiline_descriptions_and_typed_literals(): void
+    public function test_it_parses_typed_literals_and_coordinates(): void
     {
-        $rows = $this->parser->parseFile('database/ontology/pariwisata-sumut.ttl');
+        $rows = $this->parser->parseFile('database/ontology/wisata_sumut_v2.ttl');
         $destination = Destination::fromArray($rows[0]);
 
-        $this->assertStringContainsString("\n\n", $destination->fullDescription);
-        $this->assertSame(2.9186, $destination->latitude);
-        $this->assertSame(98.5204, $destination->longitude);
-        $this->assertSame(4.9, $destination->rating);
+        $this->assertStringContainsString('Air Terjun Bolon', $destination->fullDescription);
+        $this->assertSame(2.713693, $destination->latitude);
+        $this->assertSame(99.148157, $destination->longitude);
+        $this->assertNull($destination->rating);
         $this->assertSame('Alam', $destination->primaryType());
     }
 
     public function test_it_splits_multi_value_properties_and_normalizes_empty_fields(): void
     {
-        $rows = $this->parser->parseFile('database/ontology/pariwisata-sumut.ttl');
-        $sipiso = Destination::fromArray($rows[0]);
-        $lauKawar = Destination::fromArray($rows[5]);
+        $rows = $this->parser->parseFile('database/ontology/wisata_sumut_v2.ttl');
+        $pelaruga = Destination::fromArray(collect($rows)->firstWhere('idDestinasi', 'ws-272'));
 
-        $this->assertSame(
-            ['Domestik: Rp 10.000', 'Mancanegara: Rp 50.000', 'Parkir motor: Rp 5.000'],
-            $sipiso->prices,
-        );
-        $this->assertContains('Area parkir', $sipiso->facilities);
-        $this->assertSame('', $sipiso->email);
-        $this->assertNull($lauKawar->rating);
-        $this->assertSame([], $lauKawar->prices);
+        $this->assertSame(['Alam', 'Bahari', 'Religi'], $pelaruga->types);
+        $this->assertSame(['10000'], $pelaruga->prices);
+        $this->assertSame(10000.0, $pelaruga->lowestPrice());
+        $this->assertContains('Area Parkir', $pelaruga->facilities);
+        $this->assertSame('', $pelaruga->email);
+        $this->assertSame(4.5, $pelaruga->rating);
     }
 
     public function test_it_handles_a_minimal_inline_turtle_document(): void

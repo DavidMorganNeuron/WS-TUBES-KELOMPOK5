@@ -70,7 +70,7 @@ final readonly class Destination
     public function province(): string
     {
         $haystack = Str::lower($this->location.' '.$this->address);
-    
+
         return Str::contains($haystack, ['aceh', 'banda aceh', 'sabang'])
             ? 'Aceh'
             : 'Sumatera Utara';
@@ -107,6 +107,21 @@ final readonly class Destination
         ];
 
         return $fallback[$this->primaryType()] ?? $fallback['Alam'];
+    }
+
+    /**
+     * Nilai harga terendah untuk pengurutan.
+     * "Gratis" dianggap 0, sedangkan data harga kosong menghasilkan null.
+     */
+    public function lowestPrice(): ?float
+    {
+        $numeric = array_filter($this->prices, is_numeric(...));
+
+        if ($numeric !== []) {
+            return min(array_map(floatval(...), $numeric));
+        }
+
+        return in_array('Gratis', $this->prices, true) ? 0.0 : null;
     }
 
     /**

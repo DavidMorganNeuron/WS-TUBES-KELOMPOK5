@@ -12,32 +12,50 @@ class DestinationPagesTest extends TestCase
 
         $response->assertOk();
         $response->assertSee('Live Ontology Dashboard');
-        $response->assertSee('Sipiso-Piso');
-        $response->assertSee('18');
+        $response->assertSee('285');
     }
 
-    public function test_destinations_page_lists_paginated_destinations(): void
+    public function test_destinations_page_lists_paginated_destinations_sorted_by_name_by_default(): void
     {
         $response = $this->get('/destinations');
 
         $response->assertOk();
         $response->assertSee('Explore North Sumatra');
         $response->assertSee('Showing 1');
-        $response->assertSee('of 18');
-        $response->assertSee('Sipiso-Piso');
+        $response->assertSee('of 285');
+        $response->assertSeeInOrder(['Air Terjun Bolon', 'Air Terjun Dua Warna']);
     }
 
     public function test_destinations_page_can_be_filtered_by_type_and_search_query(): void
     {
-        $this->get('/destinations?jenis=Kuliner')
+        $this->get('/destinations?jenis=Bahari')
             ->assertOk()
-            ->assertSee('Bika Ambon')
-            ->assertDontSee('Air Terjun Sipiso-Piso');
+            ->assertSee('Air Terjun Pelaruga')
+            ->assertDontSee('Air Terjun Bolon');
 
         $this->get('/destinations?q=toba')
             ->assertOk()
             ->assertSee('Danau Toba')
-            ->assertDontSee('Bika Ambon');
+            ->assertDontSee('Air Terjun Bolon');
+    }
+
+    public function test_destinations_page_can_be_filtered_by_kabupaten(): void
+    {
+        $this->get('/destinations?kabupaten=Kota%20Medan')
+            ->assertOk()
+            ->assertSee('Istana Maimun')
+            ->assertDontSee('Air Terjun Bolon');
+    }
+
+    public function test_destinations_page_can_be_sorted_by_price(): void
+    {
+        $this->get('/destinations?sort=price_desc')
+            ->assertOk()
+            ->assertSeeInOrder(['Rahmat International Wildlife Museum & Gallery', 'Kebun Binatang Pematang Siantar']);
+
+        $this->get('/destinations?sort=price_asc')
+            ->assertOk()
+            ->assertSee('Gratis');
     }
 
     public function test_destinations_page_shows_an_empty_state_for_unmatched_search(): void
@@ -49,21 +67,21 @@ class DestinationPagesTest extends TestCase
 
     public function test_detail_page_renders_destination_data(): void
     {
-        $response = $this->get('/destinations/DST-0001');
+        $response = $this->get('/destinations/ws-272');
 
         $response->assertOk();
-        $response->assertSee('Air Terjun Sipiso-Piso');
-        $response->assertSee('Domestik: Rp 10.000');
-        $response->assertSee('Area parkir');
-        $response->assertSee('ID DST-0001');
+        $response->assertSee('Air Terjun Pelaruga');
+        $response->assertSee('Rp 10.000');
+        $response->assertSee('Area Parkir');
+        $response->assertSee('ID ws-272');
     }
 
     public function test_detail_page_handles_sparse_destination_data(): void
     {
-        $response = $this->get('/destinations/DST-0006');
+        $response = $this->get('/destinations/ws-001');
 
         $response->assertOk();
-        $response->assertSee('Danau Lau Kawar');
+        $response->assertSee('Air Terjun Bolon');
         $response->assertSee('No ticket information recorded.');
     }
 
@@ -78,7 +96,7 @@ class DestinationPagesTest extends TestCase
 
         $response->assertOk();
         $response->assertSee('markerData');
-        $response->assertSee('DST-0001');
+        $response->assertSee('ws-001');
         $response->assertSee('mapped points');
     }
 }

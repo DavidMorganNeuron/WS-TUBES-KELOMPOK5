@@ -10,21 +10,24 @@ class DestinationController extends Controller
 {
     public function index(Request $request, DestinationRepository $repository): View
     {
-        $filters = $this->filters($request);
+        $sorts = [
+            'name' => 'Nama A-Z',
+            'price_desc' => 'Harga Tertinggi',
+            'price_asc' => 'Harga Terendah',
+        ];
+
+        $facets = $repository->facets();
+        $filters = $this->filters($request, array_keys($sorts), array_keys($facets['kabupaten']));
+        $filters['sort'] ??= 'name';
+
         $destinations = $repository->paginate($filters)->withQueryString();
 
         return view('explore', [
             'destinations' => $destinations,
             'filters' => $filters,
-            'facets' => $repository->facets(),
+            'facets' => $facets,
             'types' => DestinationRepository::TYPES,
-            'provinces' => DestinationRepository::PROVINCES,
-            'sorts' => [
-                'rating' => 'Rating tertinggi',
-                'rating_asc' => 'Rating terendah',
-                'name' => 'Nama A-Z',
-                'id' => 'ID destinasi',
-            ],
+            'sorts' => $sorts,
         ]);
     }
 
@@ -41,14 +44,16 @@ class DestinationController extends Controller
     }
 
     /**
-     * @return array{q?: string, jenis?: string, provinsi?: string, sort?: string}
+     * @param  list<string>  $sortOptions
+     * @param  list<string>  $kabupatenOptions
+     * @return array{q?: string, jenis?: string, kabupaten?: string, sort?: string}
      */
-    private function filters(Request $request): array
+    private function filters(Request $request, array $sortOptions, array $kabupatenOptions): array
     {
         $filters = [
             'q' => $request->string('q')->trim()->toString(),
             'jenis' => $request->string('jenis')->toString(),
-            'provinsi' => $request->string('provinsi')->toString(),
+            'kabupaten' => $request->string('kabupaten')->toString(),
             'sort' => $request->string('sort')->toString(),
         ];
 
@@ -56,12 +61,12 @@ class DestinationController extends Controller
             $filters['jenis'] = '';
         }
 
-        if (! in_array($filters['provinsi'], DestinationRepository::PROVINCES, true)) {
-            $filters['provinsi'] = '';
+        if (! in_array($filters['kabupaten'], $kabupatenOptions, true)) {
+            $filters['kabupaten'] = '';
         }
 
-        if (! in_array($filters['sort'], DestinationRepository::SORTS, true)) {
-            $filters['sort'] = 'rating';
+        if (! in_array($filters['sort'], $sortOptions, true)) {
+            $filters['sort'] = '';
         }
 
         return array_filter($filters, static fn (string $value): bool => $value !== '');

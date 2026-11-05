@@ -17,7 +17,7 @@ class DestinationRepository
 
     public const PROVINCES = ['Sumatera Utara', 'Aceh', 'Lainnya'];
 
-    public const SORTS = ['rating', 'rating_asc', 'name', 'id'];
+    public const SORTS = ['rating', 'rating_asc', 'name', 'id', 'price_desc', 'price_asc'];
 
     private ?Collection $memo = null;
 
@@ -44,13 +44,14 @@ class DestinationRepository
     }
 
     /**
-     * @param  array{q?: string|null, jenis?: string|null, provinsi?: string|null, sort?: string|null}  $filters
+     * @param  array{q?: string|null, jenis?: string|null, kabupaten?: string|null, provinsi?: string|null, sort?: string|null}  $filters
      * @return Collection<int, Destination>
      */
     public function search(array $filters = []): Collection
     {
         $query = Str::lower(trim((string) ($filters['q'] ?? '')));
         $type = $this->validType($filters['jenis'] ?? null);
+        $kabupaten = trim((string) ($filters['kabupaten'] ?? ''));
         $province = $this->validProvince($filters['provinsi'] ?? null);
 
         $destinations = $this->all()
@@ -59,6 +60,9 @@ class DestinationRepository
             ))
             ->when($type !== null, fn (Collection $items): Collection => $items->filter(
                 fn (Destination $destination): bool => in_array($type, $destination->types, true),
+            ))
+            ->when($kabupaten !== '', fn (Collection $items): Collection => $items->filter(
+                fn (Destination $destination): bool => $destination->location === $kabupaten,
             ))
             ->when($province !== null, fn (Collection $items): Collection => $items->filter(
                 fn (Destination $destination): bool => $destination->province() === $province,
@@ -72,6 +76,8 @@ class DestinationRepository
             'name' => $destinations->sortBy(fn (Destination $destination): string => Str::lower($destination->name)),
             'id' => $destinations->sortBy('id'),
             'rating_asc' => $destinations->sortBy(fn (Destination $destination): float => $destination->rating ?? -1),
+            'price_asc' => $destinations->sortBy(fn (Destination $destination): float => $destination->lowestPrice() ?? PHP_FLOAT_MAX),
+            'price_desc' => $destinations->sortByDesc(fn (Destination $destination): float => $destination->lowestPrice() ?? -PHP_FLOAT_MAX),
             default => $destinations->sortByDesc(fn (Destination $destination): float => $destination->rating ?? -1),
         };
 
@@ -79,7 +85,7 @@ class DestinationRepository
     }
 
     /**
-     * @param  array{q?: string|null, jenis?: string|null, provinsi?: string|null, sort?: string|null}  $filters
+     * @param  array{q?: string|null, jenis?: string|null, kabupaten?: string|null, provinsi?: string|null, sort?: string|null}  $filters
      */
     public function paginate(array $filters = [], int $perPage = 9): LengthAwarePaginator
     {
@@ -145,7 +151,7 @@ class DestinationRepository
     }
 
     /**
-     * @return array{total: int, types: array<string, int>, provinces: array<string, int>, average_rating: float|null, rated_count: int, with_coordinates: int, with_media: int}
+     * @return array{total: int, types: array<string, int>, provinces: array<string, int>, kabupaten: array<string, int>, average_rating: float|null, rated_count: int, with_coordinates: int, with_media: int}
      */
     public function facets(): array
     {
@@ -163,6 +169,11 @@ class DestinationRepository
                 ->mapWithKeys(fn (string $province): array => [
                     $province => $destinations->filter(fn (Destination $destination): bool => $destination->province() === $province)->count(),
                 ])
+                ->all(),
+            'kabupaten' => $destinations
+                ->filter(fn (Destination $destination): bool => Str::startsWith($destination->location, ['Kabupaten ', 'Kota ']))
+                ->countBy('location')
+                ->sortKeys()
                 ->all(),
             'average_rating' => $ratings->isEmpty() ? null : round((float) $ratings->avg(), 2),
             'rated_count' => $ratings->count(),

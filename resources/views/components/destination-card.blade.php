@@ -1,20 +1,23 @@
 @props([
     'destination',
-    'badge' => null,
     'showDescription' => true,
 ])
 
 @php
-    $type = $destination->primaryType();
+    $types = array_slice($destination->types, 0, 3);
+
+    if ($types === []) {
+        $types = [$destination->primaryType()];
+    }
+
     $typeClasses = [
-        'Alam' => 'bg-brand-primary',
-        'Budaya' => 'bg-brand-accent',
-        'Religi' => 'bg-emerald-800',
-        'Bahari' => 'bg-sky-700',
-        'Kuliner' => 'bg-amber-700',
-        'Buatan' => 'bg-violet-800',
+        'Alam' => 'bg-green-700 text-white',
+        'Budaya' => 'bg-amber-800 text-white',
+        'Religi' => 'bg-gray-700 text-white',
+        'Bahari' => 'bg-blue-700 text-white',
+        'Kuliner' => 'bg-yellow-400 text-gray-900',
+        'Buatan' => 'bg-purple-700 text-white',
     ];
-    $badgeClass = $typeClasses[$type] ?? 'bg-brand-primary';
     $detailUrl = route('destination.detail', $destination->id);
 @endphp
 
@@ -23,8 +26,12 @@
         <a href="{{ $detailUrl }}" class="block h-full">
             <img src="{{ $destination->imageUrl() }}" alt="{{ $destination->name }}" class="w-full h-full object-cover" loading="lazy">
         </a>
-        <div class="absolute top-3 left-3 {{ $badgeClass }} text-white text-[10px] font-bold px-2 py-1 rounded">
-            {{ $badge ?? $type }}
+        <div class="absolute top-3 left-3 right-14 flex flex-wrap gap-1">
+            @foreach ($types as $type)
+                <span class="{{ $typeClasses[$type] ?? 'bg-brand-primary text-white' }} text-[10px] font-bold px-2 py-1 rounded">
+                    {{ $type }}
+                </span>
+            @endforeach
         </div>
         <button type="button" onclick="alert('Save to itinerary will be available in a future release.')" class="absolute top-3 right-3 bg-white/80 p-1.5 rounded-full text-gray-600 hover:text-red-500" aria-label="Save {{ $destination->name }}">
             ♡
@@ -35,15 +42,12 @@
     </div>
 
     <div class="p-5 flex-grow flex flex-col">
-        <div class="flex justify-between items-center gap-2 mb-1">
+        <div class="flex items-center gap-2 mb-1">
             <div class="text-xs font-bold text-brand-primary flex items-center gap-1">
                 ⭐ {{ $destination->ratingLabel() }}
                 @if ($destination->rating !== null)
                     <span class="font-normal text-gray-400">/ 5</span>
                 @endif
-            </div>
-            <div class="text-[10px] font-bold text-gray-500 flex items-center gap-1">
-                {{ implode(' • ', $destination->types) }}
             </div>
         </div>
 

@@ -6,12 +6,12 @@
         preg_split('/\R{2,}/', trim($destination->fullDescription)) ?: [],
     )));
     $typeClasses = [
-        'Alam' => 'bg-brand-primary',
-        'Budaya' => 'bg-brand-accent',
-        'Religi' => 'bg-emerald-800',
-        'Bahari' => 'bg-sky-700',
-        'Kuliner' => 'bg-amber-700',
-        'Buatan' => 'bg-violet-800',
+        'Alam' => 'bg-green-700 text-white',
+        'Budaya' => 'bg-amber-800 text-white',
+        'Religi' => 'bg-gray-700 text-white',
+        'Bahari' => 'bg-blue-700 text-white',
+        'Kuliner' => 'bg-yellow-400 text-gray-900',
+        'Buatan' => 'bg-purple-700 text-white',
     ];
     $phoneHref = 'tel:'.preg_replace('/[^0-9+]/', '', $destination->phone);
 @endphp
@@ -31,7 +31,7 @@
     <div class="mb-6">
         <div class="flex flex-wrap gap-2 mb-3">
             @foreach ($destination->types as $type)
-                <span class="{{ $typeClasses[$type] ?? 'bg-brand-primary' }} text-white text-[10px] font-bold px-3 py-1 rounded-full flex items-center gap-1">
+                <span class="{{ $typeClasses[$type] ?? 'bg-brand-primary text-white' }} text-[10px] font-bold px-3 py-1 rounded-full flex items-center gap-1">
                     {{ $type }}
                 </span>
             @endforeach

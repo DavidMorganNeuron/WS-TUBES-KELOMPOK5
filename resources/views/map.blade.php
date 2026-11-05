@@ -10,20 +10,20 @@
         return route('map', array_filter($params, static fn ($value): bool => $value !== null && $value !== ''));
     };
     $typeClasses = [
-        'Alam' => 'bg-brand-primary',
-        'Budaya' => 'bg-brand-accent',
-        'Religi' => 'bg-emerald-800',
-        'Bahari' => 'bg-sky-700',
-        'Kuliner' => 'bg-amber-700',
-        'Buatan' => 'bg-violet-800',
+        'Alam' => 'bg-green-700 text-white',
+        'Budaya' => 'bg-amber-800 text-white',
+        'Religi' => 'bg-gray-700 text-white',
+        'Bahari' => 'bg-blue-700 text-white',
+        'Kuliner' => 'bg-yellow-400 text-gray-900',
+        'Buatan' => 'bg-purple-700 text-white',
     ];
     $typeColors = [
-        'Alam' => '#0f5132',
-        'Budaya' => '#b74a1c',
-        'Religi' => '#065f46',
-        'Bahari' => '#0369a1',
-        'Kuliner' => '#b45309',
-        'Buatan' => '#6d28d9',
+        'Alam' => '#15803d',
+        'Budaya' => '#92400e',
+        'Religi' => '#374151',
+        'Bahari' => '#1d4ed8',
+        'Kuliner' => '#facc15',
+        'Buatan' => '#7e22ce',
     ];
 @endphp
 
@@ -86,7 +86,7 @@
                     <div class="flex gap-3 mb-3">
                         <div class="relative w-20 h-20 rounded-xl overflow-hidden flex-shrink-0">
                             <img src="{{ $destination->imageUrl() }}" alt="{{ $destination->name }}" class="w-full h-full object-cover" loading="lazy">
-                            <span class="absolute bottom-1 left-1 {{ $typeClasses[$destination->primaryType()] ?? 'bg-brand-primary' }} text-white text-[8px] font-bold px-1.5 py-0.5 rounded">{{ $destination->primaryType() }}</span>
+                            <span class="absolute bottom-1 left-1 {{ $typeClasses[$destination->primaryType()] ?? 'bg-brand-primary text-white' }} text-[8px] font-bold px-1.5 py-0.5 rounded">{{ $destination->primaryType() }}</span>
                         </div>
                         <div class="flex-grow min-w-0">
                             <div class="flex justify-between items-start gap-2">
