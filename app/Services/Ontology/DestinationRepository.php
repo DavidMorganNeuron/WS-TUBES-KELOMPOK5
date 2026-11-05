@@ -137,6 +137,76 @@ class DestinationRepository
             ->take($limit)
             ->values();
     }
+    
+    /**
+ * Kategori yang TIDAK dimiliki destinasi ini.
+ *
+ * @return list<string>
+ */
+public function otherTypes(Destination $destination): array
+{
+    return array_values(array_diff(self::TYPES, $destination->types));
+}
+
+/**
+ * Rekomendasi dari kategori lain, dibagi rata per kategori.
+ *
+ * @return Collection<int, Destination>
+ */
+public function crossCategory(Destination $destination, int $limit = 4): Collection
+{
+    $otherTypes = $this->otherTypes($destination);
+
+    if ($otherTypes === []) {
+        return collect();
+    }
+
+    $score = fn (Destination $item): float =>
+        ($item->province() === $destination->province() ? 5.0 : 0.0) + ($item->rating ?? 0);
+
+    // Kandidat: bukan destinasi ini dan tidak punya kategori yang sama dengan destinasi utama
+    $candidates = $this->all()->filter(
+        fn (Destination $item): bool => $item->id !== $destination->id
+            && array_intersect($item->types, $destination->types) === [],
+    );
+
+    // Satu destinasi terbaik per kategori dulu (round-robin), supaya semua kategori terwakili
+    $perType = [];
+    foreach ($otherTypes as $type) {
+        $perType[$type] = $candidates
+            ->filter(fn (Destination $item): bool => in_array($type, $item->types, true))
+            ->sortByDesc($score)
+            ->values();
+    }
+
+    $result = collect();
+    $round = 0;
+
+    while ($result->count() < $limit) {
+        $added = false;
+
+        foreach ($otherTypes as $type) {
+            $item = $perType[$type][$round] ?? null;
+
+            if ($item !== null && ! $result->contains('id', $item->id)) {
+                $result->push($item);
+                $added = true;
+
+                if ($result->count() >= $limit) {
+                    break;
+                }
+            }
+        }
+
+        if (! $added && $round > $candidates->count()) {
+            break;
+        }
+
+        $round++;
+    }
+
+    return $result->values();
+}
 
     /**
      * @return list<array<string, mixed>>

@@ -17,7 +17,7 @@
 @endphp
 
 @section('content')
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full overflow-x-hidden">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full overflow-x-clip">
 
     <!-- Breadcrumb -->
     <div class="text-[11px] text-gray-500 font-medium mb-4 flex flex-wrap items-center gap-2">
@@ -45,7 +45,7 @@
         </div>
 
         <div class="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-6">
-            <div>
+            <div class="min-w-0">
                 <h1 class="text-4xl md:text-5xl font-serif font-bold text-gray-900 mb-2 leading-tight">{{ $destination->name }}</h1>
                 @if ($destination->alternativeName !== '' && $destination->alternativeName !== $destination->name)
                     <p class="text-lg text-gray-500 italic mb-2">{{ $destination->alternativeName }}</p>
@@ -61,46 +61,91 @@
     </div>
 
     <!-- Gallery -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 h-auto md:h-[560px]">
-        <div class="md:col-span-2 relative rounded-2xl overflow-hidden h-80 md:h-full">
-            <img src="{{ $destination->imageUrl() }}" class="w-full h-full object-cover" alt="{{ $destination->name }}">
-            <div class="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black/80 to-transparent text-white flex justify-between items-end gap-4">
-                <div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10 md:h-[520px]">
+        <div class="md:col-span-2 relative rounded-2xl overflow-hidden h-72 md:h-full min-h-0">
+            <img src="{{ $destination->imageUrl() }}" class="absolute inset-0 w-full h-full object-cover" alt="{{ $destination->name }}">
+            <div class="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black/80 to-transparent text-white">
+                <div class="min-w-0">
                     <p class="text-[10px] font-bold text-gray-300 uppercase tracking-widest mb-1">{{ implode(' • ', $destination->types) }}</p>
-                    <p class="text-xl font-serif font-bold">{{ $destination->location !== '' ? $destination->location : $destination->province() }}</p>
+                    <p class="text-xl font-serif font-bold truncate">{{ $destination->location !== '' ? $destination->location : $destination->province() }}</p>
                 </div>
-                <span class="bg-white/20 backdrop-blur-md text-white px-4 py-2 rounded-lg text-xs font-bold whitespace-nowrap">ID {{ $destination->id }}</span>
             </div>
         </div>
 
-        <div class="grid grid-rows-3 gap-4 h-full">
+        <div class="flex flex-col md:h-full min-h-0">
+            @if ($related->isNotEmpty())
+                <div class="flex items-end justify-between gap-3 mb-3">
+                    <div>
+                        <p class="text-[10px] font-bold text-brand-accent uppercase tracking-widest">Recommendations</p>
+                        <h2 class="text-lg font-serif font-bold text-gray-900 leading-tight">You may also like</h2>
+                    </div>
+                    <a href="{{ route('destinations', ['jenis' => $destination->primaryType()]) }}" class="text-[11px] font-bold text-brand-accent hover:underline whitespace-nowrap">See more →</a>
+                </div>
+            @endif
+
+        <div class="grid grid-cols-3 gap-3 md:grid-cols-1 md:grid-rows-3 md:gap-4 flex-1 min-h-0">
             @foreach ($related->take(3) as $nearby)
-                <a href="{{ route('destination.detail', $nearby->id) }}" class="relative rounded-2xl overflow-hidden h-32 md:h-full group">
-                    <img src="{{ $nearby->imageUrl() }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" alt="{{ $nearby->name }}" loading="lazy">
+                <a href="{{ route('destination.detail', $nearby->id) }}" class="relative rounded-2xl overflow-hidden h-28 md:h-auto min-h-0 group">
+                    <img src="{{ $nearby->imageUrl() }}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition duration-500" alt="{{ $nearby->name }}" loading="lazy">
                     <div class="absolute bottom-0 left-0 w-full p-3 bg-gradient-to-t from-black/80 to-transparent text-white">
-                        <p class="text-[10px] font-bold">{{ $nearby->name }}</p>
-                        <p class="text-[9px] text-gray-300">{{ $nearby->province() }} • {{ $nearby->primaryType() }}</p>
+                        <p class="text-[10px] font-bold truncate">{{ $nearby->name }}</p>
+                        <p class="text-[9px] text-gray-300 truncate">{{ $nearby->province() }} • {{ $nearby->primaryType() }}</p>
                     </div>
                 </a>
             @endforeach
 
-            @for ($index = $related->count(); $index < 3; $index++)
-                <div class="relative rounded-2xl overflow-hidden h-32 md:h-full bg-gray-200">
-                    <img src="https://placehold.co/600x400/e5e9e2/0f5132?text={{ urlencode($destination->primaryType()) }}" class="w-full h-full object-cover" alt="Ontology media placeholder">
+            @for ($index = $related->take(3)->count(); $index < 3; $index++)
+                <div class="relative rounded-2xl overflow-hidden h-28 md:h-auto min-h-0 bg-gray-200">
+                    <img src="https://placehold.co/600x400/e5e9e2/0f5132?text={{ urlencode($destination->primaryType()) }}" class="absolute inset-0 w-full h-full object-cover" alt="Ontology media placeholder">
                     <div class="absolute bottom-0 left-0 w-full p-3 bg-gradient-to-t from-black/80 to-transparent text-white">
-                        <p class="text-[10px] font-bold">{{ $destination->name }}</p>
+                        <p class="text-[10px] font-bold truncate">{{ $destination->name }}</p>
                         <p class="text-[9px] text-gray-300">Additional media not recorded</p>
                     </div>
                 </div>
             @endfor
         </div>
+        </div>
     </div>
 
     <!-- Content Grid -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+
+        <!-- Sidebar (Visitor Snapshot paling atas) -->
+        <aside class="space-y-6 lg:order-2 lg:sticky lg:top-24 min-w-0">
+            <div class="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm">
+                <div class="flex justify-between items-start mb-4 gap-4">
+                    <div class="min-w-0">
+                        <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-1">Visitor Snapshot</p>
+                        <h3 class="text-xl font-serif font-bold text-gray-900 leading-snug">{{ $destination->name }}</h3>
+                    </div>
+                    <div class="text-right flex-shrink-0">
+                        <p class="text-[10px] text-gray-400">Rating</p>
+                        <p class="font-bold text-brand-primary">⭐ {{ $destination->ratingLabel() }}</p>
+                    </div>
+                </div>
+
+                <div class="space-y-2 text-xs text-gray-600 mb-5">
+                    <div class="flex justify-between gap-4 border-b border-gray-100 pb-2"><span>Category</span><span class="font-bold text-gray-900 text-right">{{ implode(', ', $destination->types) }}</span></div>
+                    <div class="flex justify-between gap-4 border-b border-gray-100 pb-2"><span>Province</span><span class="font-bold text-gray-900 text-right">{{ $destination->province() }}</span></div>
+                    <div class="flex justify-between gap-4 border-b border-gray-100 pb-2"><span>Opening hours</span><span class="font-bold text-gray-900 text-right">{{ $destination->openingHours !== '' ? $destination->openingHours : '—' }}</span></div>
+                    <div class="flex justify-between gap-4"><span>Entry from</span><span class="font-bold text-gray-900 text-right">{{ $destination->priceLabel() }}</span></div>
+                </div>
+
+                <a href="{{ $destination->mapsUrl() }}" target="_blank" rel="noopener" class="block text-center bg-brand-dark hover:bg-gray-800 text-white font-bold text-sm py-3 rounded-lg transition mb-3">
+                    📍 Open in Google Maps
+                </a>
+                <a href="{{ route('destinations', ['jenis' => $destination->primaryType()]) }}" class="block text-center bg-brand-light border border-brand-primary/15 text-brand-dark font-bold text-sm py-3 rounded-lg hover:bg-gray-100 transition">
+                    More {{ $destination->primaryType() }} destinations
+                </a>
+
+                <div class="flex justify-center text-[10px] text-gray-500 bg-gray-50 py-2 rounded-lg border border-gray-100 mt-4 text-center">
+                    🛡️ Emergency assistance: National 112<br>Sumut Tourist Police (+62 611 0)
+                </div>
+            </div>
+        </aside>
 
         <!-- Main Column -->
-        <div class="lg:col-span-2 space-y-6">
+        <div class="lg:col-span-2 lg:order-1 space-y-6 min-w-0">
 
             <!-- About -->
             <div class="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm">
@@ -243,7 +288,7 @@
             <!-- Location -->
             <div class="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm">
                 <div class="flex justify-between items-end gap-4 mb-4">
-                    <div>
+                    <div class="min-w-0">
                         <h2 class="text-2xl font-serif font-bold text-gray-900 mb-1">Location &amp; Access</h2>
                         <p class="text-xs text-gray-500">{{ $destination->address !== '' ? $destination->address : $destination->location }}</p>
                     </div>
@@ -267,78 +312,29 @@
             </div>
 
             <!-- Related -->
-            <div class="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm">
-                <div class="flex justify-between items-end gap-4 mb-6">
-                    <div>
-                        <p class="text-xs font-bold text-brand-accent uppercase tracking-widest mb-1">Semantic Similarity</p>
-                        <h2 class="text-2xl font-serif font-bold text-gray-900">Attractions along the same trail</h2>
-                    </div>
-                    <a href="{{ route('destinations', ['jenis' => $destination->primaryType()]) }}" class="text-xs font-bold text-brand-accent hover:underline whitespace-nowrap">View category →</a>
-                </div>
-
-                @if ($related->isEmpty())
-                    <p class="text-sm text-gray-500">No related destinations found in the ontology.</p>
-                @else
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        @foreach ($related as $item)
-                            <x-destination-card :destination="$item" :show-description="false" />
-                        @endforeach
-                    </div>
-                @endif
-            </div>
+            <!-- Other Categories -->
+@if (!empty($otherTypes))
+<div class="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm">
+    <div class="flex justify-between items-end gap-4 mb-6">
+        <div>
+            <p class="text-xs font-bold text-brand-accent uppercase tracking-widest mb-1">Explore More</p>
+            <h2 class="text-2xl font-serif font-bold text-gray-900">Discover other kinds of experiences</h2>
+            <p class="text-xs text-gray-500 mt-1">Beyond {{ implode(', ', $destination->types) }}: try {{ implode(', ', $otherTypes) }}.</p>
         </div>
+        <a href="{{ route('destinations', ['jenis' => $otherTypes[0]]) }}" class="text-xs font-bold text-brand-accent hover:underline whitespace-nowrap">View category →</a>
+    </div>
 
-        <!-- Sidebar -->
-        <div class="space-y-6">
-            <div class="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm sticky top-24">
-                <div class="flex justify-between items-start mb-4 gap-4">
-                    <div>
-                        <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-1">Visitor Snapshot</p>
-                        <h3 class="text-xl font-serif font-bold text-gray-900">{{ $destination->name }}</h3>
-                    </div>
-                    <div class="text-right">
-                        <p class="text-[10px] text-gray-400">Rating</p>
-                        <p class="font-bold text-brand-primary">⭐ {{ $destination->ratingLabel() }}</p>
-                    </div>
-                </div>
-
-                <div class="space-y-2 text-xs text-gray-600 mb-5">
-                    <div class="flex justify-between gap-4 border-b border-gray-100 pb-2"><span>Category</span><span class="font-bold text-gray-900 text-right">{{ implode(', ', $destination->types) }}</span></div>
-                    <div class="flex justify-between gap-4 border-b border-gray-100 pb-2"><span>Province</span><span class="font-bold text-gray-900 text-right">{{ $destination->province() }}</span></div>
-                    <div class="flex justify-between gap-4 border-b border-gray-100 pb-2"><span>Opening hours</span><span class="font-bold text-gray-900 text-right">{{ $destination->openingHours !== '' ? $destination->openingHours : '—' }}</span></div>
-                    <div class="flex justify-between gap-4"><span>Entry from</span><span class="font-bold text-gray-900 text-right">{{ $destination->priceLabel() }}</span></div>
-                </div>
-
-                <a href="{{ $destination->mapsUrl() }}" target="_blank" rel="noopener" class="block text-center bg-brand-dark hover:bg-gray-800 text-white font-bold text-sm py-3 rounded-lg transition mb-3">
-                    📍 Open in Google Maps
-                </a>
-                <a href="{{ route('destinations', ['jenis' => $destination->primaryType()]) }}" class="block text-center bg-brand-light border border-brand-primary/15 text-brand-dark font-bold text-sm py-3 rounded-lg hover:bg-gray-100 transition">
-                    More {{ $destination->primaryType() }} destinations
-                </a>
-
-                <div class="flex justify-center text-[10px] text-gray-500 bg-gray-50 py-2 rounded-lg border border-gray-100 mt-4 text-center">
-                    🛡️ Emergency assistance: National 112<br>Sumut Tourist Police (+62 611 0)
-                </div>
-            </div>
-
-            <div class="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm">
-                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Ontology Record</p>
-                <h3 class="text-lg font-serif font-bold text-gray-900 mb-4">Linked data metadata</h3>
-                <div class="space-y-2 text-xs text-gray-600">
-                    <div class="flex justify-between gap-4 border-b border-gray-100 pb-2"><span>ID</span><span class="font-bold text-gray-900">{{ $destination->id }}</span></div>
-                    <div class="flex justify-between gap-4 border-b border-gray-100 pb-2"><span>Class</span><span class="font-bold text-gray-900">ws:DestinasiWisata</span></div>
-                    <div class="flex justify-between gap-4 border-b border-gray-100 pb-2"><span>Media</span><span class="font-bold text-gray-900">{{ $destination->media !== '' ? 'Recorded' : 'Fallback' }}</span></div>
-                    <div class="flex justify-between gap-4"><span>Rating source</span><span class="font-bold text-gray-900">ratingPengunjung</span></div>
-                </div>
-            </div>
-
-            <div class="bg-brand-dark rounded-3xl p-6 text-white shadow-lg relative overflow-hidden">
-                <div class="absolute -right-4 -bottom-4 text-6xl opacity-10">🗺️</div>
-                <p class="text-[10px] font-bold text-brand-accent uppercase tracking-wider mb-2">🧭 Cross-Circuit Atlas</p>
-                <h3 class="text-xl font-serif font-bold mb-3 leading-tight">From highland calderas to Aceh's sacred coast</h3>
-                <p class="text-xs text-gray-300 mb-6 leading-relaxed">Combine this destination with other semantically related places across North Sumatra and Aceh on the interactive map.</p>
-                <a href="{{ route('map') }}" class="text-brand-accent hover:text-orange-300 text-xs font-bold flex items-center gap-1 transition">Open the map atlas →</a>
-            </div>
+    @if ($crossCategory->isEmpty())
+        <p class="text-sm text-gray-500">No destinations from other categories found in the ontology.</p>
+    @else
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            @foreach ($crossCategory as $item)
+                <x-destination-card :destination="$item" :show-description="false" />
+            @endforeach
+        </div>
+    @endif
+</div>
+@endif
         </div>
     </div>
 </div>

@@ -2,7 +2,6 @@
 
 @php
     $activeType = $filters['jenis'] ?? '';
-    $activeProvince = $filters['provinsi'] ?? '';
     $activeQuery = $filters['q'] ?? '';
     $urlFor = function (array $overrides = []) use ($filters): string {
         $params = array_merge($filters, $overrides);
@@ -45,9 +44,6 @@
                 @if ($activeType !== '')
                     <input type="hidden" name="jenis" value="{{ $activeType }}">
                 @endif
-                @if ($activeProvince !== '')
-                    <input type="hidden" name="provinsi" value="{{ $activeProvince }}">
-                @endif
                 <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">🔍</span>
                 <input type="text" name="q" value="{{ $activeQuery }}" placeholder="Search mapped destinations..." class="w-full pl-10 pr-20 py-2.5 bg-white border border-gray-200 rounded-xl text-sm font-medium outline-none focus:border-brand-primary">
                 <button type="submit" class="absolute right-1.5 top-1/2 -translate-y-1/2 bg-brand-dark hover:bg-gray-800 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg">Find</button>
@@ -61,15 +57,6 @@
                     <a href="{{ $urlFor(['jenis' => $type]) }}" class="text-xs font-bold px-4 py-1.5 rounded-full whitespace-nowrap flex items-center gap-1 transition {{ $activeType === $type ? 'bg-brand-dark text-white' : 'bg-white border border-gray-200 text-gray-700 hover:border-gray-300' }}">
                         <span class="w-2 h-2 rounded-full" style="background-color: {{ $typeColors[$type] }}"></span>
                         {{ $type }} ({{ number_format($facets['types'][$type] ?? 0) }})
-                    </a>
-                @endforeach
-            </div>
-
-            <div class="flex flex-wrap gap-2">
-                <a href="{{ $urlFor(['provinsi' => null]) }}" class="text-[10px] font-bold px-3 py-1 rounded-full border transition {{ $activeProvince === '' ? 'bg-brand-primary text-white border-brand-primary' : 'bg-white text-gray-600 border-gray-200' }}">All Provinces</a>
-                @foreach ($provinces as $province)
-                    <a href="{{ $urlFor(['provinsi' => $province]) }}" class="text-[10px] font-bold px-3 py-1 rounded-full border transition {{ $activeProvince === $province ? 'bg-brand-primary text-white border-brand-primary' : 'bg-white text-gray-600 border-gray-200' }}">
-                        {{ $province }} ({{ number_format($facets['provinces'][$province] ?? 0) }})
                     </a>
                 @endforeach
             </div>
@@ -107,7 +94,7 @@
                 <div class="bg-white border border-gray-200 rounded-2xl p-6 text-center">
                     <p class="text-2xl mb-2">🔎</p>
                     <p class="text-sm font-bold text-gray-900 mb-1">No destination matches</p>
-                    <p class="text-xs text-gray-500 mb-4">Try another keyword, category, or province.</p>
+                    <p class="text-xs text-gray-500 mb-4">Try another keyword or category.</p>
                     <a href="{{ route('map') }}" class="inline-block bg-brand-accent text-white text-xs font-bold px-4 py-2 rounded-full">Reset filters</a>
                 </div>
             @endforelse
@@ -130,11 +117,6 @@
         <button type="button" onclick="toggleSidebar(true)" class="md:hidden absolute top-6 left-6 z-[1000] bg-white text-brand-dark px-4 py-2 rounded-lg shadow-md text-xs font-bold border border-gray-200">
             ☰ Destinations ({{ number_format($matchCount) }})
         </button>
-
-        <div class="absolute top-6 left-6 z-[1000] hidden md:flex bg-white rounded-lg shadow-md overflow-hidden border border-gray-200">
-            <a href="{{ $urlFor(['jenis' => null, 'provinsi' => null]) }}" class="bg-brand-dark text-white px-4 py-2 text-xs font-bold flex items-center gap-2">🗺️ Terrain Map</a>
-            <a href="{{ $urlFor(['jenis' => null, 'provinsi' => null]) }}" class="bg-white text-gray-600 hover:bg-gray-50 px-4 py-2 text-xs font-bold flex items-center gap-2 border-l border-gray-200">Reset Atlas</a>
-        </div>
 
         <div class="absolute top-6 right-6 z-[1000] bg-white rounded-xl shadow-lg border border-gray-100 p-4 w-64 hidden lg:block">
             <div class="flex justify-between items-center mb-4">

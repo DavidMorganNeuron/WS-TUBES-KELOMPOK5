@@ -31,17 +31,19 @@ class DestinationController extends Controller
         ]);
     }
 
-    public function show(string $id, DestinationRepository $repository): View
-    {
-        $destination = $repository->find($id);
+public function show(string $id, DestinationRepository $repository): View
+{
+    $destination = $repository->find($id);
 
-        abort_if($destination === null, 404);
+    abort_if($destination === null, 404);
 
-        return view('destination-detail', [
-            'destination' => $destination,
-            'related' => $repository->related($destination, 4),
-        ]);
-    }
+    return view('destination-detail', [
+        'destination' => $destination,
+        'related' => $repository->related($destination, 4),
+        'otherTypes' => $repository->otherTypes($destination),
+        'crossCategory' => $repository->crossCategory($destination, 4),
+    ]);
+}
 
     /**
      * @param  list<string>  $sortOptions
