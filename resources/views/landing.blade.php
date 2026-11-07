@@ -19,7 +19,7 @@
 
             <div class="pt-2">
                 <div class="flex justify-between items-center mb-2">
-                    <span class="text-xs font-bold text-gray-700 flex items-center gap-1">📍 Sumatra Utara & Aceh</span>
+                    <span class="text-xs font-bold text-gray-700 flex items-center gap-1">📍 Sumatera Utara & Aceh</span>
                     <label class="flex items-center gap-2 text-xs font-bold text-gray-600">
                         <input type="checkbox" checked class="rounded text-brand-primary focus:ring-brand-primary"> Boundaries
                     </label>
@@ -47,7 +47,6 @@
                     <div class="flex-grow">
                         <div class="flex justify-between items-start">
                             <h3 class="font-bold text-sm text-gray-900">Sipiso-Piso Waterfall</h3>
-                            <button class="text-red-500">♥</button>
                         </div>
                         <p class="text-[10px] text-gray-500 mb-1">⭐ 4.9 (1,248) • 4.2 km away</p>
                         <p class="text-[10px] text-gray-500">Tongging, Merek, Karo Regency</p>
@@ -69,7 +68,6 @@
                     <div class="flex-grow">
                         <div class="flex justify-between items-start">
                             <h3 class="font-bold text-sm text-gray-900">Tuk Tuk Siadong Samosir</h3>
-                            <button class="text-gray-400 hover:text-red-500">♡</button>
                         </div>
                         <p class="text-[10px] text-gray-500 mb-1">⭐ 4.8 (3,820) • 12.0 km away</p>
                         <p class="text-[10px] text-gray-500">Simanindo, Samosir Island</p>
@@ -91,7 +89,6 @@
                     <div class="flex-grow">
                         <div class="flex justify-between items-start">
                             <h3 class="font-bold text-sm text-gray-900">Baiturrahman Grand Mosque</h3>
-                            <button class="text-gray-400 hover:text-red-500">♡</button>
                         </div>
                         <p class="text-[10px] text-gray-500 mb-1">⭐ 5.0 (8,914) • Banda Aceh</p>
                         <p class="text-[10px] text-gray-500">Kp. Baru, Baiturrahman, Banda Aceh</p>

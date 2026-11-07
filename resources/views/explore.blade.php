@@ -30,7 +30,7 @@
         </span>
         <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
             <div>
-                <h1 class="text-4xl md:text-5xl font-serif font-bold text-gray-900 mb-4">Explore North Sumatra &amp; Aceh Destinations</h1>
+                <h1 class="text-4xl md:text-5xl font-serif font-bold text-gray-900 mb-4">Explore North Sumatera Destinations</h1>
                 <p class="text-gray-600 text-lg max-w-2xl">
                     Discover {{ number_format($facets['total']) }} destinations curated from the tourism ontology, spanning natural wonders, historical monuments, and cultural experiences across two iconic provinces.
                 </p>
@@ -48,7 +48,7 @@
 
     <!-- Filter Bar -->
     <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 mb-8 space-y-4">
-        <form action="{{ route('destinations') }}" method="GET" class="flex flex-col lg:flex-row gap-4 justify-between items-center">
+        <form id="destination-filters" action="{{ route('destinations') }}" method="GET" class="flex flex-col lg:flex-row gap-4 justify-between items-center" data-live-destinations data-live-url="{{ route('destinations.live') }}" autocomplete="off">
             @if ($activeType !== '')
                 <input type="hidden" name="jenis" value="{{ $activeType }}">
             @endif
@@ -56,7 +56,7 @@
             <div class="flex-grow w-full flex flex-col sm:flex-row sm:flex-wrap lg:flex-nowrap gap-3">
                 <div class="relative flex-grow min-w-[12rem]">
                     <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">🔍</span>
-                    <input type="text" name="q" value="{{ $activeQuery }}" placeholder="Filter by attraction name, caldera, or island..." class="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm outline-none focus:border-brand-primary">
+                    <input type="text" name="q" value="{{ $activeQuery }}" placeholder="Filter by attraction name, caldera, or island..." class="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm outline-none focus:border-brand-primary" autocomplete="off">
                 </div>
                 <select name="sort" class="bg-gray-50 border border-gray-200 text-sm font-medium text-gray-700 rounded-lg px-4 py-2 outline-none w-full sm:w-48">
                     @foreach ($sorts as $value => $label)
@@ -69,16 +69,11 @@
                         <option value="{{ $kabupaten }}" @selected($activeKabupaten === $kabupaten)>{{ $kabupaten }}</option>
                     @endforeach
                 </select>
-                <button type="submit" class="bg-brand-dark hover:bg-gray-800 text-white text-xs font-bold px-5 py-2.5 rounded-lg transition whitespace-nowrap">
-                    Apply Filters
-                </button>
             </div>
 
             <div class="flex items-center gap-2 text-xs font-bold text-gray-500">
-                <span>Showing {{ $firstItem }}–{{ $lastItem }} of {{ number_format($destinations->total()) }}</span>
-                @if ($hasActiveFilters)
-                    <a href="{{ route('destinations') }}" class="text-brand-accent hover:underline">Reset</a>
-                @endif
+                <span id="destination-showing">Showing {{ $firstItem }}–{{ $lastItem }} of {{ number_format($destinations->total()) }}</span>
+                <a id="destination-reset" href="{{ route('destinations') }}" class="text-brand-accent hover:underline {{ $hasActiveFilters ? '' : 'hidden' }}">Reset</a>
             </div>
         </form>
 
@@ -95,29 +90,9 @@
     </div>
 
     <!-- Destination Grid -->
-    @if ($destinations->isEmpty())
-        <div class="bg-white rounded-3xl border border-gray-100 shadow-sm p-12 text-center mb-10">
-            <p class="text-4xl mb-4">🔎</p>
-            <h2 class="text-2xl font-serif font-bold text-gray-900 mb-2">No destinations match your filters</h2>
-            <p class="text-sm text-gray-500 mb-6">Try removing a category, choosing another kabupaten/kota, or using a broader keyword.</p>
-            <a href="{{ route('destinations') }}" class="inline-block bg-brand-accent hover:bg-orange-800 text-white text-sm font-bold px-5 py-2.5 rounded-full transition">Reset all filters</a>
-        </div>
-    @else
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
-            @foreach ($destinations as $destination)
-                <x-destination-card :destination="$destination" />
-            @endforeach
-        </div>
-
-        <div class="flex flex-col sm:flex-row justify-between items-center gap-4 border-t border-gray-200 pt-6 mb-16">
-            <span class="text-sm text-gray-500">
-                Showing {{ $firstItem }}–{{ $lastItem }} of {{ number_format($destinations->total()) }} attractions
-            </span>
-            <div>
-                {{ $destinations->links() }}
-            </div>
-        </div>
-    @endif
+    <div id="destination-results">
+        @include('partials.destination-results', ['destinations' => $destinations])
+    </div>
 
     <!-- Banner CTA -->
     <div class="bg-brand-dark text-white rounded-3xl p-8 md:p-12 relative overflow-hidden flex flex-col md:flex-row justify-between items-center gap-8 shadow-lg">

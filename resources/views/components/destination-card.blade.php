@@ -26,16 +26,13 @@
         <a href="{{ $detailUrl }}" class="block h-full">
             <img src="{{ $destination->imageUrl() }}" alt="{{ $destination->name }}" class="w-full h-full object-cover" loading="lazy">
         </a>
-        <div class="absolute top-3 left-3 right-14 flex flex-wrap gap-1">
+        <div class="absolute top-3 left-3 right-3 flex flex-wrap gap-1">
             @foreach ($types as $type)
                 <span class="{{ $typeClasses[$type] ?? 'bg-brand-primary text-white' }} text-[10px] font-bold px-2 py-1 rounded">
                     {{ $type }}
                 </span>
             @endforeach
         </div>
-        <button type="button" onclick="alert('Save to itinerary will be available in a future release.')" class="absolute top-3 right-3 bg-white/80 p-1.5 rounded-full text-gray-600 hover:text-red-500" aria-label="Save {{ $destination->name }}">
-            ♡
-        </button>
         <div class="absolute bottom-3 left-3 right-3 text-white text-[10px] font-bold bg-black/50 px-2 py-1 rounded truncate">
             {{ $destination->province() }} • {{ $destination->location !== '' ? $destination->location : 'Location pending' }}
         </div>

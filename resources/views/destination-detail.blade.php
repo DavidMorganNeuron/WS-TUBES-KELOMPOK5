@@ -53,7 +53,6 @@
                 <p class="text-gray-600 text-lg max-w-3xl">{{ $destination->shortDescription !== '' ? $destination->shortDescription : 'No short description has been recorded for this destination yet.' }}</p>
             </div>
             <div class="flex flex-wrap gap-2 flex-shrink-0">
-                <button type="button" onclick="alert('Save to itinerary will be available in a future release.')" class="bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-1 shadow-sm">♥ Save</button>
                 <button type="button" onclick="shareDestination()" class="bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-1 shadow-sm">↗ Share</button>
                 <a href="{{ $destination->mapsUrl() }}" target="_blank" rel="noopener" class="bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-1 shadow-sm">📍 Google Maps</a>
             </div>
@@ -194,12 +193,9 @@
 
             <!-- Visitor Information -->
             <div class="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm">
-                <div class="flex justify-between items-start mb-6 gap-4">
-                    <div>
-                        <h2 class="text-2xl font-serif font-bold text-gray-900 mb-1">Visitor Information</h2>
-                        <p class="text-xs text-gray-500">Operational hours, ticketing, and official contact channels.</p>
-                    </div>
-                    <span class="bg-green-100 text-green-800 text-[10px] font-bold px-2 py-1 rounded flex items-center gap-1 whitespace-nowrap">✓ Ontology v2.1.0</span>
+                <div class="mb-6">
+                    <h2 class="text-2xl font-serif font-bold text-gray-900 mb-1">Visitor Information</h2>
+                    <p class="text-xs text-gray-500">Operational hours, ticketing, and official contact channels.</p>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">

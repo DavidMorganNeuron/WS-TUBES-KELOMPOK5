@@ -11,15 +11,16 @@
         </span>
         <div class="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-6">
             <div>
-                <h1 class="text-4xl md:text-5xl font-serif font-bold text-gray-900 mb-4">Explore North Sumatra &amp; Aceh through linked data</h1>
+                <h1 class="text-4xl md:text-5xl font-serif font-bold text-gray-900 mb-4">Explore North Sumatera Destinations</h1>
                 <p class="text-gray-600 text-lg max-w-2xl">
                     {{ number_format($facets['total']) }} destinations curated from the tourism ontology, covering volcanic highlands, Batak heritage, and the Acehnese coast.
                 </p>
             </div>
-            <form action="{{ route('destinations') }}" method="GET" class="flex w-full lg:w-auto gap-2">
+            <form action="{{ route('destinations') }}" method="GET" class="flex w-full lg:w-auto gap-2" data-live-suggest data-suggest-url="{{ route('destinations.suggest') }}" autocomplete="off">
                 <div class="relative flex-grow lg:w-72">
                     <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">🔍</span>
-                    <input type="text" name="q" placeholder="Search destinations..." class="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm outline-none focus:border-brand-primary">
+                    <input type="text" name="q" placeholder="Search destinations..." class="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm outline-none focus:border-brand-primary" autocomplete="off" aria-autocomplete="list" aria-controls="dashboard-search-suggestions" aria-expanded="false">
+                    <div id="dashboard-search-suggestions" data-suggest-panel class="absolute left-0 right-0 top-full z-50 mt-2 hidden overflow-hidden rounded-xl border border-gray-200 bg-white shadow-xl" role="listbox"></div>
                 </div>
                 <button type="submit" class="bg-brand-dark hover:bg-gray-800 text-white text-sm font-bold px-5 py-2.5 rounded-xl transition">Search</button>
             </form>
@@ -192,36 +193,6 @@
                 </div>
             </div>
 
-            <div class="bg-brand-dark text-white rounded-3xl p-6 shadow-lg">
-                <p class="text-xs font-bold text-brand-accent uppercase tracking-wider mb-2">Ontology Snapshot</p>
-                <h3 class="text-xl font-serif font-bold mb-4">Semantic tourism atlas</h3>
-
-                <div class="space-y-2 text-xs text-gray-300 mb-6">
-                    <div class="flex justify-between border-b border-white/10 pb-2"><span>Ontology version</span><span class="font-bold text-white">2.1.0</span></div>
-                    <div class="flex justify-between border-b border-white/10 pb-2"><span>Main class</span><span class="font-bold text-white">DestinasiWisata</span></div>
-                    <div class="flex justify-between border-b border-white/10 pb-2"><span>Properties</span><span class="font-bold text-white">21</span></div>
-                    <div class="flex justify-between"><span>Source</span><span class="font-bold text-white">Fuseki / Turtle</span></div>
-                </div>
-
-                <a href="{{ route('map') }}" class="block text-center bg-white/10 hover:bg-white/20 border border-white/20 text-white text-sm font-bold px-4 py-3 rounded-xl transition">
-                    Open Interactive Map →
-                </a>
-            </div>
-
-            <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-6">
-                <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Data Quality</p>
-                <h3 class="text-xl font-serif font-bold mb-4">Coverage at a glance</h3>
-                <div class="grid grid-cols-2 gap-3 text-center">
-                    <div class="bg-brand-light rounded-2xl p-4">
-                        <p class="text-2xl font-bold text-brand-primary">{{ number_format($facets['with_coordinates']) }}</p>
-                        <p class="text-[10px] font-bold text-gray-500 uppercase mt-1">Geotagged</p>
-                    </div>
-                    <div class="bg-orange-50 rounded-2xl p-4">
-                        <p class="text-2xl font-bold text-brand-accent">{{ number_format($facets['with_media']) }}</p>
-                        <p class="text-[10px] font-bold text-gray-500 uppercase mt-1">With media</p>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </div>

@@ -35,17 +35,17 @@
             <div class="flex justify-between items-start gap-3">
                 <div>
                     <p class="text-[10px] font-bold text-brand-accent uppercase tracking-wider">Destination Atlas</p>
-                    <h1 class="text-xl font-serif font-bold text-gray-900">North Sumatra &amp; Aceh</h1>
+                    <h1 class="text-xl font-serif font-bold text-gray-900">North Sumatera</h1>
                 </div>
                 <button type="button" onclick="toggleSidebar(false)" class="md:hidden w-8 h-8 rounded-full border border-gray-200 text-gray-500 hover:bg-gray-50" aria-label="Close destination list">✕</button>
             </div>
 
-            <form action="{{ route('map') }}" method="GET" class="relative">
+            <form action="{{ route('map') }}" method="GET" class="relative" data-live-map data-live-url="{{ route('map.live') }}" autocomplete="off">
                 @if ($activeType !== '')
                     <input type="hidden" name="jenis" value="{{ $activeType }}">
                 @endif
                 <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">🔍</span>
-                <input type="text" name="q" value="{{ $activeQuery }}" placeholder="Search mapped destinations..." class="w-full pl-10 pr-20 py-2.5 bg-white border border-gray-200 rounded-xl text-sm font-medium outline-none focus:border-brand-primary">
+                <input type="text" name="q" value="{{ $activeQuery }}" placeholder="Search mapped destinations..." class="w-full pl-10 pr-20 py-2.5 bg-white border border-gray-200 rounded-xl text-sm font-medium outline-none focus:border-brand-primary" autocomplete="off">
                 <button type="submit" class="absolute right-1.5 top-1/2 -translate-y-1/2 bg-brand-dark hover:bg-gray-800 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg">Find</button>
             </form>
 
@@ -62,52 +62,12 @@
             </div>
         </div>
 
-        <div class="flex-grow overflow-y-auto p-4 space-y-4 bg-[#f8faf9]">
-            <div class="flex justify-between items-center text-[10px] font-bold text-gray-500 uppercase tracking-wider">
-                <span>Destinations on the map</span>
-                <span>{{ number_format($matchCount) }} found</span>
-            </div>
-
-            @forelse ($results as $destination)
-                <article class="bg-white rounded-2xl p-4 border border-gray-200 shadow-sm hover:shadow-md hover:border-brand-primary/30 transition cursor-pointer" data-marker-id="{{ $destination->id }}" onclick="focusMarker(@js($destination->id))">
-                    <div class="flex gap-3 mb-3">
-                        <div class="relative w-20 h-20 rounded-xl overflow-hidden flex-shrink-0">
-                            <img src="{{ $destination->imageUrl() }}" alt="{{ $destination->name }}" class="w-full h-full object-cover" loading="lazy">
-                            <span class="absolute bottom-1 left-1 {{ $typeClasses[$destination->primaryType()] ?? 'bg-brand-primary text-white' }} text-[8px] font-bold px-1.5 py-0.5 rounded">{{ $destination->primaryType() }}</span>
-                        </div>
-                        <div class="flex-grow min-w-0">
-                            <div class="flex justify-between items-start gap-2">
-                                <h3 class="font-bold text-sm text-gray-900 truncate">{{ $destination->name }}</h3>
-                                <span class="text-[10px] font-bold text-brand-primary whitespace-nowrap">⭐ {{ $destination->ratingLabel() }}</span>
-                            </div>
-                            <p class="text-[10px] text-gray-500 mb-1 truncate">{{ $destination->province() }} • {{ $destination->location }}</p>
-                            <p class="text-[10px] text-gray-500 truncate">{{ $destination->openingHours !== '' ? $destination->openingHours : 'Hours not recorded' }}</p>
-                            <p class="text-[10px] font-bold text-green-600 mt-1 truncate">{{ $destination->priceLabel() }}</p>
-                        </div>
-                    </div>
-                    <div class="flex gap-2">
-                        <a href="{{ $destination->mapsUrl() }}" target="_blank" rel="noopener" onclick="event.stopPropagation()" class="flex-1 bg-brand-dark text-white text-xs font-bold py-2 rounded-lg flex items-center justify-center gap-1 hover:bg-gray-800">◈ Directions</a>
-                        <a href="{{ route('destination.detail', $destination->id) }}" onclick="event.stopPropagation()" class="flex-1 bg-brand-light border border-brand-primary/20 text-brand-dark text-xs font-bold py-2 rounded-lg flex items-center justify-center gap-1 hover:bg-gray-100">View Details</a>
-                    </div>
-                </article>
-            @empty
-                <div class="bg-white border border-gray-200 rounded-2xl p-6 text-center">
-                    <p class="text-2xl mb-2">🔎</p>
-                    <p class="text-sm font-bold text-gray-900 mb-1">No destination matches</p>
-                    <p class="text-xs text-gray-500 mb-4">Try another keyword or category.</p>
-                    <a href="{{ route('map') }}" class="inline-block bg-brand-accent text-white text-xs font-bold px-4 py-2 rounded-full">Reset filters</a>
-                </div>
-            @endforelse
-
-            @if ($matchCount > $results->count())
-                <p class="text-center text-[10px] font-bold text-gray-400 py-3">
-                    Showing the first {{ $results->count() }} of {{ number_format($matchCount) }} matches. Use search or categories to narrow the list.
-                </p>
-            @endif
+        <div id="map-results" class="flex-grow overflow-y-auto p-4 space-y-4 bg-[#f8faf9]">
+            @include('partials.map-results', ['results' => $results, 'matchCount' => $matchCount])
         </div>
 
         <div class="p-3 bg-white border-t border-gray-200 flex justify-between items-center text-xs font-bold">
-            <span class="text-green-600 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span> {{ number_format(count($markers)) }} mapped points</span>
+            <span class="text-green-600 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span> <span id="map-marker-count">{{ number_format(count($markers)) }}</span> mapped points</span>
             <a href="{{ route('map') }}" class="text-gray-500 hover:text-gray-900">Clear Filters</a>
         </div>
     </div>
@@ -115,7 +75,7 @@
     <!-- MAP AREA -->
     <div class="flex-grow relative bg-[#e5e9e2] overflow-hidden">
         <button type="button" onclick="toggleSidebar(true)" class="md:hidden absolute top-6 left-6 z-[1000] bg-white text-brand-dark px-4 py-2 rounded-lg shadow-md text-xs font-bold border border-gray-200">
-            ☰ Destinations ({{ number_format($matchCount) }})
+            ☰ Destinations (<span id="map-sidebar-count">{{ number_format($matchCount) }}</span>)
         </button>
 
         <div class="absolute top-6 right-6 z-[1000] bg-white rounded-xl shadow-lg border border-gray-100 p-4 w-64 hidden lg:block">
@@ -149,8 +109,8 @@
         <div class="absolute bottom-0 left-0 w-full bg-white/90 backdrop-blur border-t border-gray-200 px-6 py-2 flex justify-between items-center text-xs text-gray-600 z-[1000]">
             <span>Caldera Toba Geopark &amp; Serambi Mekkah</span>
             <div class="flex gap-4 items-center">
-                <span>{{ number_format(count($markers)) }} markers</span>
-                <span class="hidden sm:inline">{{ number_format($matchCount) }} destinations match</span>
+                <span><span id="map-footer-marker-count">{{ number_format(count($markers)) }}</span> markers</span>
+                <span class="hidden sm:inline"><span id="map-footer-match-count">{{ number_format($matchCount) }}</span> destinations match</span>
             </div>
         </div>
     </div>
@@ -174,7 +134,7 @@
     }).addTo(map);
 
     const markers = {};
-    const bounds = [];
+    let bounds = [];
 
     const escapeHtml = (value) => String(value ?? '').replace(/[&<>"']/g, (character) => ({
         '&': '&amp;',
@@ -184,30 +144,40 @@
         "'": '&#039;'
     }[character]));
 
-    markerData.forEach((destination) => {
-        const color = markerColors[destination.type] || '#0f5132';
-        const icon = L.divIcon({
-            className: '',
-            html: `<div style="width:18px;height:18px;border-radius:9999px;background:${color};border:2px solid #ffffff;box-shadow:0 1px 4px rgba(0,0,0,.35)"></div>`,
-            iconSize: [18, 18],
-            iconAnchor: [9, 9]
+    function clearMarkers() {
+        Object.values(markers).forEach((marker) => map.removeLayer(marker));
+        Object.keys(markers).forEach((id) => delete markers[id]);
+        bounds = [];
+    }
+
+    function renderMarkers(destinations) {
+        clearMarkers();
+
+        destinations.forEach((destination) => {
+            const color = markerColors[destination.type] || '#0f5132';
+            const icon = L.divIcon({
+                className: '',
+                html: `<div style="width:18px;height:18px;border-radius:9999px;background:${color};border:2px solid #ffffff;box-shadow:0 1px 4px rgba(0,0,0,.35)"></div>`,
+                iconSize: [18, 18],
+                iconAnchor: [9, 9]
+            });
+
+            const marker = L.marker([destination.latitude, destination.longitude], { icon }).addTo(map);
+
+            marker.bindPopup(`
+                <div style="min-width:180px">
+                    <img src="${escapeHtml(destination.image)}" alt="${escapeHtml(destination.name)}" style="width:100%;height:90px;object-fit:cover;border-radius:8px;margin-bottom:8px">
+                    <strong style="display:block;font-size:13px">${escapeHtml(destination.name)}</strong>
+                    <span style="font-size:11px;color:#4b5563">${escapeHtml(destination.province)} • ${escapeHtml(destination.type)}</span><br>
+                    <span style="font-size:11px;color:#4b5563">⭐ ${escapeHtml(destination.rating_label)} • ${escapeHtml(destination.price)}</span><br>
+                    <a href="${escapeHtml(destination.url)}" style="display:inline-block;margin-top:6px;font-size:11px;font-weight:700;color:#b74a1c">View details →</a>
+                </div>
+            `);
+
+            markers[destination.id] = marker;
+            bounds.push([destination.latitude, destination.longitude]);
         });
-
-        const marker = L.marker([destination.latitude, destination.longitude], { icon }).addTo(map);
-
-        marker.bindPopup(`
-            <div style="min-width:180px">
-                <img src="${escapeHtml(destination.image)}" alt="${escapeHtml(destination.name)}" style="width:100%;height:90px;object-fit:cover;border-radius:8px;margin-bottom:8px">
-                <strong style="display:block;font-size:13px">${escapeHtml(destination.name)}</strong>
-                <span style="font-size:11px;color:#4b5563">${escapeHtml(destination.province)} • ${escapeHtml(destination.type)}</span><br>
-                <span style="font-size:11px;color:#4b5563">⭐ ${escapeHtml(destination.rating_label)} • ${escapeHtml(destination.price)}</span><br>
-                <a href="${escapeHtml(destination.url)}" style="display:inline-block;margin-top:6px;font-size:11px;font-weight:700;color:#b74a1c">View details →</a>
-            </div>
-        `);
-
-        markers[destination.id] = marker;
-        bounds.push([destination.latitude, destination.longitude]);
-    });
+    }
 
     function fitMap() {
         if (bounds.length > 0) {
@@ -248,6 +218,14 @@
         }
     }
 
+    window.LiveMap = {
+        update(destinations) {
+            renderMarkers(destinations);
+            fitMap();
+        }
+    };
+
+    renderMarkers(markerData);
     fitMap();
 </script>
 @endpush

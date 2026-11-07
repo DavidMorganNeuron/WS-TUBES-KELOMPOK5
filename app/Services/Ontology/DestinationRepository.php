@@ -56,7 +56,7 @@ class DestinationRepository
 
         $destinations = $this->all()
             ->when($query !== '', fn (Collection $items): Collection => $items->filter(
-                fn (Destination $destination): bool => Str::contains($this->searchableText($destination), $query),
+                fn (Destination $destination): bool => $this->matchesWordPrefix($destination, $query),
             ))
             ->when($type !== null, fn (Collection $items): Collection => $items->filter(
                 fn (Destination $destination): bool => in_array($type, $destination->types, true),
@@ -137,76 +137,75 @@ class DestinationRepository
             ->take($limit)
             ->values();
     }
-    
+
     /**
- * Kategori yang TIDAK dimiliki destinasi ini.
- *
- * @return list<string>
- */
-public function otherTypes(Destination $destination): array
-{
-    return array_values(array_diff(self::TYPES, $destination->types));
-}
-
-/**
- * Rekomendasi dari kategori lain, dibagi rata per kategori.
- *
- * @return Collection<int, Destination>
- */
-public function crossCategory(Destination $destination, int $limit = 4): Collection
-{
-    $otherTypes = $this->otherTypes($destination);
-
-    if ($otherTypes === []) {
-        return collect();
+     * Kategori yang TIDAK dimiliki destinasi ini.
+     *
+     * @return list<string>
+     */
+    public function otherTypes(Destination $destination): array
+    {
+        return array_values(array_diff(self::TYPES, $destination->types));
     }
 
-    $score = fn (Destination $item): float =>
-        ($item->province() === $destination->province() ? 5.0 : 0.0) + ($item->rating ?? 0);
+    /**
+     * Rekomendasi dari kategori lain, dibagi rata per kategori.
+     *
+     * @return Collection<int, Destination>
+     */
+    public function crossCategory(Destination $destination, int $limit = 4): Collection
+    {
+        $otherTypes = $this->otherTypes($destination);
 
-    // Kandidat: bukan destinasi ini dan tidak punya kategori yang sama dengan destinasi utama
-    $candidates = $this->all()->filter(
-        fn (Destination $item): bool => $item->id !== $destination->id
-            && array_intersect($item->types, $destination->types) === [],
-    );
+        if ($otherTypes === []) {
+            return collect();
+        }
 
-    // Satu destinasi terbaik per kategori dulu (round-robin), supaya semua kategori terwakili
-    $perType = [];
-    foreach ($otherTypes as $type) {
-        $perType[$type] = $candidates
-            ->filter(fn (Destination $item): bool => in_array($type, $item->types, true))
-            ->sortByDesc($score)
-            ->values();
-    }
+        $score = fn (Destination $item): float => ($item->province() === $destination->province() ? 5.0 : 0.0) + ($item->rating ?? 0);
 
-    $result = collect();
-    $round = 0;
+        // Kandidat: bukan destinasi ini dan tidak punya kategori yang sama dengan destinasi utama
+        $candidates = $this->all()->filter(
+            fn (Destination $item): bool => $item->id !== $destination->id
+                && array_intersect($item->types, $destination->types) === [],
+        );
 
-    while ($result->count() < $limit) {
-        $added = false;
-
+        // Satu destinasi terbaik per kategori dulu (round-robin), supaya semua kategori terwakili
+        $perType = [];
         foreach ($otherTypes as $type) {
-            $item = $perType[$type][$round] ?? null;
+            $perType[$type] = $candidates
+                ->filter(fn (Destination $item): bool => in_array($type, $item->types, true))
+                ->sortByDesc($score)
+                ->values();
+        }
 
-            if ($item !== null && ! $result->contains('id', $item->id)) {
-                $result->push($item);
-                $added = true;
+        $result = collect();
+        $round = 0;
 
-                if ($result->count() >= $limit) {
-                    break;
+        while ($result->count() < $limit) {
+            $added = false;
+
+            foreach ($otherTypes as $type) {
+                $item = $perType[$type][$round] ?? null;
+
+                if ($item !== null && ! $result->contains('id', $item->id)) {
+                    $result->push($item);
+                    $added = true;
+
+                    if ($result->count() >= $limit) {
+                        break;
+                    }
                 }
             }
+
+            if (! $added && $round > $candidates->count()) {
+                break;
+            }
+
+            $round++;
         }
 
-        if (! $added && $round > $candidates->count()) {
-            break;
-        }
-
-        $round++;
+        return $result->values();
     }
-
-    return $result->values();
-}
 
     /**
      * @return list<array<string, mixed>>
@@ -351,17 +350,41 @@ public function crossCategory(Destination $destination, int $limit = 4): Collect
         return $existing;
     }
 
-    private function searchableText(Destination $destination): string
+    /**
+     * Cocokkan setiap kata pada query sebagai awalan salah satu kata nama destinasi.
+     */
+    private function matchesWordPrefix(Destination $destination, string $query): bool
     {
-        return Str::lower(implode(' ', [
-            $destination->id,
-            $destination->name,
-            $destination->alternativeName,
-            $destination->shortDescription,
-            implode(' ', $destination->keywords),
-            $destination->location,
-            $destination->address,
-        ]));
+        $queryWords = preg_split('/[^\p{L}\p{N}]+/u', $query, -1, PREG_SPLIT_NO_EMPTY) ?: [];
+
+        if ($queryWords === []) {
+            return false;
+        }
+
+        $nameWords = preg_split(
+            '/[^\p{L}\p{N}]+/u',
+            Str::lower($destination->name.' '.$destination->alternativeName),
+            -1,
+            PREG_SPLIT_NO_EMPTY,
+        ) ?: [];
+
+        foreach ($queryWords as $queryWord) {
+            $matches = false;
+
+            foreach ($nameWords as $nameWord) {
+                if (str_starts_with($nameWord, $queryWord)) {
+                    $matches = true;
+
+                    break;
+                }
+            }
+
+            if (! $matches) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private function validType(mixed $value): ?string

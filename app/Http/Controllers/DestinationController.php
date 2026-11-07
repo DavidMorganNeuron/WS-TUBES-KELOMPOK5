@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\Ontology\DestinationRepository;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -10,11 +11,7 @@ class DestinationController extends Controller
 {
     public function index(Request $request, DestinationRepository $repository): View
     {
-        $sorts = [
-            'name' => 'Nama A-Z',
-            'price_desc' => 'Harga Tertinggi',
-            'price_asc' => 'Harga Terendah',
-        ];
+        $sorts = $this->sorts();
 
         $facets = $repository->facets();
         $filters = $this->filters($request, array_keys($sorts), array_keys($facets['kabupaten']));
@@ -31,19 +28,70 @@ class DestinationController extends Controller
         ]);
     }
 
-public function show(string $id, DestinationRepository $repository): View
-{
-    $destination = $repository->find($id);
+    public function live(Request $request, DestinationRepository $repository): JsonResponse
+    {
+        $sorts = $this->sorts();
 
-    abort_if($destination === null, 404);
+        $facets = $repository->facets();
+        $filters = $this->filters($request, array_keys($sorts), array_keys($facets['kabupaten']));
+        $filters['sort'] ??= 'name';
 
-    return view('destination-detail', [
-        'destination' => $destination,
-        'related' => $repository->related($destination, 4),
-        'otherTypes' => $repository->otherTypes($destination),
-        'crossCategory' => $repository->crossCategory($destination, 4),
-    ]);
-}
+        $destinations = $repository->paginate($filters)->withQueryString();
+        $destinations->setPath(route('destinations'));
+
+        return response()->json([
+            'html' => view('partials.destination-results', [
+                'destinations' => $destinations,
+            ])->render(),
+            'total' => $destinations->total(),
+            'first_item' => $destinations->firstItem() ?? 0,
+            'last_item' => $destinations->lastItem() ?? 0,
+            'count' => $destinations->count(),
+            'has_filters' => $this->hasActiveFilters($filters),
+        ]);
+    }
+
+    public function suggest(Request $request, DestinationRepository $repository): JsonResponse
+    {
+        $query = $request->string('q')->trim()->toString();
+
+        $destinations = $query === ''
+            ? collect()
+            : $repository->search(['q' => $query, 'sort' => 'rating'])->take(8);
+
+        return response()->json([
+            'html' => view('partials.destination-suggestions', [
+                'destinations' => $destinations,
+            ])->render(),
+            'count' => $destinations->count(),
+        ]);
+    }
+
+    public function show(string $id, DestinationRepository $repository): View
+    {
+        $destination = $repository->find($id);
+
+        abort_if($destination === null, 404);
+
+        return view('destination-detail', [
+            'destination' => $destination,
+            'related' => $repository->related($destination, 4),
+            'otherTypes' => $repository->otherTypes($destination),
+            'crossCategory' => $repository->crossCategory($destination, 4),
+        ]);
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private function sorts(): array
+    {
+        return [
+            'name' => 'Nama A-Z',
+            'price_desc' => 'Harga Tertinggi',
+            'price_asc' => 'Harga Terendah',
+        ];
+    }
 
     /**
      * @param  list<string>  $sortOptions
@@ -72,5 +120,16 @@ public function show(string $id, DestinationRepository $repository): View
         }
 
         return array_filter($filters, static fn (string $value): bool => $value !== '');
+    }
+
+    /**
+     * @param  array{q?: string, jenis?: string, kabupaten?: string, sort?: string}  $filters
+     */
+    private function hasActiveFilters(array $filters): bool
+    {
+        return ($filters['q'] ?? '') !== ''
+            || ($filters['jenis'] ?? '') !== ''
+            || ($filters['kabupaten'] ?? '') !== ''
+            || ($filters['sort'] ?? 'name') !== 'name';
     }
 }
