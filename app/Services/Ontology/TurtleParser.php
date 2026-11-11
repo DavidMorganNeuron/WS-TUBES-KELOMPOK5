@@ -99,14 +99,9 @@ class TurtleParser
             }
 
             $property = $this->localName($predicateToken);
-            $value = $this->parseValue($valueToken);
 
-            if ($value !== '' && ! array_key_exists($property, $record)) {
-                $record[$property] = $value;
-            } elseif ($value !== '' && $record[$property] !== $value && ! str_contains($record[$property], $value)) {
-                $record[$property] .= ' | '.$value;
-            } elseif ($value === '' && ! array_key_exists($property, $record)) {
-                $record[$property] = '';
+            foreach ($this->splitTopLevel($valueToken, ',') as $valueToken) {
+                $this->addValue($record, $property, $this->parseValue($valueToken));
             }
         }
 
@@ -117,6 +112,36 @@ class TurtleParser
         $record['idDestinasi'] ??= $this->localName($subject);
 
         return $record;
+    }
+
+    /**
+     * @param  array<string, string>  $record
+     */
+    private function addValue(array &$record, string $property, string $value): void
+    {
+        if (! array_key_exists($property, $record)) {
+            $record[$property] = $value;
+
+            return;
+        }
+
+        if ($value === '') {
+            return;
+        }
+
+        if ($record[$property] === '') {
+            $record[$property] = $value;
+
+            return;
+        }
+
+        $values = explode(' | ', $record[$property]);
+
+        if (in_array($value, $values, true)) {
+            return;
+        }
+
+        $record[$property] .= ' | '.$value;
     }
 
     private function isOntologyPredicate(string $token): bool

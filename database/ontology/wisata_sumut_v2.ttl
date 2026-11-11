@@ -194,7 +194,7 @@ data:ws-003 a ws:DestinasiWisata ;
     ws:namaDestinasi "Air Terjun Ponot"@id ;
     ws:namaAlternatif "-"@id ;
     ws:deskripsiSingkat "Air Terjun Ponot adalah sebuah air terjun yang terletak di antara Kabupaten Toba."@id ;
-    ws:deskripsiLengkap "Air Terjun Ponot adalah sebuah air terjun yang terletak di antara Kabupaten Toba. Air Terjun Ponot memiliki tiga tingkatan dengan ketinggian ±250 meter. Air Terjun Ponot berada di aliran Sungai Ponot yang merupakan anak Sungai Asahan di ketinggian sekitar 500 meter di atas permukaan air laut. Keindahan Air terjun Ponot terletak pada debit airnya yang sangat deras. Di bawah curahan air terjun banyak terdapat batu-batuan alam yang berukuran sangat besar sehingga menjadi daya tarik tersendiri sebagai pelengkap keindahan Air terjun Ponot."@id ;
+    ws:deskripsiLengkap "Air Terjun Ponot adalah sebuah air terjun yang terletak di antara Kabupaten Toba. Air Terjun Ponot memiliki tiga tingkatan dengan ketinggian ±250 meter. Air Terjun Ponot berada di aliran Sungai Ponot yang merupakan anak Sungai Asahan di ketinggian sekitar 500 meter di atas permukaan air laut. Keindahan Air terjun Ponot terletak pada debit airnya yang sangat deras. Di bawah curahan air terjun banyak terdapat batu-batuan alam yang berukuran sangat besar sehingga menjadi daya tarik tersendiri sebagai pelengkap keindahan Air terjun Ponot ."@id ;
     ws:jenisDestinasi "Alam"@id ;
     ws:kataKunci "Air Terjun Ponot, Sungai Ponot, Air Terjun Tiga Tingkat"@id ;
     ws:beradaDi "Kabupaten Asahan"@id ;
@@ -266,7 +266,7 @@ data:ws-006 a ws:DestinasiWisata ;
     ws:namaDestinasi "Air Terjun Sampuren Putih"@id ;
     ws:namaAlternatif "-"@id ;
     ws:deskripsiSingkat "Air Terjun Sampuren Putih adalah sebuah air terjun yang terletak di Desa Cinta Rakyat, Kecamatan Percut Sei Tuan, Kabupaten Deli Serdang, Provinsi Sumatera Utara, Indonesia."@id ;
-    ws:deskripsiLengkap "Air Terjun Sampuren Putih adalah sebuah air terjun yang terletak di Desa Cinta Rakyat, Kecamatan Percut Sei Tuan, Kabupaten Deli Serdang, Provinsi Sumatera Utara, Indonesia. Lokasinya berjarak sejauh 51,7 km dari Kota Medan. Ketinggian air terjun ini sekitar 3 meter. Rata-rata wisatawan yang berkunjung ke sini melakukan aktivitas trekking dan berkemah, selain mandi di air terjun. Suhu rata-rata disana adalah 23°C dan beriklim tropis. Bulan terpanas adalah pada Februari (24°C) serta bulan terdingin pada September (22°C). Curah hujan rata-rata di sana sekitar 3.483 milimeter per tahun. Bulan terbasah adalah Oktober dengan curah hujan 465 milimeter, sedangkan yang terkering adalah Juli dengan curah hujan 181 milimeter."@id ;
+    ws:deskripsiLengkap "Air Terjun Sampuren Putih adalah sebuah air terjun yang terletak di Desa Cinta Rakyat, Kecamatan Percut Sei Tuan, Kabupaten Deli Serdang, Provinsi Sumatera Utara, Indonesia. Lokasinya berjarak sejauh 51,7 km dari Kota Medan. Ketinggian air terjun ini sekitar 3 meter. Rata-rata wisatawan yang berkunjung ke sini melakukan aktivitas trekking dan berkemah, selain mandi di air terjun. Suhu rata-rata disana adalah 23Â°C dan beriklim tropis. Bulan terpanas adalah pada Februari (24Â°C) serta bulan terdingin pada September (22Â°C). Curah hujan rata-rata di sana sekitar 3.483 milimeter per tahun. Bulan terbasah adalah Oktober dengan curah hujan 465 milimeter, sedangkan yang terkering adalah Juli dengan curah hujan 181 milimeter."@id ;
     ws:jenisDestinasi "Alam"@id ;
     ws:kataKunci "Air Terjun Sampuren Putih"@id, "Cinta Rakyat"@id, "Percut Sei Tuan"@id ;
     ws:beradaDi "Kabupaten Deli Serdang"@id ;
@@ -337,49 +337,49 @@ data:ws-008 a ws:DestinasiWisata ;
 
 data:ws-009 a ws:DestinasiWisata ;
     ws:idDestinasi "ws-009"^^xsd:string ;
-    ws:namaDestinasi "Timezone Sun Plaza Medan"@id ;
-    ws:namaAlternatif "-"@id ;
-    ws:deskripsiSingkat "Timezone Sun Plaza Medan merupakan pusat hiburan keluarga terbesar di Pulau Sumatra dengan luas 1.753,8 m² yang menghadirkan lebih dari 146 mesin permainan modern."@id ;
-    ws:deskripsiLengkap "Berlokasi di lantai 4 Sun Plaza Medan, tempat rekreasi ini mencatat sejarah sebagai Timezone terbesar di Pulau Sumatra dengan menyediakan beragam wahana unggulan seperti Social Bowling, Bumper Cars, permainan realitas virtual (VR), serta Claw Time yang dilengkapi lebih dari 30 mesin capit. Selain itu, destinasi ini menghadirkan wahana Laser Tag pertama di Kota Medan dan memiliki sebuah Party Room berkapasitas hingga 40 orang untuk perayaan ulang tahun maupun gathering."@id ;
-    ws:jenisDestinasi "Buatan"@id ;
-    ws:kataKunci "-"@id ;
-    ws:beradaDi "Kota Medan"@id ;
-    ws:alamat "Jl. KH. Zainul Arifin No.7, Madras Hulu, Kecamatan Medan Polonia, Kota Medan, Sumatera Utara 20152"@id ;
-    ws:lintang "3.5834598221578706"^^xsd:decimal ;
-    ws:bujur "98.67166560983233"^^xsd:decimal ;
-    ws:petunjukLokasi "Melintasi Jalan Diponegoro di Kecamatan Medan Polonia dan temukan lokasi mall yang berada tepat di seberang Kantor Gubernur Sumatera Utara."@id ;
-    ws:jamOperasional "Setiap Hari 10.00 - 22.00"@id ;
-    ws:hargaMasuk "100000" ;
-    ws:noHpResmi "-" ;
-    ws:emailResmi "https://www.timezonegames.com/en-id/" ;
-    ws:instagramResmi "https://www.instagram.com/timezoneid"^^xsd:anyURI ;
-    ws:memilikiFasilitas "Toilet"@id, "Mesin Arkade"@id, "Wahana"@id, "Photobooth"@id ;
-    ws:dapatMelakukan "Bermain"@id, "Berfoto"@id, "Bersantai"@id ;
-    ws:memilikiMedia "https://www.timezonegames.com/media/evlnyyl1/web-arcade-games_768_412.png"^^xsd:anyURI ;
-    ws:ratingPengunjung "4.9" .
+    ws:namaDestinasi "Danau Aek Bagas"@id ;
+    ws:namaAlternatif "Danau Aekbagas"@id ;
+    ws:deskripsiSingkat "Danau Aek Bagas adalah danau di Kabupaten Mandailing Natal, Sumatera Utara."@id ;
+    ws:deskripsiLengkap ""@id ;
+    ws:jenisDestinasi "Alam"@id ;
+    ws:kataKunci "Danau Aek Bagas, danau Aekbagas"@id ;
+    ws:beradaDi "Kabupaten Mandailing Natal"@id ;
+    ws:alamat ""@id ;
+    ws:lintang "1.08785"^^xsd:decimal ;
+    ws:bujur "99.04753"^^xsd:decimal ;
+    ws:petunjukLokasi ""@id ;
+    ws:jamOperasional ""@id ;
+    ws:hargaMasuk "" ;
+    ws:noHpResmi "" ;
+    ws:emailResmi "" ;
+    ws:instagramResmi ""^^xsd:anyURI ;
+    ws:memilikiFasilitas ""@id ;
+    ws:dapatMelakukan "Menikmati pemandangan danau"@id ;
+    ws:memilikiMedia ""^^xsd:anyURI ;
+    ws:ratingPengunjung "" .
 
 data:ws-010 a ws:DestinasiWisata ;
     ws:idDestinasi "ws-010"^^xsd:string ;
-    ws:namaDestinasi "Timezone Medan Fair"@id ;
-    ws:namaAlternatif "-"@id ;
-    ws:deskripsiSingkat "Timezone Plaza Medan Fair di Lantai 4, Kecamatan Medan Petisah, adalah pusat hiburan keluarga ikonik yang hadir dengan wajah baru dan luas sejak pembukaan kembali pada 9 Juli 2025."@id ;
-    ws:deskripsiLengkap "Berlokasi strategis di Lantai 4 Plaza Medan Fair, Kecamatan Medan Petisah, Timezone ini menempati area seluas 1.635,42 meter persegi dengan penambahan area permainan lebih dari 1.000 meter persegi yang telah diperbarui secara besar-besaran. Tempat bermain keluarga legendaris yang sudah ada sejak Plaza Medan Fair dibuka pada September 2004 ini kini menghadirkan wahana-wahana eksklusif pertama di Medan dan Sumatera seperti Colour Grid dan VR Space Ride 4P, serta fasilitas pendukung berupa Party Room berkapasitas hingga 24 orang untuk berbagai acara spesial."@id ;
-    ws:jenisDestinasi "Buatan"@id ;
-    ws:kataKunci "-"@id ;
-    ws:beradaDi "Kota Medan"@id ;
-    ws:alamat "Jl. Gatot Subroto No.30, Sei Sikambing D, Kecamatan Medan Petisah, Kota Medan, Sumatera Utara 20113"@id ;
-    ws:lintang "3.5903446130802896"^^xsd:decimal ;
-    ws:bujur "98.65574880983219"^^xsd:decimal ;
-    ws:petunjukLokasi "Timezone Plaza Medan Fair terletak di Jalan Gatot Subroto Nomor 30, Medan Petisah, tepat di dalam area pusat perbelanjaan Plaza Medan Fair."@id ;
-    ws:jamOperasional "Setiap Hari 10.00 - 22.00"@id ;
-    ws:hargaMasuk "80000" ;
-    ws:noHpResmi "-" ;
-    ws:emailResmi "https://www.timezonegames.com/en-id/" ;
-    ws:instagramResmi "https://www.instagram.com/timezoneid"^^xsd:anyURI ;
-    ws:memilikiFasilitas "Toilet"@id, "Mesin Arkade"@id, "Wahana"@id, "Photobooth"@id ;
-    ws:dapatMelakukan "Bermain"@id, "Berfoto"@id, "Bersantai"@id ;
-    ws:memilikiMedia "https://s-light.tiket.photos/t/01E25EBZS3W0FY9GTG6C42E1SE/original/events/2020/12/22/6ab81272-8d42-425a-9958-5ec13a470047-1608646844854-86511a03a73f5410beea2e29b0e6601d.jpg"^^xsd:anyURI ;
-    ws:ratingPengunjung "4.9" .
+    ws:namaDestinasi "Danau Bargot"@id ;
+    ws:namaAlternatif ""@id ;
+    ws:deskripsiSingkat "Danau Bargot adalah danau di Kabupaten Padang Lawas Utara, Sumatera Utara."@id ;
+    ws:deskripsiLengkap ""@id ;
+    ws:jenisDestinasi "Alam"@id ;
+    ws:kataKunci "Danau Bargot"@id ;
+    ws:beradaDi "Kabupaten Padang Lawas Utara"@id ;
+    ws:alamat ""@id ;
+    ws:lintang "1.3525"^^xsd:decimal ;
+    ws:bujur "99.425"^^xsd:decimal ;
+    ws:petunjukLokasi ""@id ;
+    ws:jamOperasional ""@id ;
+    ws:hargaMasuk "" ;
+    ws:noHpResmi "" ;
+    ws:emailResmi "" ;
+    ws:instagramResmi ""^^xsd:anyURI ;
+    ws:memilikiFasilitas ""@id ;
+    ws:dapatMelakukan "Menikmati pemandangan danau"@id ;
+    ws:memilikiMedia ""^^xsd:anyURI ;
+    ws:ratingPengunjung "" .
 
 data:ws-011 a ws:DestinasiWisata ;
     ws:idDestinasi "ws-011"^^xsd:string ;
@@ -407,9 +407,9 @@ data:ws-011 a ws:DestinasiWisata ;
 data:ws-012 a ws:DestinasiWisata ;
     ws:idDestinasi "ws-012"^^xsd:string ;
     ws:namaDestinasi "Danau Kurung"@id ;
-    ws:namaAlternatif "-"@id ;
-    ws:deskripsiSingkat "Danau Kurung merupakan perairan alami yang terletak di Kampung Lama, Kecamatan Hamparan Perak, Kabupaten Deli Serdang, dengan suasana tenang dan asri khas pedesaan."@id ;
-    ws:deskripsiLengkap "Berlokasi di wilayah Kampung Lama yang masuk dalam kawasan historis Kecamatan Hamparan Perak. Sebuah daerah yang dibuka oleh Datuk Setia Raja pada tahun 1823 serta memiliki akar sejarah dari peradaban Kerajaan Aru—Danau Kurung menyajikan perairan daratan rendah yang tenang. Lingkungan sekitar danau ini masih didominasi oleh nuansa pedesaan khas Deli Serdang dengan mayoritas penduduk lokal yang menjunjung adat serta kearifan budaya Melayu Deli. Meski tidak sepopuler destinasi wisata buatan atau vulkanik besar lainnya di Sumatera Utara, Danau Kurung menjadi salah satu titik perairan lokal yang memberikan karakteristik bentang alam asri bagi masyarakat setempat."@id ;
+    ws:namaAlternatif ""@id ;
+    ws:deskripsiSingkat "Danau di Kabupaten Deli Serdang, Sumatera Utara."@id ;
+    ws:deskripsiLengkap ""@id ;
     ws:jenisDestinasi "Alam"@id ;
     ws:kataKunci "Danau Kurung"@id ;
     ws:beradaDi "Kabupaten Deli Serdang"@id ;
@@ -479,26 +479,26 @@ data:ws-014 a ws:DestinasiWisata ;
 
 data:ws-015 a ws:DestinasiWisata ;
     ws:idDestinasi "ws-015"^^xsd:string ;
-    ws:namaDestinasi "Timezone Centre Point Medan"@id ;
-    ws:namaAlternatif "-"@id ;
-    ws:deskripsiSingkat "Timezone Centre Point Medan adalah pusat hiburan keluarga modern seluas 1.545 meter persegi yang terletak di lantai 3 Centre Point Mall Medan."@id ;
-    ws:deskripsiLengkap "Timezone yang berada di Lantai 3 Centre Point Mall Medan ini menghadirkan beragam pilihan wahana permainan seru untuk anak-anak hingga orang dewasa di atas area seluas 1.545 meter persegi. Di tempat ini, pengunjung dapat menikmati berbagai atraksi populer seperti mesin arkade modern (Avengers 2P, Need for Speed: Heat, Pump it Up LX), arena bom bom car (6 unit), jalur social bowling khas Timezone, serta permainan virtual reality (VR Dark Mars dan Virtual Rabbids)."@id ;
-    ws:jenisDestinasi "Buatan"@id ;
-    ws:kataKunci "-"@id ;
-    ws:beradaDi "Kota Medan"@id ;
-    ws:alamat "Jl. Jawa No.3, Gg. Buntu, Kecamatan Medan Timur, Kota Medan, Sumatera Utara 20231"@id ;
-    ws:lintang "3.5917545749442845"^^xsd:decimal ;
-    ws:bujur "98.68112578654303"^^xsd:decimal ;
-    ws:petunjukLokasi "Berjarak sekitar 3-4 kilometer dari pusat Kota Medan (seperti area Lapangan Merdeka) dan dapat dicapai dengan berkendara ke arah timur laut menuju Jalan Jawa melalui Jalan Stasiun Kereta Api."@id ;
-    ws:jamOperasional "Setiap Hari 10.00 - 22.00"@id ;
-    ws:hargaMasuk "80000" ;
-    ws:noHpResmi "-" ;
-    ws:emailResmi "https://www.timezonegames.com/en-id/" ;
-    ws:instagramResmi "https://www.instagram.com/timezoneid"^^xsd:anyURI ;
-    ws:memilikiFasilitas "Toilet"@id, "Mesin Arkade"@id, "Wahana"@id, "Photobooth"@id ;
-    ws:dapatMelakukan "Bermain"@id, "Berfoto"@id, "Bersantai"@id ;
-    ws:memilikiMedia "https://cdn.sanity.io/images/gzyamhf5/production/a90b1e86de92def448e3e5b421474af46c315e99-1800x1200.webp?w=1200&fit=max&auto=format"^^xsd:anyURI ;
-    ws:ratingPengunjung "4.9"^^xsd:decimal .
+    ws:namaDestinasi "Danau Lauttinggal"@id ;
+    ws:namaAlternatif "Laut Tinggal"@id ;
+    ws:deskripsiSingkat "Danau Lauttinggal adalah danau di Kabupaten Mandailing Natal, Sumatera Utara."@id ;
+    ws:deskripsiLengkap ""@id ;
+    ws:jenisDestinasi "Alam"@id ;
+    ws:kataKunci "Danau Lauttinggal, Laut Tinggal"@id ;
+    ws:beradaDi "Kabupaten Mandailing Natal"@id ;
+    ws:alamat ""@id ;
+    ws:lintang "1.0075"^^xsd:decimal ;
+    ws:bujur "99.061389"^^xsd:decimal ;
+    ws:petunjukLokasi ""@id ;
+    ws:jamOperasional ""@id ;
+    ws:hargaMasuk "" ;
+    ws:noHpResmi "" ;
+    ws:emailResmi "" ;
+    ws:instagramResmi ""^^xsd:anyURI ;
+    ws:memilikiFasilitas ""@id ;
+    ws:dapatMelakukan "Menikmati pemandangan danau"@id ;
+    ws:memilikiMedia ""^^xsd:anyURI ;
+    ws:ratingPengunjung "5.0"^^xsd:decimal .
 
 data:ws-016 a ws:DestinasiWisata ;
     ws:idDestinasi "ws-016"^^xsd:string ;
@@ -509,26 +509,26 @@ data:ws-016 a ws:DestinasiWisata ;
     ws:jenisDestinasi "Alam"@id ;
     ws:kataKunci "Danau Lauttodor"@id ;
     ws:beradaDi "Kabupaten Batu Bara"@id ;
-    ws:alamat "Laut Tador, Kecamatan Sei Suka, Kabupaten Batu Bara, Sumatera Utara 20998"@id ;
-    ws:lintang "3.2678855075496047"^^xsd:decimal ;
-    ws:bujur "99.24196465087259"^^xsd:decimal ;
-    ws:petunjukLokasi "Berjarak sekitar 103 kilometer melalui Jalan Tol Medan–Tebing Tinggi, dilanjutkan menyusuri Jalan Lintas Sumatera hingga ke Jalan Arjo Utomo di Laut Tador, Kecamatan Sei Suka"@id ;
-    ws:jamOperasional "Selalu Buka"@id ;
-    ws:hargaMasuk "-" ;
-    ws:noHpResmi "-" ;
-    ws:emailResmi "-" ;
-    ws:instagramResmi "-"^^xsd:anyURI ;
-    ws:memilikiFasilitas "Tempat Parkir"@id, "Toilet"@id ;
-    ws:dapatMelakukan "Berfoto"@id, "Menikmati Pemandangan"@id, "Memancing"@id ;
-    ws:memilikiMedia "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiqs_Kfkvd00xx5pAJW8AmcndXbw3-YjNkbLhBoRPfB9IRqOYeUq9lwyA-6d5jYCWrCNWYigxNR42V785RXPMxsCRAhyovX_UurzZfr2nFkvyYyhOHSD1HGadbYW5NyhjUmEEaZ9gNs6s3T/s1600/danau+laut+tador.JPG"^^xsd:anyURI ;
-    ws:ratingPengunjung "4.3"^^xsd:decimal .
+    ws:alamat ""@id ;
+    ws:lintang "3.2675"^^xsd:decimal ;
+    ws:bujur "99.242222"^^xsd:decimal ;
+    ws:petunjukLokasi ""@id ;
+    ws:jamOperasional ""@id ;
+    ws:hargaMasuk "" ;
+    ws:noHpResmi "" ;
+    ws:emailResmi "" ;
+    ws:instagramResmi ""^^xsd:anyURI ;
+    ws:memilikiFasilitas ""@id ;
+    ws:dapatMelakukan "Menikmati pemandangan danau"@id ;
+    ws:memilikiMedia ""^^xsd:anyURI ;
+    ws:ratingPengunjung "5.0"^^xsd:decimal .
 
 data:ws-017 a ws:DestinasiWisata ;
     ws:idDestinasi "ws-017"^^xsd:string ;
     ws:namaDestinasi "Danau Linting"@id ;
     ws:namaAlternatif ""@id ;
     ws:deskripsiSingkat "Danau Linting adalah danau vulkanik yang terletak di Sinembah Tanjung Muda Hulu, Deli Serdang, Sumatera Utara, Indonesia."@id ;
-    ws:deskripsiLengkap "Terletak di Kecamatan Sinembah Tanjung Muda (STM) Hulu, Danau Linting merupakan danau hidrotermal seluas kurang lebih 1 hektar yang memiliki suhu air hangat (sekitar 30°C) akibat aktivitas vulkanik di bawahnya. Salah satu daya tarik utamanya adalah warna airnya yang dapat berubah-ubah secara alami dalam gradasi biru, hijau toska, hingga hijau kebiruan akibat kandungan mineral dan sulfur. Meskipun menyimpan pesona yang sangat indah dan dikelilingi pepohonan tropis yang rindang, danau ini juga diselimuti fakta misterius karena kedalamannya hingga kini belum pernah berhasil diukur secara pasti oleh para ahli maupun pemerintah setempat. Oleh karena itu, wisatawan hanya diizinkan bermain air atau bersantai di tepiannya demi keamanan."@id ;
+    ws:deskripsiLengkap "Danau Linting adalah danau vulkanik yang terletak di Sinembah Tanjung Muda Hulu, Deli Serdang, Sumatera Utara, Indonesia. Danau ini dikenal karena warna airnya yang khas, yaitu biru kehijauan hingga toska, yang dipengaruhi kandungan belerang di dalamnya. Nama \"Linting\" merujuk pada wilayah tempat danau ini berada. Danau Linting telah lama dikenal masyarakat setempat sebagai lokasi alam dengan fenomena warna air yang berbeda dari danau biasa. Popularitasnya sebagai objek wisata meningkat seiring berkembangnya pariwisata di Sumatera Utara, meskipun pengelolaannya masih sederhana. Karakteristik Danau Linting memiliki diameter sekitar 240 meter dengan kedalaman yang belum dapat diukur secara pasti. Airnya berwarna biru kehijauan dan dapat berubah sesuai dengan intensitas cahaya matahari. Kandungan belerang yang tinggi membuat suhu air terasa hangat serta menimbulkan aroma khas belerang di sekitar lokasi. Kondisi tersebut menyebabkan danau ini tidak digunakan untuk kegiatan berenang. Lingkungan sekitar danau ditumbuhi pepohonan besar yang menciptakan suasana teduh. Kawasan sekitarnya masih relatif alami dengan vegetasi hutan tropis."@id ;
     ws:jenisDestinasi "Alam"@id ;
     ws:kataKunci "Danau Linting"@id, "Danau Vulkanik"@id, "Sinembah Tanjung Muda Hulu"@id, "Danau Belerang"@id ;
     ws:beradaDi "Kabupaten Deli Serdang"@id ;
@@ -595,26 +595,26 @@ data:ws-019 a ws:DestinasiWisata ;
 
 data:ws-020 a ws:DestinasiWisata ;
     ws:idDestinasi "ws-020"^^xsd:string ;
-    ws:namaDestinasi "Kid's Box by kidzooona Binjai Mall"@id ;
-    ws:namaAlternatif "-"@id ;
-    ws:deskripsiSingkat "Kid’s Box by kidzooona Binjai Mall adalah wahana indoor playground anak berkonsep edukatif dari Jepang yang terletak di Lantai LG Binjai Mall."@id ;
-    ws:deskripsiLengkap "Kid’s Box by kidzooona yang berlokasi di Lantai LG Binjai Mall menawarkan ruang bermain anak yang bersih, nyaman, berpendingin ruangan, serta menghadirkan berbagai mainan edukatif khas Jepang yang dirancang untuk merangsang kreativitas dan keterampilan motorik si kecil. Tempat ini juga dilengkapi standar keamanan tinggi serta staf yang ramah untuk mendampingi anak-anak bermain sambil belajar."@id ;
-    ws:jenisDestinasi "Buatan"@id ;
-    ws:kataKunci "-"@id ;
-    ws:beradaDi "Kota Binjai"@id ;
-    ws:alamat "Binjai Mall, Lantai LG, Timbang Langkat, Kecamatan Binjai Timur, Kota Binjai, Sumatera Utara 20742"@id ;
-    ws:lintang "3.6081187705027227"^^xsd:decimal ;
-    ws:bujur "98.49655286750311"^^xsd:decimal ;
-    ws:petunjukLokasi "Dapat dijangkau dari Kota Medan dengan berkendara lurus mengikuti Jalan Lintas Medan–Binjai hingga ke arah Kota Binjai"@id ;
-    ws:jamOperasional "Setiap Hari 10.00 - 22.00"@id ;
-    ws:hargaMasuk "20000" ;
-    ws:noHpResmi "081181143903" ;
-    ws:emailResmi "https://www.aeonfantasy.co.id/" ;
-    ws:instagramResmi "-"^^xsd:anyURI ;
-    ws:memilikiFasilitas "Toilet"@id, "Wahana"@id, "Mesin Arkade"@id ;
-    ws:dapatMelakukan "Bermain"@id, "Berfoto"@id, "Bersantai"@id ;
-    ws:memilikiMedia "https://img.cnt.traveloka.com/tvlk/xpe-asset/GZtqLuOqb-33qvDmG1FcMeN1eFEH7PVvlsdFr2AUBT39jzSxIGG5kZNhhHY-p7nw/4399681363239/KID%2527S-BOX-Binjai-Mall-fdb87548-4ea2-4e7b-8b9f-c7ee8be27a37.jpeg?_src=imagekit&tr=c-at_max,h-500,q-60,w-740"^^xsd:anyURI ;
-    ws:ratingPengunjung "4.7" .
+    ws:namaDestinasi "Danau Napa Galinggang"@id ;
+    ws:namaAlternatif ""@id ;
+    ws:deskripsiSingkat "Danau Napa Galinggang adalah danau di Kabupaten Padang Lawas Utara, Sumatera Utara."@id ;
+    ws:deskripsiLengkap ""@id ;
+    ws:jenisDestinasi "Alam"@id ;
+    ws:kataKunci "Danau Napa Galinggang"@id ;
+    ws:beradaDi "Kabupaten Padang Lawas Utara"@id ;
+    ws:alamat ""@id ;
+    ws:lintang "1.284722"^^xsd:decimal ;
+    ws:bujur "99.451667"^^xsd:decimal ;
+    ws:petunjukLokasi ""@id ;
+    ws:jamOperasional ""@id ;
+    ws:hargaMasuk "" ;
+    ws:noHpResmi "" ;
+    ws:emailResmi "" ;
+    ws:instagramResmi ""^^xsd:anyURI ;
+    ws:memilikiFasilitas ""@id ;
+    ws:dapatMelakukan "Menikmati pemandangan danau"@id ;
+    ws:memilikiMedia ""^^xsd:anyURI ;
+    ws:ratingPengunjung "" .
 
 data:ws-021 a ws:DestinasiWisata ;
     ws:idDestinasi "ws-021"^^xsd:string ;
@@ -668,8 +668,8 @@ data:ws-023 a ws:DestinasiWisata ;
     ws:idDestinasi "ws-023"^^xsd:string ;
     ws:namaDestinasi "Danau Sidihoni"@id ;
     ws:namaAlternatif "Tao Sidihoni"@id ;
-    ws:deskripsiSingkat "Danau Sidihoni adalah fenomena unik berjuluk danau di atas danau yang terletak di atas Pulau Samosir dengan luas sekitar 5 hektare."@id ;
-    ws:deskripsiLengkap "Danau Sidihoni (Tao Sidihoni) yang terletak di Desa Salaon Toba, Kecamatan Ronggur Nihuta, Kabupaten Samosir, Sumatera Utara, mendapat julukan unik sebagai danau di atas danau karena posisinya berada di atas ketinggian sekitar 1.100–1.300 mdpl, jauh lebih tinggi daripada permukaan Danau Toba yang berada di ketinggian sekitar 905 mdpl. Memiliki luas kurang lebih 5 hektare, danau air tawar ini dikelilingi oleh padang rumput hijau yang landai, barisan pohon pinus, serta perbukitan yang memesona. Menariknya, air di Danau Sidihoni memiliki keunikan karena dapat berubah warna; saat musim kemarau airnya terlihat jernih kehijauan, sedangkan saat musim hujan atau terkena tiupan angin kencang ke arah dasar, airnya bisa berubah menjadi keruh kecoklatan akibat sedimentasi."@id ;
+    ws:deskripsiSingkat "Danau di atas Pulau Samosir, dikenal sebagai \"danau di atas danau\"."@id ;
+    ws:deskripsiLengkap "Danau Sidihoni (bahasa Batak Toba: Tao Sidihoni) adalah sebuah danau yang terletak di Kecamatan Ronggur Nihuta, Kabupaten Samosir, Sumatera Utara. Oleh karena berada di atas Pulau Samosir, Danau Sidihoni disebut sebagai \"danau di atas danau\" (di atas Danau Toba). Danau Sidihoni berjarak 8 kilometer dari Pangururan. Pemandangan di sekitar danau bisa dipantulkan oleh air danau. Danau ini dikelilingi oleh bukit landai berwarna hijau muda dan deretan pohon pinus.Danau Sidinohi merupakan danau yang berada di atas danau. Danau Sidihoni dikenal memiliki pemandangan alam yang memukau dan suasana yang sejuk, dan menawarkan daya tarik tersendiri yang jarang ada di tempat lain. Warna air di danau ini dapat berubah sesuai dengan keadaan lingkungan sekitarnya. Dalam kondisi di mana terjadi proses sedimentasi tertentu, air di danau ini akan memiliki warna cenderung kecoklatan. Terdapat juga faktor lainnya yang dapat menyebabkan perubahan warna air danau, seperti angin yang dapat memberi guncangan pada air hingga dasar. Wisata Untuk dapat mencapai danau ini, wisatawan dapat melalui rute Pangururan menggunakan kendaraan roda dua maupun roda empat. Pertama, kunjungi Pelabuhan Parapet dan menaiki kapal menuju Pelabuhan Tomok di Pulau Samosir. Lanjutkan perjalanan selanjutnya menuju ke Pangururan lalu ikuti petunjuk arah menuju Danau Sidihoni. Markah tanah yang paling terkenal di sekitar danau ini adalah bangunan gereja HKBP Sidihoni."@id ;
     ws:jenisDestinasi "Alam"@id ;
     ws:kataKunci "Danau Sidihoni"@id, "Tao Sidihoni"@id, "Danau di Atas Danau"@id, "Ronggur Nihuta"@id, "Samosir"@id ;
     ws:beradaDi "Kabupaten Samosir"@id ;
@@ -808,7 +808,7 @@ data:ws-029 a ws:DestinasiWisata ;
     ws:namaDestinasi "Danau Toba"@id ;
     ws:namaAlternatif "Tao Toba"@id ;
     ws:deskripsiSingkat "Danau vulkanik terbesar di dunia, kaldera supervulkan Toba."@id ;
-    ws:deskripsiLengkap "Danau Toba merupakan danau kawah raksasa di Provinsi Sumatera Utara yang membentang sepanjang 100 kilometer dan lebar 30 kilometer dengan kedalaman hingga 505 meter. Terletak di ketinggian sekitar 900 meter di atas permukaan laut, danau ini lahir dari letusan Gunung Toba Purba—salah satu letusan vulkanik paling kolosal dalam sejarah bumi. Di tengah danau ini terdapat Pulau Samosir, sebuah pulau luas yang menjadi pusat kebudayaan dan tradisi masyarakat Batak Toba. Berkat keunikan geologi dan kekayaan ekosistemnya, kawasan ini resmi diakui sebagai UNESCO Global Geopark sejak Juli 2020."@id ;
+    ws:deskripsiLengkap "Danau Toba (Indonesia: Danau Toba, Batak Toba: ᯖᯀᯬ ᯖᯬᯅ; romanisasi: Tao Toba) adalah sebuah danau alami berukuran besar di Sumatera Utara dan Indonesia. Danau ini merupakan kaldera raksasa dari gunung berapi super Toba. Danau ini terletak di tengah bagian utara pulau Sumatra, dengan ketinggian permukaan sekitar 900 meter (2.953 ft), danau ini membentang dari 2.88°N 98.52°E﻿ / 2.88; 98.52 hingga 2.35°N 99.1°E﻿ / 2.35; 99.1. Danau ini memiliki panjang sekitar 100 kilometer (62 mil), lebar 30 kilometer (19 mi), dan kedalaman hingga 505 meter (1.657 ft). Danau Toba adalah danau terbesar di Indonesia dan danau vulkanik terbesar di dunia. Kaldera Toba adalah satu dari dua puluh geopark di Indonesia, dan diakui pada Juli 2020 sebagai salah satu UNESCO Global Geoparks. Danau Toba adalah lokasi letusan supervulkanik dengan perkiraan skala 8 pada VEI yang terjadi 69.000 hingga 77.000 tahun yang lalu, yang mengubah iklim bumi untuk sementara waktu. Kemajuan terbaru dalam metode penanggalan menunjukkan tanggal letusan yang lebih presisi, yaitu 74.000 tahun yang lalu. Letusan ini merupakan letusan eksplosif terbesar yang diketahui di Bumi dalam 25 juta tahun terakhir. Sebuah teori yang dikenal sebagai teori bencana Toba mendalilkan bahwa peristiwa ini membawa konsekuensi global bagi populasi manusia di Bumi. Karena letusan tersebut kemungkinan besar telah membunuh sebagian besar manusia beserta banyak makhluk lain yang hidup pada saat itu, teori ini menyarankan bahwa letusan itu bisa menjelaskan leher botol populasi yang terlihat di Afrika Timur bagian tengah dan India pada sekitar waktu tersebut. Kehilangan keragaman genetik yang dahsyat akan memengaruhi susunan genetik manusia di seluruh dunia, sehingga berdampak pada evolusi manusia hingga saat ini. Penelitian yang lebih baru meragukan teori ini, karena tidak ada bukti yang muncul tentang pengurangan populasi manusia dan fauna lainnya secara berkelanjutan pada waktu itu. Terdapat kemungkinan lain, termasuk pola migrasi, yang dapat menjelaskan penurunan yang tampak pada keragaman genetik manusia."@id ;
     ws:jenisDestinasi "Alam"@id ;
     ws:kataKunci "Danau Toba"@id, "Tao Toba"@id, "Kaldera Toba"@id, "UNESCO Global Geopark"@id, "Vulkanik"@id ;
     ws:beradaDi "Kabupaten Toba"@id ;
@@ -823,9 +823,9 @@ data:ws-029 a ws:DestinasiWisata ;
     ws:instagramResmi "https://www.instagram.com/danau_tobasamosir"^^xsd:anyURI ;
     ws:memilikiFasilitas "Rumah Makan"@id, "Penginapan"@id, "Tempat Wisata"@id ;
     ws:dapatMelakukan "Berfoto"@id,
-        "Berenang"@id, "Menelusuri"@id, 
-        "Menikmati Pemandangan"@id,
-        "Mengapresiasi"@id, "Memancing"@id ;
+        "Berperahu"@id,
+        "Menikmati panorama danau"@id,
+        "Menjelajah desa wisata"@id ;
     ws:memilikiMedia "https://commons.wikimedia.org/wiki/Special:FilePath/Danau_Toba_-_Sumut.jpg"^^xsd:anyURI ;
     ws:ratingPengunjung "4.6" .
 
@@ -842,15 +842,15 @@ data:ws-030 a ws:DestinasiWisata ;
     ws:lintang "3.5923586282373114"^^xsd:decimal ;
     ws:bujur "98.68077335400976"^^xsd:decimal ;
     ws:petunjukLokasi ""@id ;
-    ws:jamOperasional "Setiap Hari 10.00 - 22.00"@id ;
-    ws:hargaMasuk "90000" ;
-    ws:noHpResmi "-" ;
-    ws:emailResmi "https://www.centrepoint.co.id/stores/toys-baby-game-station/fun-fit" ;
-    ws:instagramResmi "-"^^xsd:anyURI ;
-    ws:memilikiFasilitas "Toilet"@id, "Wahana"@id, "Mesin Arkade"@id ;
-    ws:dapatMelakukan "Bermain"@id, "Berfoto"@id, "Bersantai"@id ;
-    ws:memilikiMedia "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTTRzNq6aidK-auXkLP2JmfBpw3pEESGuIIZa5fV9YvoJJ-RbBFcrvotsA&s=10"^^xsd:anyURI ;
-    ws:ratingPengunjung "3.8"^^xsd:decimal .
+    ws:jamOperasional ""@id ;
+    ws:hargaMasuk "" ;
+    ws:noHpResmi "" ;
+    ws:emailResmi "" ;
+    ws:instagramResmi ""^^xsd:anyURI ;
+    ws:memilikiFasilitas ""@id ;
+    ws:dapatMelakukan "Beribadah"@id ;
+    ws:memilikiMedia "https://commons.wikimedia.org/wiki/Special:FilePath/HKBP_Aek_Dakka%2C_Tapanuli_Tengah_2.jpg"^^xsd:anyURI ;
+    ws:ratingPengunjung "5.0"^^xsd:decimal .
 
 data:ws-031 a ws:DestinasiWisata ;
     ws:idDestinasi "ws-031"^^xsd:string ;
@@ -877,33 +877,33 @@ data:ws-031 a ws:DestinasiWisata ;
 
 data:ws-032 a ws:DestinasiWisata ;
     ws:idDestinasi "ws-032"^^xsd:string ;
-    ws:namaDestinasi "Milky Verse Tebing Tinggi"@id ;
-    ws:namaAlternatif "-"@id ;
-    ws:deskripsiSingkat "Milky Verse Tebing Tinggi merupakan wahana permainan indoor bertema luar angkasa yang terletak di lantai 3 Ramayana Tebing Tinggi dengan menyediakan lebih dari 20 jenis wahana interaktif untuk anak-anak hingga orang dewasa."@id ;
-    ws:deskripsiLengkap "Milky Verse Tebing Tinggi menghadirkan konsep wisata rekreasi keluarga berbasis petualangan antarbintang yang bisa dinikmati oleh pengunjung dari usia 1 tahun hingga dewasa. Tempat bermain ini dilengkapi dengan berbagai fasilitas seru seperti kolam bola, trampolin, seluncuran (spiral slide), dinding panjat bertema planet (planet wall climbing), hingga party room untuk acara spesial. Dibuka secara resmi pada 22 Desember 2024, destinasi ini dirancang tidak hanya sebagai sarana hiburan (healing), tetapi juga tempat bermain sambil belajar yang memberikan sensasi imajinatif ala astronot bagi masyarakat Kota Tebing Tinggi dan sekitarnya."@id ;
-    ws:jenisDestinasi "Buatan"@id ;
-    ws:kataKunci "-"@id ;
-    ws:beradaDi "Kota Tebing Tinggi"@id ;
-    ws:alamat "Jl. Jend. Sudirman, Sri Padang, Kecamatan Rambutan, Kota Tebing Tinggi, Sumatera Utara 20998"@id ;
-    ws:lintang "3.3447750444830175"^^xsd:decimal ;
-    ws:bujur "99.16599073866811"^^xsd:decimal ;
-    ws:petunjukLokasi "Berkendara melalui Jalan Tol Medan–Tebing Tinggi sejauh kurang lebih 82 kilometer menuju Ramayana Tebing Tinggi di Jalan Jenderal Sudirman"@id ;
-    ws:jamOperasional "Setiap Hari 10.00 - 20.00"@id ;
-    ws:hargaMasuk "40000" ;
-    ws:noHpResmi "-" ;
-    ws:emailResmi "-" ;
-    ws:instagramResmi "-"^^xsd:anyURI ;
-    ws:memilikiFasilitas "Toilet"@id, "Wahana"@id, "Mesin Arkade"@id ;
-    ws:dapatMelakukan "Bermain"@id, "Berfoto"@id, "Bersantai"@id ;
-    ws:memilikiMedia "https://img.cnt.traveloka.com/tvlk/xpe-asset/GZtqLuOqb-33qvDmG1FcMeN1eFEH7PVvlsdFr2AUBT39jzSxIGG5kZNhhHY-p7nw/4044798994247/Milky-Verse-Tebing-Tinggi-2164571e-bd72-499d-acbc-06c638750711.jpeg?tr=q-60,c-at_max,w-740,h-500&_src=imagekit"^^xsd:anyURI ;
-    ws:ratingPengunjung "4.1" .
+    ws:namaDestinasi "Gereja Santo Thomas Rasul, Palipi"@id ;
+    ws:namaAlternatif ""@id ;
+    ws:deskripsiSingkat "Gereja Katolik di Siupar, Palipi, Kabupaten Samosir."@id ;
+    ws:deskripsiLengkap "Gereja Santo Thomas Rasul, dengan nama resmi Gereja Santo Thomas Siupar, Paroki Palipi, adalah sebuah gereja paroki Katolik yang terletak di Siupar, Palipi, Samosir, Sumatera Utara, Indonesia. Gereja ini didedikasikan kepada Santo Thomas Rasul. Secara struktural dalam Gereja Katolik, Gereja Santo Thomas Siupar berada di bawah yurisdiksi Keuskupan Agung Medan."@id ;
+    ws:jenisDestinasi "Religi"@id ;
+    ws:kataKunci "Gereja Santo Thomas Rasul, Gereja Santo Thomas Siupar, Palipi, Samosir"@id ;
+    ws:beradaDi "Kabupaten Samosir"@id ;
+    ws:alamat ""@id ;
+    ws:lintang "2.503241"^^xsd:decimal ;
+    ws:bujur "98.813259"^^xsd:decimal ;
+    ws:petunjukLokasi "Berada di Siupar, Kecamatan Palipi, Kabupaten Samosir."@id ;
+    ws:jamOperasional ""@id ;
+    ws:hargaMasuk "" ;
+    ws:noHpResmi "" ;
+    ws:emailResmi "" ;
+    ws:instagramResmi ""^^xsd:anyURI ;
+    ws:memilikiFasilitas ""@id ;
+    ws:dapatMelakukan "Beribadah"@id ;
+    ws:memilikiMedia "https://commons.wikimedia.org/wiki/Special:FilePath/Gereja_Katolik_St._Thomas_Siupar_Paroki_Palipi.jpg"^^xsd:anyURI ;
+    ws:ratingPengunjung "" .
 
 data:ws-033 a ws:DestinasiWisata ;
     ws:idDestinasi "ws-033"^^xsd:string ;
     ws:namaDestinasi "Gunung Sibayak"@id ;
-    ws:namaAlternatif "-"@id ;
-    ws:deskripsiSingkat "Gunung Sibayak adalah gunung berapi stratovolcano aktif setinggi 2.212 mdpl di Kabupaten Karo, Sumatera Utara, yang dijuluki sebagai Gunung Raja oleh masyarakat setempat."@id ;
-    ws:deskripsiLengkap "Terletak sekitar 50 kilometer barat daya Kota Medan, Gunung Sibayak merupakan destinasi vulkanik ikonik yang terakhir kali mengalami letusan pada tahun 1881. Dalam bahasa Karo, kata Sibayak memiliki arti raja, sehingga gunung ini kerap disebut sebagai Gunung Raja. Dikenal sangat ramah bagi pendaki pemula, jalur menuju puncaknya dapat ditempuh dalam waktu sekitar 1 hingga 2 jam saja dari titik awal seperti Desa Jaranguda atau Desa Semangat Gunung. Di area puncaknya yang menyerupai kepala kuda—disebut Takal Kuda—pengunjung disuguhkan kawah aktif yang mengeluarkan uap solfatara dan aroma belerang khas, serta pemandangan megah ke arah Gunung Sinabung di kejauhan. Selain pendakian, kawasan kaki gunung ini terkenal dengan pemandian air panas alami belerang seperti di Lau Sidebuk-Debuk.:"@id ;
+    ws:namaAlternatif ""@id ;
+    ws:deskripsiSingkat "Gunung Sibayak adalah sebuah gunung berapi aktif tipe B berdasarkan catatan PVMBG (berbeda dengan tetangganya di selatan yaitu Gunung Sinabung yang termasuk dalam kategori gunung berapi aktif tipe A berdasarkan catatan…"@id ;
+    ws:deskripsiLengkap "Gunung Sibayak adalah sebuah gunung berapi aktif tipe B berdasarkan catatan PVMBG (berbeda dengan tetangganya di selatan yaitu Gunung Sinabung yang termasuk dalam kategori gunung berapi aktif tipe A berdasarkan catatan PVMBG), yang di mana Gunung Sibayak berlokasi di perbatasan antara Kabupaten Karo dan Kabupaten Deli Serdang, Provinsi Sumatera Utara. Masyarakat Karo menyebut gunung Sibayak dengan sebutan \"gunung raja\". Gunung Sibayak merupakan gunung berapi aktif dan terakhir meletus sekitar tahun 1881 atau sudah lebih dari 140 tahun hingga saat ini. Gunung ini berjarak sekitar 65 kilometer di sebelah barat daya Kota Medan, ibukota Provinsi Sumatera Utara. Pendakian Gunung Sibayak menjadi salah satu gunung di Sumatera Utara yang paling sering dikunjungi. Gunung ini memiliki destinasi wisata cukup lengkap untuk berbagai jenis kegiatan alam. Bagi pendaki pemula maupun wisatawan umum, gunung ini sering dipilih untuk pendakian pulang hari (tektok) untuk menikmati panorama kawah dan pemandangan dari puncak. Selain itu, kawasan puncak juga menjadi lokasi populer untuk berkemah, terutama saat akhir pekan atau musim liburan. Gunung Sibayak juga sering dijadikan pilihan tempat diadakan upcara Hari Kemerdekaan Indonesia. Bagi pecinta alam, Sibayak juga kerap dimanfaatkan sebagai arena mountaineering dan latihan teknis pendakian. Tidak hanya itu, berbagai komunitas pencinta alam menjadikan kawasan ini sebagai lokasi pendidikan dasar dan kegiatan orientasi karena jalurnya relatif aman tetapi tetap menantang. Hutan di sekitar kompleks Gunung Sibayak yang masih asri juga membuka peluang untuk kegiatan eksplorasi dan penelitian lingkungan, sehingga menjadikan Sibayak sebagai salah satu gunung yang paling komplit untuk berbagai tujuan pendakian maupun pendidikan alam. Selain jalur pendakian yang mudah, Gunung Sibayak juga memiliki sejumlah objek wisata alam yang menarik untuk dikunjungi:"@id ;
     ws:jenisDestinasi "Alam"@id ;
     ws:kataKunci "Gunung Sibayak"@id, "Gunung Raja"@id, "Gunung Berapi"@id, "Karo"@id, "Berastagi"@id ;
     ws:beradaDi "Kabupaten Karo"@id ;
@@ -1022,26 +1022,26 @@ data:ws-037 a ws:DestinasiWisata ;
 
 data:ws-038 a ws:DestinasiWisata ;
     ws:idDestinasi "ws-038"^^xsd:string ;
-    ws:namaDestinasi "Kidzlandia Delipark Medan"@id ;
-    ws:namaAlternatif "-"@id ;
-    ws:deskripsiSingkat "Kidzlandia Kidzlandia Delipark Medan adalah arena bermain anak indoor berkonsep fun and edutainment yang terletak di lantai 2 Delipark Mall Medan."@id ;
-    ws:deskripsiLengkap "Kidzlandia Delipark Medan merupakan cabang Kidzlandia pertama di Pulau Sumatera dengan luas area mencapai 1.600 meter persegi dan kapasitas hingga 700 orang. Di tempat ini, anak-anak berusia 1 hingga 12 tahun dapat mengeksplorasi sekitar 18 hingga 20 jenis wahana permainan edukatif dan aktif—seperti kolam bola (ball pit), perosotan (slide), sand pit, trampolin, hingga area role-play seperti dapur dan supermarket. Seluruh fasilitas dirancang aman dan bersih, serta mewajibkan penggunaan kaus kaki anti-selip serta pendampingan orang dewasa demi kenyamanan bermain si kecil."@id ;
-    ws:jenisDestinasi "Buatan"@id ;
-    ws:kataKunci "-"@id ;
-    ws:beradaDi "Kota Medan"@id ;
-    ws:alamat "Delipark Mall Medan, Jl. Guru Patimpus Lt 2, Kesawan, Kecamatan Medan Barat, Kota Medan, Sumatera Utara 20111"@id ;
-    ws:lintang "3.594205366544403"^^xsd:decimal ;
-    ws:bujur "98.67400346750306"^^xsd:decimal ;
-    ws:petunjukLokasi "Berada di Lantai 3A DeliPark Mall yang berlokasi di Jalan Putri Hijau, tepat di seberang JW Marriott Hotel Medan."@id ;
-    ws:jamOperasional "Setiap Hari 10.00 - 22.00"@id ;
-    ws:hargaMasuk "100000" ;
-    ws:noHpResmi "-" ;
-    ws:emailResmi "-" ;
-    ws:instagramResmi "-"^^xsd:anyURI ;
-    ws:memilikiFasilitas "Toilet"@id, "Wahana"@id ;
-    ws:dapatMelakukan "Bermain"@id, "Berfoto"@id, "Bersantai"@id ;
-    ws:memilikiMedia "https://s-light.tiket.photos/t/01E25EBZS3W0FY9GTG6C42E1SE/rsfit19201280gsm/events/2024/05/06/0985f465-f1a9-4048-984a-7d2e063852e0-1714977191899-48b4a7f7201fb1f40e181b0c89255809.png"^^xsd:anyURI ;
-    ws:ratingPengunjung "3.6"^^xsd:decimal .
+    ws:namaDestinasi "HKBP Sipirok"@id ;
+    ws:namaAlternatif "HKPB Sipirok"@id ;
+    ws:deskripsiSingkat "Gereja HKBP Sipirok adalah gereja HKBP pertama yang ada di Tanah Batak terletak di Tapanuli Selatan."@id ;
+    ws:deskripsiLengkap "Gereja HKBP Sipirok adalah gereja HKBP pertama yang ada di Tanah Batak terletak di Tapanuli Selatan. Gereja ini berlokasi di Jalan Rumah Sakit, Kecamatan Sipirok, Tapanuli Selatan. Pembangunan gereja ini diprakarsai oleh misionaris asal Belanda, Gerrit Van Asselt, pendeta asal Belanda yang diutus oleh badan Zending Ermelo ke tanah batak pada tahun 1857 dan menjadi misionaris pertama yang berhasil membaptis orang batak. Gereja ini didirikan pada tahun 1864 dan telah dilakukan renovasi berulang kali. Meskipun pembangunannya diprakarsai oleh pendeta Belanda, gereja ini juga mendapatkan pengaruh dari pendeta-pendeta asal Jerman yang berkontribusi juga dalam perkembangan agama Kristen di Tanah Batak. Kompleks gereja ini memiliki luas 7 Ha, terdapat gedung gereja, makam para missionaris, rumah pendeta, area persawahan milik gereja, dan tugu peringatan berdirinya gereja. Di kompleks ini juga pernah berdiri balai kesehatan milik HKBP, yang sekarang telah dijadikan pemerintah menjadi RSUD Sipirok. Berdirinya gereja ini diawali dengan rapat pelayanan di Sipirok oleh empat misionaris asal Eropa pada 7 Oktober 1861 mengenai pembagian wilayah penginjilan di Tapanuli. Tanggal tersebut dijadikan HKBP sebagai tanggal kelahirannya. Hasil rapat di Sipirok menyebabkan berdirinya gereja HKBP Sipirok pada bulan Mei 1864, dan menjadi gereja HKBP pertama di dunia. Bangunan gereja ini memiliki gaya arsitektur klasik-modern zaman Belanda, berlantaikan papan. Sampai saat ini, gereja ini masih berdiri kokoh dan masih dijadikan tempat beribadah oleh masyarakat. Gereja ini telah dijadikan oleh pemerintah menjadi tempat cagar budaya Provinsi Sumatera Utara. Walaupun telah berusia ratusan tahun, bangunan ini masih berdiri kokoh dan masih dipakai oleh Masyarakat sebagai tempat beribadah orang Kristen. Gereja ini adalah gereja induk (sabungan) resort sipirok dengan gereja pagarannya sebanyak 13 gereja. Gereja ini telah dijadikan oleh pemerintah menjadi tempat cagar budaya Provinsi Sumatera Utara."@id ;
+    ws:jenisDestinasi "Religi"@id ;
+    ws:kataKunci "HKBP Sipirok, Gereja HKBP Sipirok, Sipirok, Tapanuli Selatan"@id ;
+    ws:beradaDi "Kabupaten Tapanuli Selatan"@id ;
+    ws:alamat ""@id ;
+    ws:lintang "1.603872"^^xsd:decimal ;
+    ws:bujur "99.268031"^^xsd:decimal ;
+    ws:petunjukLokasi "Berada di Jalan Rumah Sakit, Kecamatan Sipirok, Kabupaten Tapanuli Selatan."@id ;
+    ws:jamOperasional ""@id ;
+    ws:hargaMasuk "" ;
+    ws:noHpResmi "" ;
+    ws:emailResmi "" ;
+    ws:instagramResmi ""^^xsd:anyURI ;
+    ws:memilikiFasilitas ""@id ;
+    ws:dapatMelakukan "Beribadah"@id ;
+    ws:memilikiMedia "https://commons.wikimedia.org/wiki/Special:FilePath/HKBP_Sipirok%2C_Res._Sipirok_01.jpg"^^xsd:anyURI ;
+    ws:ratingPengunjung "4.8"^^xsd:decimal .
 
 data:ws-039 a ws:DestinasiWisata ;
     ws:idDestinasi "ws-039"^^xsd:string ;
@@ -1052,18 +1052,18 @@ data:ws-039 a ws:DestinasiWisata ;
     ws:jenisDestinasi "Alam"@id ;
     ws:kataKunci "-"@id ;
     ws:beradaDi "Kabupaten Tapanuli Utara"@id ;
-    ws:alamat "Sibaragas, Kecamatan Pagaran, Kabupaten Tapanuli Utara, Sumatera Utara"@id ;
-    ws:lintang "2.158750464020816"^^xsd:decimal ;
-    ws:bujur "98.92999996760678"^^xsd:decimal ;
-    ws:petunjukLokasi "Perjalanan darat dari Kota Medan menuju Gunung (Dolok) Imun di Kabupaten Tapanuli Utara ditempuh melalui Jalan Tol Medan–Tebing Tinggi, lalu dilanjutkan sepanjang Jalan Lintas Sumatera ke arah Pematang Siantar dan Parapat hingga mencapai kawasan Kecamatan Pagaran atau Sipoholon."@id ;
-    ws:jamOperasional "Selalu Buka"@id ;
-    ws:hargaMasuk "0" ;
-    ws:noHpResmi "-" ;
-    ws:emailResmi "-" ;
-    ws:instagramResmi "-"^^xsd:anyURI ;
-    ws:memilikiFasilitas "-"@id ;
-    ws:dapatMelakukan "Berfoto"@id, "Menikmati Pemandangan"@id, "Berkemah"@id ;
-    ws:memilikiMedia "https://inimedan.com/wp-content/uploads/2023/06/Digunduli2.jpg"^^xsd:anyURI ;
+    ws:alamat ""@id ;
+    ws:lintang "2.158"^^xsd:decimal ;
+    ws:bujur "98.93"^^xsd:decimal ;
+    ws:petunjukLokasi ""@id ;
+    ws:jamOperasional ""@id ;
+    ws:hargaMasuk "" ;
+    ws:noHpResmi "" ;
+    ws:emailResmi "" ;
+    ws:instagramResmi ""^^xsd:anyURI ;
+    ws:memilikiFasilitas ""@id ;
+    ws:dapatMelakukan ""@id ;
+    ws:memilikiMedia ""^^xsd:anyURI ;
     ws:ratingPengunjung "3.9"^^xsd:decimal .
 
 data:ws-040 a ws:DestinasiWisata ;
@@ -1094,7 +1094,7 @@ data:ws-041 a ws:DestinasiWisata ;
     ws:namaDestinasi "Kuil Shri Mariamman"@id ;
     ws:namaAlternatif "-"@id ;
     ws:deskripsiSingkat "Kuil Shri Mariamman adalah kuil Hindu tertua di Petisah Tengah, Medan Petisah, Medan."@id ;
-    ws:deskripsiLengkap "Berlokasi di kawasan Kampung Madras (Little India), Kuil Shri Mariamman merupakan kuil Hindu tertua di Sumatera Utara yang berdiri sejak tahun 1884 oleh komunitas awal etnis Tamil. Bangunan ini didedikasikan untuk memuja Dewi Mariamman, dewi yang diyakini masyarakat memiliki kekuatan menyembuhkan penyakit dan mendatangkan hujan. Dari segi arsitektur, kuil ini mengusung gaya Dravidia khas India Selatan yang ditandai dengan menara gopuram bertingkat di bagian pintu masuknya serta dihiasi patung-patung dewa-dewi beraneka warna. Selain berfungsi sebagai pusat kegiatan keagamaan umat Hindu—terutama saat perayaan besar seperti Deepavali dan Thaipusam—kuil ini juga menjadi simbol sejarah masuknya masyarakat keturunan India di Tanah Deli serta ikon kerukunan antarumat beragama di Kota Medan."@id ;
+    ws:deskripsiLengkap "Kuil Shri Mariamman adalah kuil Hindu tertua di Petisah Tengah, Medan Petisah, Medan. Kuil ini dibangun pada tahun 1881 untuk memuja dewi Mariamman. Kuil ini terletak di kawasan yang dikenal sebagai Kampung Madras. Kuil yang menstanakan lima dewa, masing-masing Dewa Shri Vinayagar, Shri Murugan, dan Dewi Shri Mariamman (Durga dalam wujud Kali) itu dikelola salah seorang keluarga pemilik perusahaan besar Texmaco, Lila Marimutu. Pintu gerbangnya dihiasi sebuah gopuram, yaitu menara bertingkat yang biasanya dapat ditemukan di pintu gerbang kuil-kuil Hindu dari India Selatan atau semacam gapura. Kuil ini sering dipenuhi umat Hindu apabila festival Deepawali,Thaipusam dan Theemithi (Pesta tahunan Kuil) diadakan di sini. Sejarah Kuil ini dibangun pada tahun 1884 dan merupakan kuil Hindu tertua di kota Medan yang berfungsi sebagai tempat pemujaan Dewi Mariamman. Kuil ini dibangun melalui upaya bersama para pemukim Tamil awal di Medan, yang pada waktu itu bekerja di perusahaan perkebunan yang berlokasi di Sumatera Utara. Kuil ini juga dipimpin oleh Sami Rangga Naiker serta Somusundram Vaithiyar dan Ramasamy Vaithiyar, yang juga merupakan donatur dalam pembangunan kuil ini. Kuil Sri Mariamman terletak di Jalan Teuku Umar No. 18,. Kuil ini berada di Kampung Madras, sebuah kawasan di Medan yang mayoritas penduduknya adalah orang Tamil beragama Hindu. Kuil ini berdekatan dengan Sun Plaza. Kuil ini memiliki arsitektur yang sama dengan kuil-kuil Hindu di India Selatan dan Sri Lanka, berbeda dengan beberapa kuil Hindu di bagian lain Indonesia yang mengikuti gaya arsitektur Jawa atau Bali. Kuil Sri Mariamman mulai diresmikan penggunaannya untuk Hindu Dharma pada tanggal 23 Oktober 1991 oleh mantan Gubernur Sumatera Utara H. Raja Inal Siregar. Arsitektur Kuil ini dibina dengan Arsitektur Dravidia.Kuil ini memiliki struktur yang dihiasi dengan ornamen-ornamen rumit, patung dewa-dewi Hindu, serta menara gopuram yang menjulang tinggi di pintu masuk, yang merupakan ciri khas kuil Hindu di India Selatan. Gopuram tersebut diukir dengan berbagai figur mitologis dan simbol-simbol agama Hindu yang penuh warna."@id ;
     ws:jenisDestinasi "Religi"@id ;
     ws:kataKunci "Kampung Madras"@id, "Kuil Hindu"@id, "Gopuram"@id ;
     ws:beradaDi "Kota Medan"@id ;
@@ -1140,7 +1140,7 @@ data:ws-043 a ws:DestinasiWisata ;
     ws:namaDestinasi "Masjid Raya Al Osmani"@id ;
     ws:namaAlternatif "Masjid Labuhan"@id ;
     ws:deskripsiSingkat "Masjid Al Osmani Medan Labuhan adalah masjid di Jalan K.L. Yos Sudarso, Kelurahan Pekan Labuhan, sekitar 20 km di utara Kota Medan."@id ;
-    ws:deskripsiLengkap "Terletak di kawasan Pekan Labuhan, Masjid Raya Al-Osmani merupakan ikon sejarah Islam tertua di Kota Medan yang didirikan pada tahun 1854 oleh Raja Deli ketujuh, Sultan Osman Perkasa Alam. Awalnya dibangun menggunakan bahan kayu pilihan berukuran 16x16 meter, masjid ini kemudian dipugar menjadi bangunan permanen bergaya megah antara tahun 1870–1872 oleh anaknya, Sultan Mahmud Perkasa Alam, di bawah rancangan arsitek asal Jerman G.D. Langereis. Keunikan bangunan ini terletak pada perpaduan arsitektur yang memadukan unsur Tiongkok, India, Eropa, Timur Tengah, dan Melayu, dengan dominasi warna kuning khas kedaulatan Melayu serta kubah tembaga seberat 2,5 ton. Selain menjadi pusat ibadah, kompleks masjid yang telah ditetapkan sebagai cagar budaya ini juga menyimpan makam dari lima raja Kesultanan Deli."@id ;
+    ws:deskripsiLengkap "Masjid Al-Osmani (Aksara Jawi:مسجد العثماني) adalah sebuah masjid di Medan, Sumatera Utara. Masjid ini juga di kenal dengan sebutan Masjid Labuhan karena lokasinya yang berada di kecamatan Medan Labuhan. Masjid ini terletak di jalan K.L. Yos Sudarso Kel. Pekan Labuhan sekitar 20 kilometer sebelah utara Kota Medan. Masjid ini adalah masjid tertua di kota Medan. Masjid Al-Osmani dibangun pada 1854 oleh Raja Deli ketujuh, yakni Sultan Osman Perkasa Alam dengan menggunakan bahan kayu pilihan. Kemudian pada 1870 hingga 1872 masjid yang terbuat dari bahan kayu itu dibangun menjadi permanen oleh anak Sultan Osman, yakni Sultan Mahmud Perkasa Alam yang juga menjadi Raja Deli kedelapan. Hingga kini, selain digunakan sebagai tempat beribadah, masjid itu juga dipakai sebagai tempat peringatan dan perayaan hari besar keagamaan dan tempat pemberangkatan menuju pemondokan jemaah haji yang berasal dari Medan Utara. Di masjid ini juga terdapat lima makam raja deli yang dikuburkan yakni Tuanku Panglima Pasutan (Raja Deli IV), Tuanku Panglima Gandar Wahid (Raja Deli V), Sulthan Amaluddin Perkasa Alam (Raja Deli VI), Sultan Osman Perkasa Alam, dan Sulthan Mahmud Perkasa Alam. Arsitektural Ketika pertama kali dibangun pada tahun 1854, ukuran Masjid Al-Osmani hanya 16 x 16 meter dengan material utama dari kayu. Pada tahun 1870, Sultan Deli VIII Mahmud Al Rasyid melakukan pemugaran besar-besaran terhadap bangunan masjid yang diarsiteki arsitek asal Jerman, GD Langereis. Selain dibangun secara permanen, dengan material dari Eropa dan Persia, ukurannya juga diperluas menjadi 26 x 26 meter. Renovasi itu selesai tahun 1872. Beberapa kali pemugaran terhadap bangunan masjid ini telah dilaksanakan tanpa menghilangkan arsitektur asli yang merupakan perpaduan bangunan Timur Tengah, India, Spanyol, Melayu, dan Tiongkok. Kombinasi arsitektur empat negara itu misalnya pada pintu masjid berornamen Tiongkok, ukiran bangunan bernuansa India, dan arsitektur bernuansa Eropa, dan ornamen-ornamennya bernuansa Timur Tengah. Rancangannya unik, bergaya India dengan kubah tembaga bersegi delapan. Kubah yang terbuat dari kuningan tersebut beratnya mencapai 2,5 ton"@id ;
     ws:jenisDestinasi "Religi"@id ;
     ws:kataKunci "-"@id ;
     ws:beradaDi "Kota Medan"@id ;
@@ -1148,61 +1148,61 @@ data:ws-043 a ws:DestinasiWisata ;
     ws:lintang "3.732376496437109"^^xsd:decimal ;
     ws:bujur "98.67627567125885"^^xsd:decimal ;
     ws:petunjukLokasi "Berada di Jalan K.L. Yos Sudarso, Kelurahan Pekan Labuhan, sekitar 20 km di utara Kota Medan."@id ;
-    ws:jamOperasional "Selalu Buka"@id ;
-    ws:hargaMasuk "0" ;
-    ws:noHpResmi "-" ;
-    ws:emailResmi "http://www.medanwisata.com/2014/03/masjid-raya-al-osmani-medan-sumatera.html" ;
-    ws:instagramResmi "-"^^xsd:anyURI ;
-    ws:memilikiFasilitas "Toilet"@id, "Tempat Parkir"@id ;
-    ws:dapatMelakukan "Beribadah"@id, "Berdoa"@id, "Berziarah"@id, "Berfoto"@id ;
+    ws:jamOperasional ""@id ;
+    ws:hargaMasuk "" ;
+    ws:noHpResmi "" ;
+    ws:emailResmi "" ;
+    ws:instagramResmi ""^^xsd:anyURI ;
+    ws:memilikiFasilitas ""@id ;
+    ws:dapatMelakukan "Beribadah"@id ;
     ws:memilikiMedia "https://commons.wikimedia.org/wiki/Special:FilePath/Al-Osmani_Mosque%2C_Medan%2C_Indonesia.jpg"^^xsd:anyURI ;
     ws:ratingPengunjung "4.8"^^xsd:decimal .
 
 data:ws-044 a ws:DestinasiWisata ;
     ws:idDestinasi "ws-044"^^xsd:string ;
-    ws:namaDestinasi "KiDZiLLA Centre Point"@id ;
-    ws:namaAlternatif "-"@id ;
-    ws:deskripsiSingkat "KiDZiLLA Centre Point Medan adalah arena bermain anak indoor berbasis edukasi yang terletak di Mall Centre Point, Kota Medan, dengan berbagai wahana interaktif seperti kolam bola, perosotan, dan trampolin."@id ;
-    ws:deskripsiLengkap "Berlokasi di lantai 2 Mall Centre Point, Jl. Jawa No. 8, Kota Medan, KiDZiLLA hadir sebagai destinasi playland dan edutainment ramah anak yang dirancang untuk mendukung pertumbuhan motorik serta kreativitas si kecil melalui lingkungan yang aman. Di area bermain ini, anak-anak dapat menikmati ragam fasilitas menarik—mulai dari kolam mandi bola berwarna-warni, seluncuran, terowongan ketangkasan, hingga permainan interaktif berbasis layar digital. Tempat ini menjadi pilihan favorit keluarga untuk menghabiskan waktu berkualitas (family time) di tengah pusat kota Medan dengan harga tiket masuk yang cukup terjangkau."@id ;
-    ws:jenisDestinasi "Buatan"@id ;
-    ws:kataKunci "-"@id ;
+    ws:namaDestinasi "Masjid Ghaudiyah"@id ;
+    ws:namaAlternatif "Masjid India"@id ;
+    ws:deskripsiSingkat "Masjid Ghaudiyah atau Masjid India adalah sebuah masjid yang terletak di Jalan KH Zainul Arifin No 200A, Petisah Tengah, Kecamatan Medan Petisah, Kota Medan."@id ;
+    ws:deskripsiLengkap "Masjid Ghaudiyah atau Masjid India adalah sebuah masjid yang terletak di Jalan KH Zainul Arifin No 200A, Petisah Tengah, Kecamatan Medan Petisah, Kota Medan. Sejarah Masjid ini pertama kali di bangun pada tahun 1887 di atas tanah seluas sekitar 3313 meter persegi yang diberikan oleh Sultan Mahmud Al Rasyid bagi masyarakat muslim asal India Selatan di Kota Medan. Pada tahun 1980-an bangunan masjid digeser ke belakang karena adanya pelebaran jalan. Karena itulah, ukuran masjid yang semula luas kini menjadi kecil. Saat ini luas Masjid Ghaudiyah berkisar 10 x 20 meter. Masjid tersebut relatif kecil bagi sebuah masjid yang memiliki sejarah panjang. Masjid Ghaudiyah di kelola oleh Yayasan Masjid Muslim India Selatan (Yayasan South Indian Moslem Mosque) bersama dengan Masjid Jamik Kebun Bunga. Pada Halaman belakang Masjid Ghaudiyah terdapat Pemakaman khusus warga keturunan India muslim asal India Selatan. Sejak Tahun 1925 Masjid ini masih terus menjalankan tradisi Bagi-bagi Bubur Sup Khas India dan hidangan Buka Puasa Nasi Briyani. Kegiatan tidaklah mengkhususkan untuk para jamaah yang merupakan etnis India Muslim saja, akan tetapi yayasan tetap memberikan kebebasan kepada seluruh umat Islam dari berbagai penjuru yang hendak melaksanakan ibadah sholat. Oleh sebab itu keluasan asal jamaah Masjid Ghaudiyah banyak dari umat Muslim yang bekerja atau sebagai masyarakat tetap di daerah masjid. Saat pelaksanaan Sholat Jum’at banyak juga para jamaah yang berasal dari Cambridge Hotel Medan, karena jarak yang tidak terlalu jauh dari masjid. Sedangkan petugas khatib dan imam sudah dijadwal yang merupakan jadwal tahunan Kegiatan pengajian rutin dilaksanakan empat kali dalam satu bulan yakni pada setiap hari Senin ba’da Maghrib sampai waktu Isya. Selain kajian rutin, Yayasan India Muslim juga membuat program tausiyah, dzikir, tablig akbar dan muhasabah pada harihari besar seperti pada saat akhir tahun"@id ;
+    ws:jenisDestinasi "Religi"@id ;
+    ws:kataKunci "Masjid Ghaudiyah, Masjid India, Medan Petisah, masjid bersejarah"@id ;
     ws:beradaDi "Kota Medan"@id ;
-    ws:alamat "Jl. Jawa No.8, Gg. Buntu, Kecamatan Medan Timur, Kota Medan, Sumatera Utara 20236"@id ;
-    ws:lintang "3.5919270205619593"^^xsd:decimal ;
-    ws:bujur "98.68102012517477"^^xsd:decimal ;
-    ws:petunjukLokasi "Terletak di dalam Mall Centre Point Medan di Jalan Jawa, Gang Buntu, Medan Timur, yang berjarak sekitar 10–15 menit berkendara dari pusat Kota Medan."@id ;
-    ws:jamOperasional "Setiap Hari 10.00 - 22.00"@id ;
-    ws:hargaMasuk "100000" ;
-    ws:noHpResmi "082170657867" ;
-    ws:emailResmi "https://www.centrepoint.co.id/stores/toys-baby-game-station/kidzilla" ;
-    ws:instagramResmi "-"^^xsd:anyURI ;
-    ws:memilikiFasilitas "Toilet"@id, "Wahana"@id ;
-    ws:dapatMelakukan "Berfoto"@id, "Bermain"@id, "Bersantai"@id ;
-    ws:memilikiMedia "https://cdn.sanity.io/images/gzyamhf5/production/8b95c3b05b6b6aff4e5889ba965f3a9c37986697-1800x1200.webp?w=1200&fit=max&auto=format"^^xsd:anyURI ;
-    ws:ratingPengunjung "4.5"^^xsd:decimal .
+    ws:alamat ""@id ;
+    ws:lintang "3.584162"^^xsd:decimal ;
+    ws:bujur "98.668434"^^xsd:decimal ;
+    ws:petunjukLokasi "Berada di Jalan KH Zainul Arifin No. 200A, Petisah Tengah, Kecamatan Medan Petisah, Kota Medan."@id ;
+    ws:jamOperasional ""@id ;
+    ws:hargaMasuk "" ;
+    ws:noHpResmi "" ;
+    ws:emailResmi "" ;
+    ws:instagramResmi ""^^xsd:anyURI ;
+    ws:memilikiFasilitas ""@id ;
+    ws:dapatMelakukan "Beribadah"@id ;
+    ws:memilikiMedia ""^^xsd:anyURI ;
+    ws:ratingPengunjung "5.0"^^xsd:decimal .
 
 data:ws-045 a ws:DestinasiWisata ;
     ws:idDestinasi "ws-045"^^xsd:string ;
-    ws:namaDestinasi "Timezone Brastagi Cemara Medan"@id ;
-    ws:namaAlternatif "-"@id ;
-    ws:deskripsiSingkat "Timezone Brastagi Supermarket Cemara Medan adalah destinasi hiburan keluarga modern yang berlokasi di dalam kompleks Brastagi Supermarket Cemara Medan, menghadirkan beragam pilihan permainan arcade seru untuk anak-anak hingga dewasa."@id ;
-    ws:deskripsiLengkap "Arena bermain ini menjadi bagian dari konsep baru cabang ke-6 Brastagi Supermarket yang diresmikan pada akhir Oktober 2024. Di tempat ini, pengunjung dapat menikmati berbagai wahana permainan interaktif—mulai dari mesin capit boneka, permainan basket, hingga deretan game arcade modern yang tiketnya dapat dikumpulkan untuk ditukar dengan berbagai hadiah menarik. Kehadirannya melengkapi pengalaman belanja harian keluarga di supermarket tersebut sehingga pengunjung bisa berbelanja kebutuhan pokok sekaligus berekreasi dalam satu lokasi yang nyaman dan mudah dijangkau."@id ;
-    ws:jenisDestinasi "Buatan"@id ;
-    ws:kataKunci "-"@id ;
-    ws:beradaDi "Kota Medan"@id ;
-    ws:alamat "Jl. Cemara No.57, Pulo Brayan Darat II, Kecamatan Medan Timur, Kota Medan, Sumatera Utara 20239"@id ;
-    ws:lintang "3.6295109207517378"^^xsd:decimal ;
-    ws:bujur "98.69228885401013"^^xsd:decimal ;
-    ws:petunjukLokasi "Terletak di Jalan Cemara, Pulo Brayan Bengkel Baru, Kecamatan Medan Timur, Kota Medan"@id ;
-    ws:jamOperasional "Setiap Hari 10.00 - 22.00"@id ;
-    ws:hargaMasuk "80000" ;
-    ws:noHpResmi "-" ;
-    ws:emailResmi "https://www.timezonegames.com/en-id/" ;
-    ws:instagramResmi "https://www.instagram.com/timezoneid"^^xsd:anyURI ;
-    ws:memilikiFasilitas "Toilet"@id, "Mesin Arkade"@id, "Wahana"@id ;
-    ws:dapatMelakukan "Bermain"@id, "Berfoto"@id, "Bersantai"@id ;
-    ws:memilikiMedia "https://img.cnt.traveloka.com/tvlk/xpe-asset/GZtqLuOqb-33qvDmG1FcMeN1eFEH7PVvlsdFr2AUBT39jzSxIGG5kZNhhHY-p7nw/2002102548445/Timezone-Plaza-Medan-Fair-4th-Floor-Card-Top-up-3dd76ce5-1e96-490d-adcf-daab8a13b248.jpeg?tr=q-60,c-at_max,w-540,h-960&_src=imagekit"^^xsd:anyURI ;
-    ws:ratingPengunjung "4.5" .
+    ws:namaDestinasi "Masjid Jamik Ismailiyah"@id ;
+    ws:namaAlternatif "Masjid Jamik lsmailiyah"@id ;
+    ws:deskripsiSingkat "Masjid Jamik Ismailiyah adalah masjid yang berada di Desa Beringin, Kecamatan Beringin, Kabupaten Deli Serdang."@id ;
+    ws:deskripsiLengkap "Masjid Jamik Ismailiyah adalah masjid yang berada di Desa Beringin, Kecamatan Beringin, Kabupaten Deli Serdang. Bagian utara dari masjid dibatasi oleh Sungai Bedagai dan rumah penduduk sedangkan bagian timur berbatasan dengan jalan raya dan perkebunan penduduk. Bagian barat juga berbatasan dengan perkebunan, sedangkan bagian selatan berbatasan dengan bekas istana Kerajaan Negeri Bedagai. Luas lahan Masjid Jamik lsrnailiyah sekitar 900 meter persegi dengan masjid sepanjang 24 meter, Iebar 20 meter, dan tinggi 30 meter. Bangunan masjid dipagari tembok dan besi dan memiliki gapura bertiang. Bagian depan atas dari masjid berbentuk lengkungan yang meruncing dengan atap seng serta bertingkat dua. Atap bagian pinggir di tiap tingkat berhiaskan tumpal dari kayu berwarna kuning. Di halaman masjid terdapat pagar tembok setinggi 1,5 meter yang mengelilingi masjid sebagai penahan dan tempat duduk. Bentuk pagar tembok menyerupai kursi panjang dengan sandaran. Jarak antara pagar tembok dengan bangunan masjid sekitar 3,5 meter. Lantai halaman masjid terbuat dari bata yang ditata rapi dengan tinggi yang lebih rendah 60 cm dari lantai masjid. Masjid jamik Ismailiyah menghadap ke arah timur. Sejarah Masjid Jamik Ismailiyah dibangun pada tahun I884. Masjid ini merupakan masjid kerajaan karena istananya terletak di samping kiri masjid (di sebelah selatan). Istana dibangun pada tahun1989. Sekarang tinggal bekasnya saja, struktur bata masih tampak di sana-sin Masjid telah mengalami pemugaran dua kali. Tahun 1937 penggantian atap yang semula dari genteng kemudian diganti dengan seng. Selain itu, posisinya ditinggikan sampai melebihi bangunanistana yang pada waktu masih berdiri. Kubahnya juga diganti dengan ukuran yang lebih besar. Bentuk atapnya tumpang seperti semula. Tahun 1982 dibangun menara dan penggantian lantai dibagian dalam masjid. Lantai semula dari tegel berukuran 30 x 30 m, yang masih terlihat di serambidan bagian belakang bangunan masjid. Selanjutnya tegel diganti dengan keramik. Bentuk lengkung pada tembok yang merupakan pagar serambi masjid yaitu di bagiandepan, samping kiri, dan kanan sudah diubah bentuknya dan adanya penambahan tiang (pilar) yangdibuat dengan bentuk yang terlihat sekarang. Adapun bentuk aslinya masih tampak pada bagianmasjid yaitu berpagar tembok dengan bagian atas bergelombang dan memiiiki dua tiang sebagaipenyangga atap. Pada dinding bagian…"@id ;
+    ws:jenisDestinasi "Religi"@id ;
+    ws:kataKunci "Masjid Jamik Ismailiyah, Beringin, Deli Serdang, masjid bersejarah"@id ;
+    ws:beradaDi "Kabupaten Deli Serdang"@id ;
+    ws:alamat ""@id ;
+    ws:lintang "3.496595"^^xsd:decimal ;
+    ws:bujur "99.191907"^^xsd:decimal ;
+    ws:petunjukLokasi "Berada di Desa Beringin, Kecamatan Beringin, Kabupaten Deli Serdang, di tepi Sungai Bedagai."@id ;
+    ws:jamOperasional ""@id ;
+    ws:hargaMasuk "" ;
+    ws:noHpResmi "" ;
+    ws:emailResmi "" ;
+    ws:instagramResmi ""^^xsd:anyURI ;
+    ws:memilikiFasilitas ""@id ;
+    ws:dapatMelakukan "Beribadah"@id ;
+    ws:memilikiMedia ""^^xsd:anyURI ;
+    ws:ratingPengunjung "" .
 
 data:ws-046 a ws:DestinasiWisata ;
     ws:idDestinasi "ws-046"^^xsd:string ;
@@ -1232,7 +1232,7 @@ data:ws-047 a ws:DestinasiWisata ;
     ws:namaDestinasi "Masjid Raya Stabat"@id ;
     ws:namaAlternatif "-"@id ;
     ws:deskripsiSingkat "Masjid Raya Stabat adalah salah satu masjid bersejarah yang ada di Kabupaten Langkat, Sumatera Utara selain Masjid Azizi yang ada di Tanjung Pura."@id ;
-    ws:deskripsiLengkap "Masjid Raya Stabat adalah salah satu masjid bersejarah yang ada di Kabupaten Langkat, Sumatera Utara selain Masjid Azizi yang ada di Tanjung Pura. Masjid ini memiliki corak Melayu yang khas, dapat dilihat dari warna masjid yang didominasi warna kuning dan hijau, warna kebesaran suku Melayu. Masjid ini berada di Kota Stabat, ibu kota Kabupaten Langkat, Sumatera Utara. Tepat di sisi sungai Wampu, tepatnya di pinggir Jalan Lintas Sumatra, Medan-Aceh. Masjid bersejarah ini dibangun dua tahun setelah pembangunan Masjid Raya Azizi. Tepatnya pada tahun 1904, mulai dikerjakan pembangunannya Semasa Kejuruan Stabat Tengku Mhd Chalid. Pada mulanya bangunan masjid ini terdiri dari bangunan induk seluas 20 meter persegi. Kemudian ditambah teras dua meter keliling dengan satu buah menara. Saat itu jama’ah yang dapat ditampung hanya berkisar 300 orang. Masjid Raya Stabat ini telah berkembang pesat, luas areal masjidnya saat ini menjadi 4.454 meter persegi dengan daya tampung mencapai 1350 jamaah."@id ;
+    ws:deskripsiLengkap "Masjid Raya Stabat adalah salah satu masjid bersejarah yang ada di Kabupaten Langkat, Sumatera Utara selain Masjid Azizi yang ada di Tanjung Pura. Masjid ini memiliki corak Melayu yang khas, dapat dilihat dari warna masjid yang didominasi warna kuning dan hijau, warna kebesaran suku Melayu. Masjid ini berada di Kota Stabat, ibu kota Kabupaten Langkat, Sumatera Utara. Tepat di sisi sungai Wampu, tepatnya di pinggir Jalan Lintas Sumatra, Medan-Aceh. Masjid bersejarah ini dibangun dua tahun setelah pembangunan Masjid Raya Azizi. Tepatnya pada tahun 1904, mulai dikerjakan pembangunannya Semasa Kejuruan Stabat Tengku Mhd Chalid. Pada mulanya bangunan masjid ini terdiri dari bangunan induk seluas 20 meter persegi. Kemudian ditambah teras dua meter keliling dengan satu buah menara. Saat itu jamaâ€™ah yang dapat ditampung hanya berkisar 300 orang. Masjid Raya Stabat ini telah berkembang pesat, luas areal masjidnya saat ini menjadi 4.454 meter persegi dengan daya tampung mencapai 1350 jamaah."@id ;
     ws:jenisDestinasi "Religi"@id ;
     ws:kataKunci "Stabat"@id, "Langkat"@id, "Arsitektur Melayu"@id ;
     ws:beradaDi "Kabupaten Langkat"@id ;
@@ -1275,26 +1275,26 @@ data:ws-048 a ws:DestinasiWisata ;
 
 data:ws-049 a ws:DestinasiWisata ;
     ws:idDestinasi "ws-049"^^xsd:string ;
-    ws:namaDestinasi "Milky Verse Medan"@id ;
-    ws:namaAlternatif "-"@id ;
-    ws:deskripsiSingkat "Milky Verse Medan adalah taman bermain (playground) dalam ruangan bertema luar angkasa yang terletak di lantai 3 Ramayana Teladan Medan dengan puluhan wahana seru untuk anak-anak hingga orang dewasa."@id ;
-    ws:deskripsiLengkap "Milky Verse Medan menghadirkan konsep petualangan antarbintang yang unik dengan menyediakan lebih dari 30 jenis permainan—mulai dari kolam bola yang luas, berbagai tipe perosotan (rainbow slide), trampolin, ninja warrior, area mandi pasir, hingga sepeda gantung. Arena bermain ini dirancang ramah untuk segala usia (dari anak-anak hingga dewasa) dengan mengutamakan standar kebersihan yang rutin dijaga setiap harinya. Pengunjung dapat menikmati seluruh fasilitas ini dengan harga tiket yang terjangkau, lengkap dengan fasilitas tambahan seperti kaus kaki gratis serta berbagai promo menarik yang sering dihadirkan."@id ;
-    ws:jenisDestinasi "Buatan"@id ;
-    ws:kataKunci "-"@id ;
-    ws:beradaDi "Kota Medan"@id ;
-    ws:alamat "Jl. Sisingamangaraja, Teladan Bar., Kecamatan Medan Kota, Kota Medan, Sumatera Utara 20214"@id ;
-    ws:lintang "3.5657321093515546"^^xsd:decimal ;
-    ws:bujur "98.6924996098322"^^xsd:decimal ;
-    ws:petunjukLokasi "berlokasi di lantai 3 Ramayana Teladan, Jalan Sisingamangaraja, Teladan Barat, Kecamatan Medan Kota, yang dapat ditempuh lurus ke arah selatan dari pusat Kota Medan."@id ;
-    ws:jamOperasional "Setiap Hari 10.00 - 21.30"@id ;
-    ws:hargaMasuk "50000" ;
-    ws:noHpResmi "-" ;
-    ws:emailResmi "-" ;
-    ws:instagramResmi "-"^^xsd:anyURI ;
-    ws:memilikiFasilitas "Toilet"@id, "Wahana"@id, "Mesin Arkade"@id ;
-    ws:dapatMelakukan "Bermain"@id, "Berfoto"@id, "Bersantai"@id ;
-    ws:memilikiMedia "https://img.cnt.traveloka.com/tvlk/xpe-asset/GZtqLuOqb-33qvDmG1FcMeN1eFEH7PVvlsdFr2AUBT39jzSxIGG5kZNhhHY-p7nw/3108217216229/MILKY-VERSE-MEDAN-540b296e-ccd3-42d3-8d15-9e48cd864e41.jpeg?_src=imagekit&tr=c-at_max,h-250,q-80,w-414"^^xsd:anyURI ;
-    ws:ratingPengunjung "4.5"^^xsd:decimal .
+    ws:namaDestinasi "Masjid Sulaimaniyah"@id ;
+    ws:namaAlternatif ""@id ;
+    ws:deskripsiSingkat "Masjid Sulaimaniyah merupakan sebuah masjid raya yang berada di kawasan Deli Serdang, Sumatera Utara."@id ;
+    ws:deskripsiLengkap "Masjid Sulaimaniyah merupakan sebuah masjid raya yang berada di kawasan Deli Serdang, Sumatera Utara. Masjid ini merupakan masjid bersejarah yang didirikan pada tahun 1322 H/1901 M oleh Sultan Sulaiman Alamsyah (Sultan Serdang). Masjid ini dalam pendanaannya ditanggung oleh Sultan Serdang. Hampir seluruh bahan bangunan yang digunakan berasal dari dalam negeri, kecuali marmer yang dipesan dari luar negeri. Selepas wafatnya Sultan Serdang, pendanaan masjid tetap dilanjutkan pembiayaannya oleh keluarga sultan. Sejarah Masjid Raya Sulaimaniyah merupakan masjid peninggalan dari Kesultanan Serdang. Masjid ini juga dapat dikatakan sebagai salah satu pintu masuk untuk melihat jejak sejarah kejayaan kesultanan Serdang. Masjid ini didirikan oleh Sultan Sulaiman Syariful Alamsyah pada tahun 1901. Untuk pembangunan Masjid Sulaimaniyah sebenarnya sudah dimulai sejak tahun 1889. Sultan Syariful Alamsyah mendirikan Masjid Sulaimaniyah berbarengan dan seklaigus saat mendirikan Istana Draul Arif di Kraton Kota Galuh. Pada perkebangan selanjutnya, tepatnya pada tahun 1939, Sultan Serdang memberikan seluruh kekuasaanya termasuk didalamnya Masjid Raya Sulaimaniyah kepada Tengku haji Yafizham selaku Ketua Majelis Syar’I kerajaan Serdang. Lalu setelah itu, Tengku haji Yafizham memberikan kuasa kepada T.Lukman Sinar, T. Abu Nawar Sinar, T. Abu Kasim Sinar, dan T.Ziwar pada tahun 1964. Dalam komplek Masjid Sulaimaniyah juga terdapat sebuah makam-makam para Sultan Serdang, yakninya makam Sultan Sulaiman Syariful Alamsyah beserta keturunannya. Selain dari Sultan Serdang beserta keturunannya, juga terdapat makam Ketua Majelsi Syar'i Kesultanan Serdang yaitu T. Fachruddin dan Tuanku Haji Yafizham, makam pemangku adat Kesultan Serdang, T. Abu Nawar Sinar dan Tuanku Lukman Sinar Basarsah II. Arsitektur Arsitektur Masjid Sulaimaniyah memiliki arsitektur gaya Melayu. Bangunan masjid memiliki perpaduan warna kuning dan hijau. Pada bagian kubah masjid, berbentuk segi empat memanjang dan di atasnya terdapat bulan sabit dan bintang."@id ;
+    ws:jenisDestinasi "Religi"@id ;
+    ws:kataKunci "Masjid Sulaimaniyah, Sultan Sulaiman Alamsyah, Deli Serdang, masjid bersejarah"@id ;
+    ws:beradaDi "Kabupaten Deli Serdang"@id ;
+    ws:alamat ""@id ;
+    ws:lintang "3.64107"^^xsd:decimal ;
+    ws:bujur "98.979059"^^xsd:decimal ;
+    ws:petunjukLokasi "Berada di kawasan Deli Serdang, Sumatera Utara."@id ;
+    ws:jamOperasional ""@id ;
+    ws:hargaMasuk "" ;
+    ws:noHpResmi "" ;
+    ws:emailResmi "" ;
+    ws:instagramResmi ""^^xsd:anyURI ;
+    ws:memilikiFasilitas ""@id ;
+    ws:dapatMelakukan "Beribadah"@id ;
+    ws:memilikiMedia ""^^xsd:anyURI ;
+    ws:ratingPengunjung "4.8"^^xsd:decimal .
 
 data:ws-050 a ws:DestinasiWisata ;
     ws:idDestinasi "ws-050"^^xsd:string ;
@@ -1329,7 +1329,7 @@ data:ws-051 a ws:DestinasiWisata ;
     ws:namaAlternatif "Museum GBKP"@id,
         "Museum Gereja Batak Karo Protestan (GBKP)"@id ;
     ws:deskripsiSingkat "Museum Gereja Batak Karo Protestan (disingkat Museum GBKP) adalah museum yang terletak di kompleks Taman Jubelium 100 Tahun GBKP di Bandar Baru, Sibolangit, Kabupaten Deli Serdang, Sumatera Utara."@id ;
-    ws:deskripsiLengkap "Museum Gereja Batak Karo Protestan (disingkat Museum GBKP) adalah museum yang terletak di kompleks Taman Jubelium 100 Tahun GBKP di Bandar Baru, Sibolangit, Kabupaten Deli Serdang, Sumatera Utara. Museum GBKP didirikan sebagai bagian dari perayaan Jubileum 100 tahun Gereja Batak Karo Protestan (GBKP) untuk melestarikan warisan dan dokumen sejarah masuk dan berkembangnya Kekristenan di tengah masyarakat Batak Karo. Peletakan batu pertama museum ini dilaksanakan pada tanggal 30 Juli 1990, kemudian diresmikan pada tanggal 11 Agustus 2007 oleh Gubernur Sumatera Utara Rudolf Pardede. Museum di Tanah Karo ini mulai dibangun sejak tanggal 18 April 1890 dan selesai pada 18 April 1990. Tahun 2003, gedung museum diserahkan oleh pengurus pusat retret GBKP kepada kepala Biro Museum, Perpustakaan dan Kebudayaan Karo dan digunakan sebagai sarana penunjang berbagai kegiatan. Konsep pembangunan Museum GBKP muncul selama perencanaan perayaan 100 tahun GBKP, yang juga merayakan masuknya Injil ke tanah Karo pada 18 April 1890 hingga 18 April 1990. Museum ini dibangun untuk merawat bahan-bahan dan dokumen sejarah yang berkaitan dengan penyebaran agama Kristen di tengah masyarakat Karo. Museum GBKP berlokasi di Taman Jubelium 100 Tahun GBKP, di Bandar Baru, Sibolangit, Kabupaten Deli Serdang, Sumatera Utara, tempat di mana batu pertama diletakkan pada tanggal 30 Juli 1990, bersamaan dengan pembukaan Taman Jubelium tersebut. Museum ini menampilkan 143 koleksi yang meliputi berbagai bidang seperti etnografi, arkeologi, sejarah, filologi, dan keramik. Proses pendirian Gereja Batak Karo Protestan mengawali dengan pekabaran Injil pertama ke wilayah Karo, dianggap sebagai tindakan ilahi untuk menyampaikan pesan Keselamatan kepada penduduknya. Penyampaian Injil dibagi menjadi dua periode oleh Lembaga Penelitian dan Studi DGI. Pertama, periode awal dari tahun 1890 hingga 1906, ditandai dengan penolakan keras oleh masyarakat Karo terhadap Belanda yang mereka anggap telah mengambil tanah untuk kepentingan perkebunan tembakau. Masyarakat Karo menunjukkan perlawanan dengan sabotase terhadap kegiatan perkebunan Belanda, termasuk membakar gudang penyimpanan tembakau. Untuk meredam ketegangan, Mr. J.T. Cremer dari Deli Mij mengumpulkan dana untuk menyebarkan agama Kristen di antara orang Karo, yang percaya bahwa upaya tersebut akan memperbaiki hubungan dan mengamankan perkebunan Cremer…"@id ;
+    ws:deskripsiLengkap "Museum Gereja Batak Karo Protestan (disingkat Museum GBKP) adalah museum yang terletak di kompleks Taman Jubelium 100 Tahun GBKP di Bandar Baru, Sibolangit, Kabupaten Deli Serdang, Sumatera Utara. Museum GBKP didirikan sebagai bagian dari perayaan Jubileum 100 tahun Gereja Batak Karo Protestan (GBKP) untuk melestarikan warisan dan dokumen sejarah masuk dan berkembangnya Kekristenan di tengah masyarakat Batak Karo. Peletakan batu pertama museum ini dilaksanakan pada tanggal 30 Juli 1990, kemudian diresmikan pada tanggal 11 Agustus 2007 oleh Gubernur Sumatera Utara Rudolf Pardede. Museum di Tanah Karo ini mulai dibangun sejak tanggal 18 April 1890 dan selesai pada 18 April 1990. Tahun 2003, gedung museum diserahkan oleh pengurus pusat retret GBKP kepada kepala Biro Museum, Perpustakaan dan Kebudayaan Karo dan digunakan sebagai sarana penunjang berbagai kegiatan. Konsep pembangunan Museum GBKP muncul selama perencanaan perayaan 100 tahun GBKP, yang juga merayakan masuknya Injil ke tanah Karo pada 18 April 1890 hingga 18 April 1990. Museum ini dibangun untuk merawat bahan-bahan dan dokumen sejarah yang berkaitan dengan penyebaran agama Kristen di tengah masyarakat Karo. Museum GBKP berlokasi di Taman Jubelium 100 Tahun GBKP, di Bandar Baru, Sibolangit, Kabupaten Deli Serdang, Sumatera Utara, tempat di mana batu pertama diletakkan pada tanggal 30 Juli 1990, bersamaan dengan pembukaan Taman Jubelium tersebut. Museum ini menampilkan 143 koleksi yang meliputi berbagai bidang seperti etnografi, arkeologi, sejarah, filologi, dan keramik. Proses pendirian Gereja Batak Karo Protestan mengawali dengan pekabaran Injil pertama ke wilayah Karo, dianggap sebagai tindakan ilahi untuk menyampaikan pesan Keselamatan kepada penduduknya. Penyampaian Injil dibagi menjadi dua periode oleh Lembaga Penelitian dan Studi DGI. Pertama, periode awal dari tahun 1890 hingga 1906, ditandai dengan penolakan keras oleh masyarakat Karo terhadap Belanda yang mereka anggap telah mengambil tanah untuk kepentingan perkebunan tembakau. Masyarakat Karo menunjukkan perlawanan dengan sabotase terhadap kegiatan perkebunan Belanda, termasuk membakar gudang penyimpanan tembakau. Untuk meredam ketegangan, Mr. J.T. Cremer dari Deli Mij mengumpulkan dana untuk menyebarkan agama Kristen di antara orang Karo, yang percaya bahwa upaya tersebut akan memperbaiki hubungan dan mengamankan perkebunan Cremerâ€¦"@id ;
     ws:jenisDestinasi "Budaya"@id ;
     ws:kataKunci "Museum GBKP, Gereja Batak Karo Protestan, Sibolangit, sejarah gereja"@id ;
     ws:beradaDi "Kabupaten Deli Serdang"@id ;
@@ -1443,7 +1443,7 @@ data:ws-055 a ws:DestinasiWisata ;
     ws:instagramResmi "https://www.instagram.com/museumperjuanganperssumut/"^^xsd:anyURI ;
     ws:memilikiFasilitas "Akses Kursi Roda"@id ;
     ws:dapatMelakukan "Belajar sejarah pers"@id ;
-    ws:memilikiMedia ""^^xsd:anyURI ;
+    ws:memilikiMedia "https://commons.wikimedia.org/wiki/Special:FilePath/Koleksi_Koran_di_Museum_Perjuangan_Pers_Sumatera_Utara_1.jpg"^^xsd:anyURI ;
     ws:ratingPengunjung "4.9"^^xsd:decimal .
 
 data:ws-056 a ws:DestinasiWisata ;
@@ -1613,12 +1613,12 @@ data:ws-062 a ws:DestinasiWisata ;
 
 data:ws-063 a ws:DestinasiWisata ;
     ws:idDestinasi "ws-063"^^xsd:string ;
-    ws:namaDestinasi "Situs Megalith Tetegewo Hilisao'ötö"@id ;
+    ws:namaDestinasi "Situs Megalith Tetegewo Hilisao'Ã¶tÃ¶"@id ;
     ws:namaAlternatif ""@id ;
     ws:deskripsiSingkat "Situs di Kabupaten Nias Selatan, Sumatera Utara."@id ;
     ws:deskripsiLengkap ""@id ;
     ws:jenisDestinasi "Budaya"@id ;
-    ws:kataKunci "situs megalitik Tetegewo, Hilisao'ötö, megalit Nias"@id ;
+    ws:kataKunci "situs megalitik Tetegewo, Hilisao'Ã¶tÃ¶, megalit Nias"@id ;
     ws:beradaDi "Kabupaten Nias Selatan"@id ;
     ws:alamat ""@id ;
     ws:lintang "0.832443"^^xsd:decimal ;
@@ -1640,7 +1640,7 @@ data:ws-064 a ws:DestinasiWisata ;
     ws:namaDestinasi "Taman Nasional Batang Gadis"@id ;
     ws:namaAlternatif ""@id ;
     ws:deskripsiSingkat "Taman Nasional Batang Gadis (disingkat TNBG) adalah sebuah taman nasional yang terletak di Kabupaten Mandailing Natal, Sumatera Utara."@id ;
-    ws:deskripsiLengkap "Taman Nasional Batang Gadis (disingkat TNBG) adalah sebuah taman nasional yang terletak di Kabupaten Mandailing Natal, Sumatera Utara. Awalnya, Taman Nasional Batang Gadis menempati lahan seluas 108.000 hektare. Luasnya dikurangi menjadi 72.803,75 hektar melalui Surat Keputusan Kementerian Kehutanan No. 121 tahun 2012. Lahan yang dikeluarkan dalam wilayahnya digunakan sebagai hutan lindung (15.700 ha) dan hutan produksi terbatas (20.462 ha). Penetapan Taman Nasional Batang Gadis sebagai taman nasional berdasarkan Keputusan Menteri Kehutanan No. 126/Kpts-II/2004, tertanggal 29 April 2004. Habitat di dalam taman nasional ini menempati ekosistem yang beragam mulai dari hutan rawa dataran tinggi, lahan basah, lembah sungai, hutan gamping, hutan dataran rendah perbukitan hingga hutan pegunungan. Hutan di dalamnya terbagi menjadi dua formasi yaitu Formasi Air Bangis – Singkil di Bukit Barisan Barat (300-1000 mdpl) dan ekosistem montana di Bukit barisan (1000–1800 mdpl). Separuh luas kawasan Taman Nasional Batang Gadis merupakan hutan dataran rendah dengan Formasi Air Bangis – Singkil. Taman Nasional Batang Gadis mencakup 26% dari total luas Kabupaten Mandailing Natal yang terletak pada ketinggian 300 s/d 2.145 meter di atas permukaan laut dengan titik tertinggi puncak Gunung Sorik Marapi. Lokasi geografis dari Taman Nasional Batang Gadis terletak di 99° 12’ 45\" Bujur Timur sampai dengan 99° 47’ 10\" dan 0° 27’ 15\" sampai dengan 1° 01’ 57\" Lintang Utara dan secara administrasi wilayah ini dikelilingi 68 desa di 13 kecamatan di Kabupaten Mandailing Natal. Nama taman nasional ini berasal dari dari nama sungai utama yang mengalir dan membelah Kabupaten Mandailing Natal, Sungai Batang Gadis. Surat keputusan Menteri Kehutanan No. 126/Menhut-II/2004 tanggal 29April 2004 tentang perubahan fungsi dan penunjukan hutan lindung, hutan produksi terbatas, dan hutan produksi tetap di Kab. Mandailing Natal Propinsi Sumatera Utara seluas 108.000 Ha sebagai Kawasan Pelestarian Alam dengan fungsi Taman Nasional Batang Gadis. Dan berdasarkan Keputusan Menteri Lingkungan Hidup dan Kehutanan Nomor SK.169/Menlhk-II/2015 tentang Penunjukan Unit Pelaksana Teknis Taman Nasional. TNBG terdiri dari dari kawasan hutan lindung, hutan produksi terbatas, dan hutan produksi tetap. Hutan lindung yang dialih fungsikan seluas 101.500 ha, terdiri dari hutan lindung Register 4 Batang Gadis I, hutan…"@id ;
+    ws:deskripsiLengkap "Taman Nasional Batang Gadis (disingkat TNBG) adalah sebuah taman nasional yang terletak di Kabupaten Mandailing Natal, Sumatera Utara. Awalnya, Taman Nasional Batang Gadis menempati lahan seluas 108.000 hektare. Luasnya dikurangi menjadi 72.803,75 hektar melalui Surat Keputusan Kementerian Kehutanan No. 121 tahun 2012. Lahan yang dikeluarkan dalam wilayahnya digunakan sebagai hutan lindung (15.700 ha) dan hutan produksi terbatas (20.462 ha). Penetapan Taman Nasional Batang Gadis sebagai taman nasional berdasarkan Keputusan Menteri Kehutanan No. 126/Kpts-II/2004, tertanggal 29 April 2004. Habitat di dalam taman nasional ini menempati ekosistem yang beragam mulai dari hutan rawa dataran tinggi, lahan basah, lembah sungai, hutan gamping, hutan dataran rendah perbukitan hingga hutan pegunungan. Hutan di dalamnya terbagi menjadi dua formasi yaitu Formasi Air Bangis â€“ Singkil di Bukit Barisan Barat (300-1000 mdpl) dan ekosistem montana di Bukit barisan (1000â€“1800 mdpl). Separuh luas kawasan Taman Nasional Batang Gadis merupakan hutan dataran rendah dengan Formasi Air Bangis â€“ Singkil. Taman Nasional Batang Gadis mencakup 26% dari total luas Kabupaten Mandailing Natal yang terletak pada ketinggian 300 s/d 2.145 meter di atas permukaan laut dengan titik tertinggi puncak Gunung Sorik Marapi. Lokasi geografis dari Taman Nasional Batang Gadis terletak di 99Â° 12â€™ 45\" Bujur Timur sampai dengan 99Â° 47â€™ 10\" dan 0Â° 27â€™ 15\" sampai dengan 1Â° 01â€™ 57\" Lintang Utara dan secara administrasi wilayah ini dikelilingi 68 desa di 13 kecamatan di Kabupaten Mandailing Natal. Nama taman nasional ini berasal dari dari nama sungai utama yang mengalir dan membelah Kabupaten Mandailing Natal, Sungai Batang Gadis. Surat keputusan Menteri Kehutanan No. 126/Menhut-II/2004 tanggal 29April 2004 tentang perubahan fungsi dan penunjukan hutan lindung, hutan produksi terbatas, dan hutan produksi tetap di Kab. Mandailing Natal Propinsi Sumatera Utara seluas 108.000 Ha sebagai Kawasan Pelestarian Alam dengan fungsi Taman Nasional Batang Gadis. Dan berdasarkan Keputusan Menteri Lingkungan Hidup dan Kehutanan Nomor SK.169/Menlhk-II/2015 tentang Penunjukan Unit Pelaksana Teknis Taman Nasional. TNBG terdiri dari dari kawasan hutan lindung, hutan produksi terbatas, dan hutan produksi tetap. Hutan lindung yang dialih fungsikan seluas 101.500 ha, terdiri dari hutan lindung Register 4 Batang Gadis I, hutanâ€¦"@id ;
     ws:jenisDestinasi "Alam"@id ;
     ws:kataKunci "Taman Nasional Batang Gadis, konservasi, Mandailing Natal, Bukit Barisan"@id ;
     ws:beradaDi "Kabupaten Mandailing Natal"@id ;
@@ -1681,7 +1681,7 @@ data:ws-065 a ws:DestinasiWisata ;
     ws:memilikiFasilitas ""@id ;
     ws:dapatMelakukan "Beribadah"@id,
         "Menikmati arsitektur"@id ;
-    ws:memilikiMedia ""^^xsd:anyURI ;
+    ws:memilikiMedia "https://commons.wikimedia.org/wiki/Special:FilePath/Vihara_Gunung_Timur%2C_Medan_12.jpg"^^xsd:anyURI ;
     ws:ratingPengunjung "4.7"^^xsd:decimal .
 
 data:ws-066 a ws:DestinasiWisata ;
@@ -1713,7 +1713,7 @@ data:ws-067 a ws:DestinasiWisata ;
     ws:namaDestinasi "Museum Niat Lima Laras"@id ;
     ws:namaAlternatif "Istana Niat Lima Laras"@id ;
     ws:deskripsiSingkat "Museum Niat Lima Laras atau dikenal juga dengan Istana Niat Lima Laras adalah situs sejarah peninggalan masyarakat Melayu pesisir yang berusia lebih dari 100 tahun."@id ;
-    ws:deskripsiLengkap "Museum Niat Lima Laras atau dikenal juga dengan Istana Niat Lima Laras adalah situs sejarah peninggalan masyarakat Melayu pesisir yang berusia lebih dari 100 tahun. Museum ini terletak di Dusun 1, Desa Lima Laras, Kecamatan Nibung Hangus, Kabupaten Batubara, Sumatera Utara. Sekitar 136km dari kota Medan. Penamaan Penamaan istana dengan kata ‘niat’ merupakan sebuah ungkapan niat dari datuk Muhammad Yoeda, sebelumnya kerajaan Lima Laras tunduk pada Kesultanan Siak dan berpindah-pindah. Setelah datok Muhammad Yoeda wafat pada 1919 M, maka berakhirlah kerajaan Lima Laras dan sekarang warisan tersebut dirawat cucunya Datok Muhammad Azminsyah. terdapat bukti-bukti peninggalan barang pusaka seperti tempayan berukir naga, barang pecah belah, pedang dan tombak. Sejarah Istana Niat Lima Laras berada di kawasan pemukiman nelayan yang dibangun berawal dari niat seorang Datuk Matyoeda Sri Diraja (Raja Kerajaan Lima Laras XII) yang dikenal dengan nama Datuk Muhammad Yuda, putera tertua dari seorang Raja yaitu Datuk Haji Djafar gelar Raja Sri Indra (Raja Kerajaan Lima Laras XI) yang bertahta pada tahun 1883 - 1919. Akibat adanya larangan berdagang oleh pemerintah Hindia Belanda, Datuk Matyoeda yang sering berdagang kopra, damar, dan rotan ke Malaka, Malaysia, Singapura, dan Thailand membuat ia sering kali berhadapan dengan pemerintah Hindia Belanda. Sehingga Datuk Matyoeda berniat untuk membangun Istana apabila ia dapat berlabuh dengan selamat di pelabuhan Tanjung Tiram. Raja kerajaan Lima Laras ke-XII yaitu Datuk Muhammad Yoeda pun mendirikan istana ini pada tahun 1907 dan selesai pada 1912 di saat ia masih bertahta. Pengerjaannya mendatangkan para ahli dari China dengan biaya sebesar 150.000 gulden dengan luas lahan 102x98 meter berbentuk persegi panjang. Pada tahun 1942, tentara Jepang masuk ke Indonesia dan menguasai Istana tersebut. Pada masa Agresi Militer II, Istana Lima Laras kembali ke Republik Indonesia dan ditempati oleh Angkatan laut dan dijadikan pusat perjuangan."@id ;
+    ws:deskripsiLengkap "Museum Niat Lima Laras atau dikenal juga dengan Istana Niat Lima Laras adalah situs sejarah peninggalan masyarakat Melayu pesisir yang berusia lebih dari 100 tahun. Museum ini terletak di Dusun 1, Desa Lima Laras, Kecamatan Nibung Hangus, Kabupaten Batubara, Sumatera Utara. Sekitar 136km dari kota Medan. Penamaan Penamaan istana dengan kata â€˜niatâ€™ merupakan sebuah ungkapan niat dari datuk Muhammad Yoeda, sebelumnya kerajaan Lima Laras tunduk pada Kesultanan Siak dan berpindah-pindah. Setelah datok Muhammad Yoeda wafat pada 1919 M, maka berakhirlah kerajaan Lima Laras dan sekarang warisan tersebut dirawat cucunya Datok Muhammad Azminsyah. terdapat bukti-bukti peninggalan barang pusaka seperti tempayan berukir naga, barang pecah belah, pedang dan tombak. Sejarah Istana Niat Lima Laras berada di kawasan pemukiman nelayan yang dibangun berawal dari niat seorang Datuk Matyoeda Sri Diraja (Raja Kerajaan Lima Laras XII) yang dikenal dengan nama Datuk Muhammad Yuda, putera tertua dari seorang Raja yaitu Datuk Haji Djafar gelar Raja Sri Indra (Raja Kerajaan Lima Laras XI) yang bertahta pada tahun 1883 - 1919. Akibat adanya larangan berdagang oleh pemerintah Hindia Belanda, Datuk Matyoeda yang sering berdagang kopra, damar, dan rotan ke Malaka, Malaysia, Singapura, dan Thailand membuat ia sering kali berhadapan dengan pemerintah Hindia Belanda. Sehingga Datuk Matyoeda berniat untuk membangun Istana apabila ia dapat berlabuh dengan selamat di pelabuhan Tanjung Tiram. Raja kerajaan Lima Laras ke-XII yaitu Datuk Muhammad Yoeda pun mendirikan istana ini pada tahun 1907 dan selesai pada 1912 di saat ia masih bertahta. Pengerjaannya mendatangkan para ahli dari China dengan biaya sebesar 150.000 gulden dengan luas lahan 102x98 meter berbentuk persegi panjang. Pada tahun 1942, tentara Jepang masuk ke Indonesia dan menguasai Istana tersebut. Pada masa Agresi Militer II, Istana Lima Laras kembali ke Republik Indonesia dan ditempati oleh Angkatan laut dan dijadikan pusat perjuangan."@id ;
     ws:jenisDestinasi "Budaya"@id ;
     ws:kataKunci "Museum Niat Lima Laras, Istana Niat Lima Laras, Melayu pesisir, Batu Bara"@id ;
     ws:beradaDi "Kabupaten Batu Bara"@id ;
@@ -2046,8 +2046,8 @@ data:ws-081 a ws:DestinasiWisata ;
     ws:namaDestinasi "Masjid Azizi"@id ;
     ws:namaAlternatif "Masjid Kesultanan Langkat"@id,
         "Masjid Sultan Abdul Aziz"@id ;
-    ws:deskripsiSingkat "Masjid Azizi (bahasa Arab: مسجد عزيزي), secara resmi bernama Masjid Sultan Abdul Aziz, atau lebih dikenal dengan Masjid Kesultanan Langkat adalah sebuah masjid bersejarah peninggalan Kesultanan Langkat yang berada di Kelurahan Tanjung Pura, Kecamatan Tanjung Pura, Kabupaten Langkat, Sumatera Utara."@id ;
-    ws:deskripsiLengkap "Masjid Azizi (bahasa Arab: مسجد عزيزي), secara resmi bernama Masjid Sultan Abdul Aziz (bahasa Arab: مسجد السلطان عبد العزيز) atau lebih dikenal dengan Masjid Kesultanan Langkat (bahasa Arab: مسجد لانجكات الملكي) adalah sebuah masjid bersejarah peninggalan Kesultanan Langkat yang berada di Kelurahan Tanjung Pura, Kecamatan Tanjung Pura, Kabupaten Langkat, Provinsi Sumatera Utara, Indonesia. Masjid ini awalnya dibangun pada tahun 1889, atas perintah Sultan Abdul Aziz, penguasa Kesultanan Langkat akhir abad ke-19. Arsitektur masjid ini menjadi inspirasi bagi arsitektur Masjid Zahir di Kedah, Malaysia."@id ;
+    ws:deskripsiSingkat "Masjid Azizi (bahasa Arab: Ù…Ø³Ø¬Ø¯ Ø¹Ø²ÙŠØ²ÙŠ), secara resmi bernama Masjid Sultan Abdul Aziz, atau lebih dikenal dengan Masjid Kesultanan Langkat adalah sebuah masjid bersejarah peninggalan Kesultanan Langkat yang berada di Kelurahan Tanjung Pura, Kecamatan Tanjung Pura, Kabupaten Langkat, Sumatera Utara."@id ;
+    ws:deskripsiLengkap "Masjid Azizi (bahasa Arab: Ù…Ø³Ø¬Ø¯ Ø¹Ø²ÙŠØ²ÙŠ), secara resmi bernama Masjid Sultan Abdul Aziz (bahasa Arab: Ù…Ø³Ø¬Ø¯ Ø§Ù„Ø³Ù„Ø·Ø§Ù† Ø¹Ø¨Ø¯ Ø§Ù„Ø¹Ø²ÙŠØ²) atau lebih dikenal dengan Masjid Kesultanan Langkat (bahasa Arab: Ù…Ø³Ø¬Ø¯ Ù„Ø§Ù†Ø¬ÙƒØ§Øª Ø§Ù„Ù…Ù„ÙƒÙŠ) adalah sebuah masjid bersejarah peninggalan Kesultanan Langkat yang berada di Kelurahan Tanjung Pura, Kecamatan Tanjung Pura, Kabupaten Langkat, Provinsi Sumatera Utara, Indonesia. Masjid ini awalnya dibangun pada tahun 1889, atas perintah Sultan Abdul Aziz, penguasa Kesultanan Langkat akhir abad ke-19. Arsitektur masjid ini menjadi inspirasi bagi arsitektur Masjid Zahir di Kedah, Malaysia."@id ;
     ws:jenisDestinasi "Religi"@id ;
     ws:kataKunci "Masjid Azizi, Kesultanan Langkat, Tanjung Pura, masjid bersejarah, masjid Melayu"@id ;
     ws:beradaDi "Kabupaten Langkat"@id ;
@@ -2471,7 +2471,7 @@ data:ws-098 a ws:DestinasiWisata ;
     ws:instagramResmi ""^^xsd:anyURI ;
     ws:memilikiFasilitas ""@id ;
     ws:dapatMelakukan "Melihat koleksi benda bersejarah Batak"@id ;
-    ws:memilikiMedia ""^^xsd:anyURI ;
+    ws:memilikiMedia "https://commons.wikimedia.org/wiki/Special:FilePath/Patung_Horbo_di_Museum_Sipalakka_1.jpg"^^xsd:anyURI ;
     ws:ratingPengunjung "4.3"^^xsd:decimal .
 
 data:ws-099 a ws:DestinasiWisata ;
@@ -2523,7 +2523,7 @@ data:ws-100 a ws:DestinasiWisata ;
         "Toilet"@id ;
     ws:dapatMelakukan "Beribadah"@id,
         "Menikmati arsitektur"@id ;
-    ws:memilikiMedia ""^^xsd:anyURI ;
+    ws:memilikiMedia "https://commons.wikimedia.org/wiki/Special:FilePath/Masjid_Raya_Pematang_Siantar_3.jpg"^^xsd:anyURI ;
     ws:ratingPengunjung "" .
 
 data:ws-101 a ws:DestinasiWisata ;
@@ -2551,7 +2551,7 @@ data:ws-101 a ws:DestinasiWisata ;
     ws:dapatMelakukan "Berfoto"@id,
         "Menikmati pantai"@id,
         "Menjelajah mangrove"@id ;
-    ws:memilikiMedia ""^^xsd:anyURI ;
+    ws:memilikiMedia "https://commons.wikimedia.org/wiki/Special:FilePath/Hut_in_Pantai_Mangrove_Kampoeng_Nipah.jpg"^^xsd:anyURI ;
     ws:ratingPengunjung "4.2"^^xsd:decimal .
 
 data:ws-102 a ws:DestinasiWisata ;
@@ -2606,8 +2606,8 @@ data:ws-104 a ws:DestinasiWisata ;
     ws:idDestinasi "ws-104"^^xsd:string ;
     ws:namaDestinasi "Gunung Lubuk Raya"@id ;
     ws:namaAlternatif "Dolok Lubuk Raya"@id ;
-    ws:deskripsiSingkat "Gunung Lubuk Raya (Surat Batak: ᯑᯬᯞᯬᯄ᯦᯲ ᯞᯮᯅᯮᯄ᯦᯲ ᯒᯛ, translit. Dolok Lubuk Raya) adalah gunung berapi kerucut andesit di Pulau Sumatra, Indonesia."@id ;
-    ws:deskripsiLengkap "Gunung Lubuk Raya (Surat Batak: ᯑᯬᯞᯬᯄ᯦᯲ ᯞᯮᯅᯮᯄ᯦᯲ ᯒᯛ, translit. Dolok Lubuk Raya) adalah gunung berapi kerucut andesit di Pulau Sumatra, Indonesia. Gunung ini secara administratif terletak di Kabupaten Tapanuli Selatan, Sumatera Utara. Gunung Lubuk Raya merupakan gunung api yang sudah tidak aktif yang tidak diketahui waktu letusan terakhirnya. Tidak ada aktivitas vulkanik di permukaan gunung ini tetapi jejak letusannya tampak berupa bekas dinding kawah yang sobek memanjang ke arah barat daya. Pendakian Gunung Lubuk Raya umumnya dimulai dari Desa Lembah Lubuk Raya, Kecamatan Angkola Barat."@id ;
+    ws:deskripsiSingkat "Gunung Lubuk Raya (Surat Batak: á¯‘á¯¬á¯žá¯¬á¯„á¯¦á¯² á¯žá¯®á¯…á¯®á¯„á¯¦á¯² á¯’á¯›, translit. Dolok Lubuk Raya) adalah gunung berapi kerucut andesit di Pulau Sumatra, Indonesia."@id ;
+    ws:deskripsiLengkap "Gunung Lubuk Raya (Surat Batak: á¯‘á¯¬á¯žá¯¬á¯„á¯¦á¯² á¯žá¯®á¯…á¯®á¯„á¯¦á¯² á¯’á¯›, translit. Dolok Lubuk Raya) adalah gunung berapi kerucut andesit di Pulau Sumatra, Indonesia. Gunung ini secara administratif terletak di Kabupaten Tapanuli Selatan, Sumatera Utara. Gunung Lubuk Raya merupakan gunung api yang sudah tidak aktif yang tidak diketahui waktu letusan terakhirnya. Tidak ada aktivitas vulkanik di permukaan gunung ini tetapi jejak letusannya tampak berupa bekas dinding kawah yang sobek memanjang ke arah barat daya. Pendakian Gunung Lubuk Raya umumnya dimulai dari Desa Lembah Lubuk Raya, Kecamatan Angkola Barat."@id ;
     ws:jenisDestinasi "Alam"@id ;
     ws:kataKunci "Gunung Lubuk Raya, Dolok Lubuk Raya, gunung api, Angkola Barat"@id ;
     ws:beradaDi "Kabupaten Tapanuli Selatan"@id ;
@@ -2754,10 +2754,10 @@ data:ws-110 a ws:DestinasiWisata ;
     ws:idDestinasi "ws-110"^^xsd:string ;
     ws:namaDestinasi "Gua Togi Ndrawa"@id ;
     ws:namaAlternatif ""@id ;
-    ws:deskripsiSingkat "Tögi Ndrawa adalah sebuah gua yang terletak di Nias."@id ;
-    ws:deskripsiLengkap "Tögi Ndrawa adalah sebuah gua yang terletak di Nias. Gua ini memiliki jejak peninggalan orang Nias sejak 12.000 tahun lalu. Letaknya berada di Desa Lolowonu Niko'otano, Gunungsitoli. Sejarah Mitos Menurut masyarakat sekitar, gua ini disebut Tögi Ndrawa karena gua ini sebelumnya merupakan tempat persembunyian pendatang atau orang asing, ada juga diartikan yang beragama Islam, Hindu, Budha, dan lain-lain (oleh orang Nias disebut Ndrawa) pada masa pendudukan Jepang di Nias. Ada juga versi lain yang menyatakan bahwa gua ini merupakan tempat persembunyian orang Nias pada masa datangnya Niha Dawa (orang asing) ke daerah tersebut."@id ;
+    ws:deskripsiSingkat "TÃ¶gi Ndrawa adalah sebuah gua yang terletak di Nias."@id ;
+    ws:deskripsiLengkap "TÃ¶gi Ndrawa adalah sebuah gua yang terletak di Nias. Gua ini memiliki jejak peninggalan orang Nias sejak 12.000 tahun lalu. Letaknya berada di Desa Lolowonu Niko'otano, Gunungsitoli. Sejarah Mitos Menurut masyarakat sekitar, gua ini disebut TÃ¶gi Ndrawa karena gua ini sebelumnya merupakan tempat persembunyian pendatang atau orang asing, ada juga diartikan yang beragama Islam, Hindu, Budha, dan lain-lain (oleh orang Nias disebut Ndrawa) pada masa pendudukan Jepang di Nias. Ada juga versi lain yang menyatakan bahwa gua ini merupakan tempat persembunyian orang Nias pada masa datangnya Niha Dawa (orang asing) ke daerah tersebut."@id ;
     ws:jenisDestinasi "Alam"@id ;
-    ws:kataKunci "Gua Togi Ndrawa, Tögi Ndrawa, Nias, situs arkeologi"@id ;
+    ws:kataKunci "Gua Togi Ndrawa, TÃ¶gi Ndrawa, Nias, situs arkeologi"@id ;
     ws:beradaDi "Kota Gunungsitoli"@id ;
     ws:alamat ""@id ;
     ws:lintang "1.294482"^^xsd:decimal ;
@@ -2778,15 +2778,15 @@ data:ws-111 a ws:DestinasiWisata ;
     ws:idDestinasi "ws-111"^^xsd:string ;
     ws:namaDestinasi "Museum Pusaka Nias"@id ;
     ws:namaAlternatif "Museum Swasta Pusaka Nias"@id ;
-    ws:deskripsiSingkat "Museum Pusaka Nias adalah sebuah museum di Jl. Yos Sudarso No. 134-A, Saombö, Gunungsitoli, Sumatera Utara yang didirikan untuk melestarikan budaya Nias."@id ;
-    ws:deskripsiLengkap "Museum Pusaka Nias adalah sebuah museum di Jl. Yos Sudarso No. 134-A. Saombö, Gunungsitoli, Sumatera Utara yang didirikan untuk melestarikan budaya Nias. Museum ini dikelola oleh Persaudaraan Kapusin Sibolga. Sejarah Sejak tahun 1972, seorang misionaris Gereja Katolik bernama Johannes Maria Hämmerle sudah memulai mengoleksi benda-benda budaya, seni dan sejarah masyarakat Nias. Lama-kelamaan jumlah koleksinya makin banyak, dan dia mulai mencatat nama dan kegunaannya masing-masing. Pastor Johannes mengusulkan kepada Dewan Ordo Kapusin Provinsi Sibolga untuk mendirikan sebuah museum dan disetujui pada tahun 1990. Pada tanggal 19 April 1991, Pastor Johannes bertindak atas nama Dewan Ordo Kapusin Provinsi Sibolga menghadap Notaris untuk mendirikan Yayasan Pusaka Nias sebagai Badan Hukum Museum Pusaka Nias. Museum Pusaka Nias terdiri dari 4 paviliun dan 1 paviliun khusus tempat koleksi batu-batu megalit. Pada 16 September 1993, Kakanwil Depdikbud Prop. Sumatera Utara mengeluarkan Izin Pendirian Museum Pusaka Nias."@id ;
+    ws:deskripsiSingkat "Museum Pusaka Nias adalah sebuah museum di Jl. Yos Sudarso No. 134-A, SaombÃ¶, Gunungsitoli, Sumatera Utara yang didirikan untuk melestarikan budaya Nias."@id ;
+    ws:deskripsiLengkap "Museum Pusaka Nias adalah sebuah museum di Jl. Yos Sudarso No. 134-A. SaombÃ¶, Gunungsitoli, Sumatera Utara yang didirikan untuk melestarikan budaya Nias. Museum ini dikelola oleh Persaudaraan Kapusin Sibolga. Sejarah Sejak tahun 1972, seorang misionaris Gereja Katolik bernama Johannes Maria HÃ¤mmerle sudah memulai mengoleksi benda-benda budaya, seni dan sejarah masyarakat Nias. Lama-kelamaan jumlah koleksinya makin banyak, dan dia mulai mencatat nama dan kegunaannya masing-masing. Pastor Johannes mengusulkan kepada Dewan Ordo Kapusin Provinsi Sibolga untuk mendirikan sebuah museum dan disetujui pada tahun 1990. Pada tanggal 19 April 1991, Pastor Johannes bertindak atas nama Dewan Ordo Kapusin Provinsi Sibolga menghadap Notaris untuk mendirikan Yayasan Pusaka Nias sebagai Badan Hukum Museum Pusaka Nias. Museum Pusaka Nias terdiri dari 4 paviliun dan 1 paviliun khusus tempat koleksi batu-batu megalit. Pada 16 September 1993, Kakanwil Depdikbud Prop. Sumatera Utara mengeluarkan Izin Pendirian Museum Pusaka Nias."@id ;
     ws:jenisDestinasi "Budaya"@id ;
     ws:kataKunci "Museum Pusaka Nias, budaya Nias, Gunungsitoli, museum"@id ;
     ws:beradaDi "Kota Gunungsitoli"@id ;
-    ws:alamat "Jalan Yos Sudarso No.134-A, Saombö, Kota Gunungsitoli, Sumatera Utara 22812"@id ;
+    ws:alamat "Jalan Yos Sudarso No.134-A, SaombÃ¶, Kota Gunungsitoli, Sumatera Utara 22812"@id ;
     ws:lintang "1.298416"^^xsd:decimal ;
     ws:bujur "97.608737"^^xsd:decimal ;
-    ws:petunjukLokasi "Berada di Jalan Yos Sudarso No. 134-A, Saombö, Kota Gunungsitoli, Pulau Nias."@id ;
+    ws:petunjukLokasi "Berada di Jalan Yos Sudarso No. 134-A, SaombÃ¶, Kota Gunungsitoli, Pulau Nias."@id ;
     ws:jamOperasional "Senin-Sabtu 08.00-18.00 WIB, Minggu 12.30-18.00 WIB"@id ;
     ws:hargaMasuk "5000"^^xsd:decimal ;
     ws:noHpResmi "" ;
@@ -2851,7 +2851,7 @@ data:ws-114 a ws:DestinasiWisata ;
     ws:namaDestinasi "Graha Maria Annai Velangkanni"@id ;
     ws:namaAlternatif "Graha Maria Annai Velangkanni Medan"@id ;
     ws:deskripsiSingkat "Graha Maria Annai Velangkanni adalah gereja Katolik bergaya India-Mughal yang dibuka pada tahun 2005 di Kota Medan, Sumatera Utara, Indonesia."@id ;
-    ws:deskripsiLengkap "Graha Maria Annai Velangkanni adalah gereja Katolik bergaya India-Mughal yang dibuka pada tahun 2005 di Kota Medan, Sumatera Utara, Indonesia. Peresmian bangunan dilakukan oleh Gubernur Sumatera Utara Rudolf Pardede. Konsekrasi bangunan dan altar dilakukan oleh Uskup Agung Medan Mgr. Alfred Gonti Pius Datubara, OFM.Cap. Gereja ini dipersembahkan untuk Bunda Velangkanni atau Santa Maria Bunda Penyembuh yang Baik (bahasa Tamil: ஆரோக்கிய மாதா Ārōkkiya mātā). Gereja Velangkanni terletak di sebuah jalan kecil yang bernama Jl. Sakura III, dan masuk ke dalam wilayah Paroki Santa Maria, Medan. Pada bagian gerbang bangunan ini, terdapat miniatur rumah tradisional Batak Karo dan Batak Toba. Konon Bunda Maria pernah muncul pada abad ke-17 di Kota Velankanni, Tamil Nadu, India, sehingga muncullah gelar Bunda Velangkanni Bunda Penyembuh. Gereja ini merupakan bangunan dua tingkat yang terdiri dari tempat pertemuan di lantai dasar dan tempat ibadah di lantai pertama, sementara menara di atasnya terdiri dari tujuh lantai sebagai lambang bahwa di surga terdapat tempat untuk semua orang. Menara ini sendiri merupakan perwakilan Raja Gopuram (kubah raja) dalam arsitektur Hindu. Di atas bangunan gereja ini juga terdapat tiga kubah yang dibangun dengan gaya arsitektur Mughal dan merupakan lambang Tritunggal."@id ;
+    ws:deskripsiLengkap "Graha Maria Annai Velangkanni adalah gereja Katolik bergaya India-Mughal yang dibuka pada tahun 2005 di Kota Medan, Sumatera Utara, Indonesia. Peresmian bangunan dilakukan oleh Gubernur Sumatera Utara Rudolf Pardede. Konsekrasi bangunan dan altar dilakukan oleh Uskup Agung Medan Mgr. Alfred Gonti Pius Datubara, OFM.Cap. Gereja ini dipersembahkan untuk Bunda Velangkanni atau Santa Maria Bunda Penyembuh yang Baik (bahasa Tamil: à®†à®°à¯‹à®•à¯à®•à®¿à®¯ à®®à®¾à®¤à®¾ Ä€rÅkkiya mÄtÄ). Gereja Velangkanni terletak di sebuah jalan kecil yang bernama Jl. Sakura III, dan masuk ke dalam wilayah Paroki Santa Maria, Medan. Pada bagian gerbang bangunan ini, terdapat miniatur rumah tradisional Batak Karo dan Batak Toba. Konon Bunda Maria pernah muncul pada abad ke-17 di Kota Velankanni, Tamil Nadu, India, sehingga muncullah gelar Bunda Velangkanni Bunda Penyembuh. Gereja ini merupakan bangunan dua tingkat yang terdiri dari tempat pertemuan di lantai dasar dan tempat ibadah di lantai pertama, sementara menara di atasnya terdiri dari tujuh lantai sebagai lambang bahwa di surga terdapat tempat untuk semua orang. Menara ini sendiri merupakan perwakilan Raja Gopuram (kubah raja) dalam arsitektur Hindu. Di atas bangunan gereja ini juga terdapat tiga kubah yang dibangun dengan gaya arsitektur Mughal dan merupakan lambang Tritunggal."@id ;
     ws:jenisDestinasi "Religi"@id ;
     ws:kataKunci "Graha Maria Annai Velangkanni, Bunda Velangkanni, gereja Katolik, arsitektur India-Mughal, Medan"@id ;
     ws:beradaDi "Kota Medan"@id ;
@@ -3056,17 +3056,17 @@ data:ws-122 a ws:DestinasiWisata ;
     ws:memilikiFasilitas ""@id ;
     ws:dapatMelakukan "Beribadah"@id,
         "Menikmati arsitektur"@id ;
-    ws:memilikiMedia ""^^xsd:anyURI ;
+    ws:memilikiMedia "https://commons.wikimedia.org/wiki/Special:FilePath/Masjid_Lama_Gang_Bengkok_Medan_7.jpg"^^xsd:anyURI ;
     ws:ratingPengunjung "4.8"^^xsd:decimal .
 
 data:ws-123 a ws:DestinasiWisata ;
     ws:idDestinasi "ws-123"^^xsd:string ;
     ws:namaDestinasi "Masjid Raya Al-Ma'shun"@id ;
     ws:namaAlternatif "Masjid Raya Al-Mashun"@id,
-        "Masjid Raya Al-Ma’shun"@id,
+        "Masjid Raya Al-Maâ€™shun"@id,
         "Mesjid Raya Medan"@id ;
     ws:deskripsiSingkat "Masjid Raya Al-Ma'shun adalah masjid di Jalan Sisingamangaraja, Kelurahan Mesjid, Kecamatan Medan Kota, Kota Medan, dekat Istana Maimun."@id ;
-    ws:deskripsiLengkap "Masjid Raya Al-Mashun (bahasa Arab: مسجد جامع المشون) atau yang lebih dikenal Masjid Raya Medan adalah sebuah masjid yang berada di Kota Medan, Provinsi Sumatera Utara, Indonesia. Masjid ini dibangun pada tahun 1906 dan selesai pada tahun 1909. Pada awal pendiriannya, masjid ini merupakan bagian dari kompleks Istana Maimun. Gaya arsitekturnya memadukan unsur Timur Tengah, India, dan Spanyol. Masjid ini berbentuk segi delapan dan memiliki sayap di bagian selatan, timur, utara, dan barat. Sejarah Sultan Ma'mun Ar-Rasyid sebagai pemimpin Kesultanan Deli memulai pembangunan masjid ini pada tanggal 21 Agustus 1906 atau yang bertepatan pada 1 Rajab 1324 Hijriah. Seluruh pembangunan selesai pada tanggal 10 September 1909 dan ditandai dengan pelaksanaan salat Jumat pertama di masjid tersebut. Anggaran pembangunan keseluruhan adalah satu juta gulden. Pembangunan masjid ini dibiayai oleh Kesultanan Deli, Deli Maatschappij, dan Tjong A Fie, pengusaha terkaya di Medan saat itu."@id ;
+    ws:deskripsiLengkap "Masjid Raya Al-Mashun (bahasa Arab: Ù…Ø³Ø¬Ø¯ Ø¬Ø§Ù…Ø¹ Ø§Ù„Ù…Ø´ÙˆÙ†) atau yang lebih dikenal Masjid Raya Medan adalah sebuah masjid yang berada di Kota Medan, Provinsi Sumatera Utara, Indonesia. Masjid ini dibangun pada tahun 1906 dan selesai pada tahun 1909. Pada awal pendiriannya, masjid ini merupakan bagian dari kompleks Istana Maimun. Gaya arsitekturnya memadukan unsur Timur Tengah, India, dan Spanyol. Masjid ini berbentuk segi delapan dan memiliki sayap di bagian selatan, timur, utara, dan barat. Sejarah Sultan Ma'mun Ar-Rasyid sebagai pemimpin Kesultanan Deli memulai pembangunan masjid ini pada tanggal 21 Agustus 1906 atau yang bertepatan pada 1 Rajab 1324 Hijriah. Seluruh pembangunan selesai pada tanggal 10 September 1909 dan ditandai dengan pelaksanaan salat Jumat pertama di masjid tersebut. Anggaran pembangunan keseluruhan adalah satu juta gulden. Pembangunan masjid ini dibiayai oleh Kesultanan Deli, Deli Maatschappij, dan Tjong A Fie, pengusaha terkaya di Medan saat itu."@id ;
     ws:jenisDestinasi "Religi"@id ;
     ws:kataKunci "Masjid Raya Al-Ma'shun, Masjid Raya Medan"@id ;
     ws:beradaDi "Kota Medan"@id ;
@@ -3115,7 +3115,7 @@ data:ws-125 a ws:DestinasiWisata ;
     ws:namaAlternatif "Raz Collection Museum & Gallery"@id,
         "Raz Museum & Gallery"@id ;
     ws:deskripsiSingkat "Museum Koleksi dan Galeri Raz (nama resmi: Raz Collection Museum and Gallery, dikenal juga sebagai Raz Museum and Gallery) adalah museum khusus yang didirikan oleh Rahmawaty Sofyan Raz."@id ;
-    ws:deskripsiLengkap "Museum Koleksi dan Galeri Raz (nama resmi: Raz Collection Museum and Gallery, dikenal juga sebagai Raz Museum and Gallery) adalah museum khusus yang didirikan oleh Rahmawaty Sofyan Raz. Museum ini berisi koleksi benda kenang-kenangan dari keluarga Raz. Museum ini diresmikan oleh Menteri Pendidikan periode 2005–2009, Bambang Sudibyo. Raz Museum & Gallery berlokasi di Jl. DR. Mansyur No.162, Kota Medan, Provinsi Sumatera Utara. Raz Museum and Gallery telah diakui oleh Museum Rekor Dunia Indonesia melalui pemberian sejumlah piagam penghargaan yang bergengsi, termasuk \"Sekolah yang memiliki galeri dengan koleksi barang-barang keluarga variasi terbanyak\" dan \"Pemrakarsa berdirinya galeri dengan koleksi barang-barang variasi terbanyak\". Museum ini dikenal karena menampilkan berbagai koleksi unik yang mengundang minat pengunjung. Dengan bangunan galeri tiga lantai, museum ini dirancang dengan penataan yang rapi untuk memberikan pengalaman visual yang memuaskan. Koleksi yang dipamerkan meliputi berbagai barang perabotan, pakaian, perlengkapan pengantin, serta perlengkapan anak-anak dari keluarga Sofyan Raz. Selain itu, museum juga menampilkan berbagai pernak-pernik koleksi dari berbagai negara yang dikunjungi."@id ;
+    ws:deskripsiLengkap "Museum Koleksi dan Galeri Raz (nama resmi: Raz Collection Museum and Gallery, dikenal juga sebagai Raz Museum and Gallery) adalah museum khusus yang didirikan oleh Rahmawaty Sofyan Raz. Museum ini berisi koleksi benda kenang-kenangan dari keluarga Raz. Museum ini diresmikan oleh Menteri Pendidikan periode 2005â€“2009, Bambang Sudibyo. Raz Museum & Gallery berlokasi di Jl. DR. Mansyur No.162, Kota Medan, Provinsi Sumatera Utara. Raz Museum and Gallery telah diakui oleh Museum Rekor Dunia Indonesia melalui pemberian sejumlah piagam penghargaan yang bergengsi, termasuk \"Sekolah yang memiliki galeri dengan koleksi barang-barang keluarga variasi terbanyak\" dan \"Pemrakarsa berdirinya galeri dengan koleksi barang-barang variasi terbanyak\". Museum ini dikenal karena menampilkan berbagai koleksi unik yang mengundang minat pengunjung. Dengan bangunan galeri tiga lantai, museum ini dirancang dengan penataan yang rapi untuk memberikan pengalaman visual yang memuaskan. Koleksi yang dipamerkan meliputi berbagai barang perabotan, pakaian, perlengkapan pengantin, serta perlengkapan anak-anak dari keluarga Sofyan Raz. Selain itu, museum juga menampilkan berbagai pernak-pernik koleksi dari berbagai negara yang dikunjungi."@id ;
     ws:jenisDestinasi "Budaya"@id ;
     ws:kataKunci "Raz Collection Museum, museum keluarga, Medan Sunggal, galeri"@id ;
     ws:beradaDi "Kota Medan"@id ;
@@ -3584,7 +3584,7 @@ data:ws-144 a ws:DestinasiWisata ;
     ws:instagramResmi ""^^xsd:anyURI ;
     ws:memilikiFasilitas ""@id ;
     ws:dapatMelakukan "Melihat koleksi budaya Simalungun"@id ;
-    ws:memilikiMedia ""^^xsd:anyURI ;
+    ws:memilikiMedia "https://commons.wikimedia.org/wiki/Special:FilePath/Pasung_di_Museum_Simalungun.jpg"^^xsd:anyURI ;
     ws:ratingPengunjung "4.2"^^xsd:decimal .
 
 data:ws-145 a ws:DestinasiWisata ;
@@ -3658,7 +3658,7 @@ data:ws-147 a ws:DestinasiWisata ;
     ws:memilikiFasilitas ""@id ;
     ws:dapatMelakukan "Berfoto"@id,
         "Menikmati senja"@id ;
-    ws:memilikiMedia ""^^xsd:anyURI ;
+    ws:memilikiMedia "https://commons.wikimedia.org/wiki/Special:FilePath/Dermaga_di_pantai_pelabuhan_lama_Sibolga.jpg"^^xsd:anyURI ;
     ws:ratingPengunjung "4.4"^^xsd:decimal .
 
 data:ws-148 a ws:DestinasiWisata ;
@@ -3692,7 +3692,7 @@ data:ws-148 a ws:DestinasiWisata ;
         "Berkemah"@id,
         "Body Rafting"@id,
         "Trekking"@id ;
-    ws:memilikiMedia ""^^xsd:anyURI ;
+    ws:memilikiMedia "https://commons.wikimedia.org/wiki/Special:FilePath/Air_terjun_Pelaruga_2.jpg"^^xsd:anyURI ;
     ws:ratingPengunjung "" .
 
 data:ws-149 a ws:DestinasiWisata ;
@@ -3931,7 +3931,7 @@ data:ws-156 a ws:DestinasiWisata ;
     ws:dapatMelakukan "Berendam air panas"@id,
         "Berfoto"@id,
         "Menikmati kawah putih"@id ;
-    ws:memilikiMedia ""^^xsd:anyURI ;
+    ws:memilikiMedia "https://commons.wikimedia.org/wiki/Special:FilePath/Bukit_Kapur_%26_Kawah_Putih%2C_Dolok_Tinggi_Raja%2C_Simalungun.jpg"^^xsd:anyURI ;
     ws:ratingPengunjung "" .
 
 data:ws-157 a ws:DestinasiWisata ;
@@ -4080,7 +4080,7 @@ data:ws-161 a ws:DestinasiWisata ;
     ws:dapatMelakukan "Berfoto"@id,
         "Menikmati arsitektur pagoda"@id,
         "Wisata rohani"@id ;
-    ws:memilikiMedia ""^^xsd:anyURI ;
+    ws:memilikiMedia "https://commons.wikimedia.org/wiki/Special:FilePath/Pagoda_Taman_Alam_Lumbini_Berastagi._Kabupaten_Karo._Provinsi_Sumatera_Utara.jpg"^^xsd:anyURI ;
     ws:ratingPengunjung "" .
 
 data:ws-162 a ws:DestinasiWisata ;
@@ -4116,7 +4116,7 @@ data:ws-163 a ws:DestinasiWisata ;
     ws:idDestinasi "ws-163"^^xsd:string ;
     ws:namaDestinasi "Desa Adat Bawomataluo"@id ;
     ws:namaAlternatif "Bawomataluo"@id,
-        "Bawömataluo"@id ;
+        "BawÃ¶mataluo"@id ;
     ws:deskripsiSingkat "Bawomataluo adalah desa adat di Kecamatan Fanayama, Kabupaten Nias Selatan, yang dikenal karena rumah adat Nias dan atraksi lompat batu (fahombo)."@id ;
     ws:deskripsiLengkap "Bawomataluo adalah desa adat di Kecamatan Fanayama, Kabupaten Nias Selatan, yang dikenal karena rumah adat Nias dan atraksi lompat batu (fahombo). Desa ini berada di atas bukit sekitar 400 mdpl dan memiliki deretan omo hada (rumah adat) yang berhadapan sepanjang jalan batu, dengan batu megalitik di halaman masing-masing. Atas keaslian dan kelengkapan budayanya, Bawomataluo ditetapkan sebagai cagar budaya peringkat nasional pada 2017."@id ;
     ws:jenisDestinasi "Budaya"@id ;
@@ -4232,7 +4232,7 @@ data:ws-166 a ws:DestinasiWisata ;
         "Mencicipi Teh"@id,
         "Mengikuti Tur Pabrik Teh"@id,
         "Menikmati panorama kebun teh"@id ;
-    ws:memilikiMedia "https://commons.wikimedia.org/wiki/Special:FilePath/Kebun Teh Sidamanik, Kabupaten Simalungun.jpg"^^xsd:anyURI ;
+    ws:memilikiMedia "https://commons.wikimedia.org/wiki/Special:FilePath/Kebun%20Teh%20Sidamanik,%20Kabupaten%20Simalungun.jpg"^^xsd:anyURI ;
     ws:ratingPengunjung "4.6"^^xsd:decimal .
 
 data:ws-167 a ws:DestinasiWisata ;
@@ -4263,7 +4263,7 @@ data:ws-167 a ws:DestinasiWisata ;
         "Memetik Buah"@id,
         "Mencicipi Buah Andaliman"@id,
         "Trekking"@id ;
-    ws:memilikiMedia "https://commons.wikimedia.org/wiki/Special:FilePath/Taman Eden 100 yang telah dikembangkan dan berada di pinggir pemukiman masyarakat 02.jpg"^^xsd:anyURI ;
+    ws:memilikiMedia "https://commons.wikimedia.org/wiki/Special:FilePath/Taman%20Eden%20100%20yang%20telah%20dikembangkan%20dan%20berada%20di%20pinggir%20pemukiman%20masyarakat%2002.jpg"^^xsd:anyURI ;
     ws:ratingPengunjung "4.5"^^xsd:decimal .
 
 data:ws-168 a ws:DestinasiWisata ;
@@ -4293,7 +4293,7 @@ data:ws-168 a ws:DestinasiWisata ;
         "Berfoto"@id,
         "Membeli Buah Segar"@id,
         "Mencicipi Stroberi Cokelat"@id ;
-    ws:memilikiMedia ""^^xsd:anyURI ;
+    ws:memilikiMedia "https://commons.wikimedia.org/wiki/Special:FilePath/Pasar_buah_Berastagi.jpg"^^xsd:anyURI ;
     ws:ratingPengunjung "4.4"^^xsd:decimal .
 
 data:ws-169 a ws:DestinasiWisata ;
@@ -4747,7 +4747,7 @@ data:ws-183 a ws:DestinasiWisata ;
         "Memancing"@id,
         "Menyelam"@id,
         "Snorkeling"@id ;
-    ws:memilikiMedia "https://commons.wikimedia.org/wiki/Special:FilePath/Air Terjun Mursala 5.jpg"^^xsd:anyURI ;
+    ws:memilikiMedia "https://commons.wikimedia.org/wiki/Special:FilePath/Air%20Terjun%20Mursala%205.jpg"^^xsd:anyURI ;
     ws:ratingPengunjung "4.7"^^xsd:decimal .
 
 data:ws-184 a ws:DestinasiWisata ;
@@ -4827,7 +4827,7 @@ data:ws-186 a ws:DestinasiWisata ;
     ws:hargaMasuk "50000"^^xsd:decimal ;
     ws:noHpResmi "" ;
     ws:emailResmi "" ;
-    ws:instagramResmi "@hillparkmedan.id"^^xsd:anyURI ;
+    ws:instagramResmi "https://www.instagram.com/hillparkmedan.id/"^^xsd:anyURI ;
     ws:memilikiFasilitas "Area Parkir"@id,
         "Musala"@id,
         "Restoran"@id,
@@ -4993,7 +4993,7 @@ data:ws-191 a ws:DestinasiWisata ;
     ws:hargaMasuk "50000"^^xsd:decimal ;
     ws:noHpResmi "+6285277220007"^^xsd:string ;
     ws:emailResmi "" ;
-    ws:instagramResmi "@wisatamerci"^^xsd:anyURI ;
+    ws:instagramResmi "https://www.instagram.com/wisatamerci/"^^xsd:anyURI ;
     ws:memilikiFasilitas "Area Parkir"@id,
         "Food Court"@id,
         "Gazebo"@id,
@@ -5479,7 +5479,7 @@ data:ws-206 a ws:DestinasiWisata ;
         "Menikmati panorama danau"@id,
         "Menikmati senja"@id,
         "Trekking"@id ;
-    ws:memilikiMedia ""^^xsd:anyURI ;
+    ws:memilikiMedia "https://commons.wikimedia.org/wiki/Special:FilePath/Pulau_Sibandang_02.jpg"^^xsd:anyURI ;
     ws:ratingPengunjung "" .
 
 data:ws-207 a ws:DestinasiWisata ;
@@ -5512,7 +5512,7 @@ data:ws-207 a ws:DestinasiWisata ;
         "Menikmati panorama Danau Toba"@id,
         "Menikmati senja"@id,
         "Piknik"@id ;
-    ws:memilikiMedia ""^^xsd:anyURI ;
+    ws:memilikiMedia "https://commons.wikimedia.org/wiki/Special:FilePath/PanBes_atau_Pantai_Bebas%2C_Parapat%2C_Simalungun_23.jpg"^^xsd:anyURI ;
     ws:ratingPengunjung "" .
 
 data:ws-208 a ws:DestinasiWisata ;
@@ -5601,7 +5601,7 @@ data:ws-210 a ws:DestinasiWisata ;
         "Berfoto"@id,
         "Melihat rumah adat"@id,
         "Menikmati panorama danau"@id ;
-    ws:memilikiMedia ""^^xsd:anyURI ;
+    ws:memilikiMedia "https://commons.wikimedia.org/wiki/Special:FilePath/Istana_Sisingamangaraja.jpg"^^xsd:anyURI ;
     ws:ratingPengunjung "" .
 
 data:ws-211 a ws:DestinasiWisata ;
@@ -5631,7 +5631,7 @@ data:ws-211 a ws:DestinasiWisata ;
         "Mendaki"@id,
         "Menikmati panorama pantai barat"@id,
         "Ziarah"@id ;
-    ws:memilikiMedia ""^^xsd:anyURI ;
+    ws:memilikiMedia "https://commons.wikimedia.org/wiki/Special:FilePath/Tangga_1000_Makam_Papan_Tinggi_7.jpg"^^xsd:anyURI ;
     ws:ratingPengunjung "" .
 
 data:ws-212 a ws:DestinasiWisata ;
@@ -5947,7 +5947,7 @@ data:ws-221 a ws:DestinasiWisata ;
         "Menikmati panorama danau"@id,
         "Menikmati senja"@id,
         "Wisata keluarga"@id ;
-    ws:memilikiMedia ""^^xsd:anyURI ;
+    ws:memilikiMedia "https://commons.wikimedia.org/wiki/Special:FilePath/Menara_Pandang_Tele_tampak_dari_atas_01.jpg"^^xsd:anyURI ;
     ws:ratingPengunjung "" .
 
 data:ws-222 a ws:DestinasiWisata ;
@@ -5979,7 +5979,7 @@ data:ws-222 a ws:DestinasiWisata ;
         "Menikmati senja"@id,
         "Piknik"@id,
         "Trekking ringan"@id ;
-    ws:memilikiMedia ""^^xsd:anyURI ;
+    ws:memilikiMedia "https://commons.wikimedia.org/wiki/Special:FilePath/Sipinsur_Geopark.jpg"^^xsd:anyURI ;
     ws:ratingPengunjung "" .
 
 data:ws-223 a ws:DestinasiWisata ;
@@ -6043,7 +6043,7 @@ data:ws-224 a ws:DestinasiWisata ;
         "Menikmati panorama perbukitan"@id,
         "Menikmati senja"@id,
         "Wisata keluarga"@id ;
-    ws:memilikiMedia ""^^xsd:anyURI ;
+    ws:memilikiMedia "https://commons.wikimedia.org/wiki/Special:FilePath/Bukit_kubu_Berastagi.jpg"^^xsd:anyURI ;
     ws:ratingPengunjung "" .
 
 data:ws-225 a ws:DestinasiWisata ;
@@ -6107,7 +6107,7 @@ data:ws-226 a ws:DestinasiWisata ;
         "Menikmati kuliner"@id,
         "Menikmati matahari terbit"@id,
         "Menikmati panorama gunung"@id ;
-    ws:memilikiMedia ""^^xsd:anyURI ;
+    ws:memilikiMedia "https://commons.wikimedia.org/wiki/Special:FilePath/Bukit_gajah_Bobok_02.jpg"^^xsd:anyURI ;
     ws:ratingPengunjung "" .
 
 data:ws-227 a ws:DestinasiWisata ;
@@ -6137,7 +6137,7 @@ data:ws-227 a ws:DestinasiWisata ;
         "Berfoto"@id,
         "Menikmati pemandangan air terjun"@id,
         "Trekking ringan"@id ;
-    ws:memilikiMedia ""^^xsd:anyURI ;
+    ws:memilikiMedia "https://commons.wikimedia.org/wiki/Special:FilePath/Jalanan_batako_di_Air_Terjun_Sikulikap_02.jpg"^^xsd:anyURI ;
     ws:ratingPengunjung "" .
 
 data:ws-228 a ws:DestinasiWisata ;
@@ -6167,7 +6167,7 @@ data:ws-228 a ws:DestinasiWisata ;
         "Berfoto"@id,
         "Menikmati pemandangan air terjun"@id,
         "Wisata keluarga"@id ;
-    ws:memilikiMedia ""^^xsd:anyURI ;
+    ws:memilikiMedia "https://commons.wikimedia.org/wiki/Special:FilePath/Air_terjun_Linggahara.jpg"^^xsd:anyURI ;
     ws:ratingPengunjung "" .
 
 data:ws-229 a ws:DestinasiWisata ;
@@ -6597,7 +6597,7 @@ data:ws-242 a ws:DestinasiWisata ;
         "Membeli produk lokal"@id,
         "Menikmati acara seni"@id,
         "Menikmati kuliner"@id ;
-    ws:memilikiMedia ""^^xsd:anyURI ;
+    ws:memilikiMedia "https://commons.wikimedia.org/wiki/Special:FilePath/Pos_Bloc_Medan_3.jpg"^^xsd:anyURI ;
     ws:ratingPengunjung "" .
 
 data:ws-243 a ws:DestinasiWisata ;
@@ -6714,7 +6714,7 @@ data:ws-246 a ws:DestinasiWisata ;
         "Menikmati pantai"@id,
         "Piknik"@id,
         "Snorkeling"@id ;
-    ws:memilikiMedia ""^^xsd:anyURI ;
+    ws:memilikiMedia "https://commons.wikimedia.org/wiki/Special:FilePath/Kapal_wisata_di_Pulau_Kalimantung.jpg"^^xsd:anyURI ;
     ws:ratingPengunjung "" .
 
 data:ws-247 a ws:DestinasiWisata ;
@@ -6744,7 +6744,7 @@ data:ws-247 a ws:DestinasiWisata ;
         "Memancing"@id,
         "Menikmati pantai"@id,
         "Piknik"@id ;
-    ws:memilikiMedia ""^^xsd:anyURI ;
+    ws:memilikiMedia "https://commons.wikimedia.org/wiki/Special:FilePath/Pulau_Pandang.jpg"^^xsd:anyURI ;
     ws:ratingPengunjung "" .
 
 data:ws-248 a ws:DestinasiWisata ;
@@ -6776,7 +6776,7 @@ data:ws-248 a ws:DestinasiWisata ;
         "Berfoto"@id,
         "Menikmati pemandangan air terjun"@id,
         "Wisata keluarga"@id ;
-    ws:memilikiMedia ""^^xsd:anyURI ;
+    ws:memilikiMedia "https://commons.wikimedia.org/wiki/Special:FilePath/Sampuran_Aek_Sijorni.jpg"^^xsd:anyURI ;
     ws:ratingPengunjung "" .
 
 data:ws-249 a ws:DestinasiWisata ;
@@ -6871,5 +6871,5 @@ data:ws-251 a ws:DestinasiWisata ;
         "Berfoto"@id,
         "Melihat rumah adat"@id,
         "Melihat tenun ulos"@id ;
-    ws:memilikiMedia ""^^xsd:anyURI ;
+    ws:memilikiMedia "https://commons.wikimedia.org/wiki/Special:FilePath/Desa_Meat_14.jpg"^^xsd:anyURI ;
     ws:ratingPengunjung "" .

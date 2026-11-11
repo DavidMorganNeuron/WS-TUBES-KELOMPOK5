@@ -13,7 +13,7 @@ use Throwable;
 class OntologyDoctor extends Command
 {
     protected $signature = 'ontology:doctor
-        {id=ws-272 : ID destinasi yang diperiksa}
+        {id=ws-148 : ID destinasi yang diperiksa}
         {--file= : File Turtle yang diperiksa (default: ONTOLOGY_TTL_PATH)}
         {--property=hargaMasuk : Properti yang dibandingkan antara Fuseki dan aplikasi}
         {--forget-cache : Hapus cache ontologi sebelum membandingkan}';
@@ -68,7 +68,7 @@ class OntologyDoctor extends Command
 
         try {
             $result = $linter->lint($resolved);
-        } catch (\Throwable $exception) {
+        } catch (Throwable $exception) {
             $this->components->error($exception->getMessage());
 
             return 1;

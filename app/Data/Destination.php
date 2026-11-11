@@ -50,7 +50,7 @@ final readonly class Destination
             fullDescription: self::text($data['deskripsiLengkap'] ?? ''),
             types: self::splitValues($data['jenisDestinasi'] ?? ''),
             keywords: self::splitValues($data['kataKunci'] ?? ''),
-            location: self::text($data['beradaDi'] ?? ''),
+            location: self::location($data['beradaDi'] ?? ''),
             address: self::text($data['alamat'] ?? ''),
             latitude: self::coordinate($data['lintang'] ?? null, -90, 90),
             longitude: self::coordinate($data['bujur'] ?? null, -180, 180),
@@ -91,22 +91,30 @@ final readonly class Destination
         return $this->latitude !== null && $this->longitude !== null;
     }
 
-    public function imageUrl(): string
+    public function imageUrl(int $width = 600): string
     {
         if ($this->media !== '') {
-            return $this->media;
+            return $this->mediaWithWidth($this->media, $width);
         }
 
-        $fallback = [
-            'Alam' => 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1200&q=80',
-            'Budaya' => 'https://images.unsplash.com/photo-1555400038-63f5ba517a47?auto=format&fit=crop&w=1200&q=80',
-            'Religi' => 'https://images.unsplash.com/photo-1564769625905-50e93615e769?auto=format&fit=crop&w=1200&q=80',
-            'Bahari' => 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80',
-            'Kuliner' => 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1200&q=80',
-            'Buatan' => 'https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?auto=format&fit=crop&w=1200&q=80',
-        ];
+        $slug = Str::slug($this->primaryType()) ?: 'destinasi';
+        $allowed = ['alam', 'budaya', 'religi', 'bahari', 'kuliner', 'buatan'];
 
-        return $fallback[$this->primaryType()] ?? $fallback['Alam'];
+        return asset('images/placeholders/'.(in_array($slug, $allowed, true) ? $slug : 'destinasi').'.svg');
+    }
+
+    /**
+     * @return array{artist: string, license: string, license_url: string, source_url: string}|null
+     */
+    public function imageAttribution(): ?array
+    {
+        static $attributions = null;
+
+        if ($attributions === null) {
+            $attributions = require __DIR__.'/destination_images.php';
+        }
+
+        return $attributions[$this->id] ?? null;
     }
 
     /**
@@ -136,7 +144,7 @@ final readonly class Destination
             return self::formatPrice((string) min(array_map(floatval(...), $numeric)));
         }
 
-        return $this->prices[0] ?? '—';
+        return isset($this->prices[0]) ? self::formatPrice($this->prices[0]) : '—';
     }
 
     /**
@@ -151,9 +159,26 @@ final readonly class Destination
 
     private static function formatPrice(string $price): string
     {
-        return is_numeric($price)
-            ? 'Rp '.number_format((float) $price, 0, ',', '.')
-            : $price;
+        if (! is_numeric($price)) {
+            return Str::lower(trim($price)) === 'gratis' ? 'Free' : $price;
+        }
+
+        $amount = (float) $price;
+
+        return $amount <= 0.0 ? 'Free' : 'Rp '.number_format($amount, 0, ',', '.');
+    }
+
+    private function mediaWithWidth(string $url, int $width): string
+    {
+        if (! str_contains($url, 'commons.wikimedia.org') || ! str_contains($url, 'Special:FilePath')) {
+            return $url;
+        }
+
+        if (preg_match('/[?&]width=/', $url) === 1) {
+            return $url;
+        }
+
+        return $url.(str_contains($url, '?') ? '&' : '?').'width='.$width;
     }
 
     public function ratingLabel(): string
@@ -186,7 +211,8 @@ final readonly class Destination
             'location' => $this->location,
             'price' => $this->priceLabel(),
             'hours' => $this->openingHours,
-            'image' => $this->imageUrl(),
+            'image' => $this->imageUrl(600),
+            'image_attribution' => $this->imageAttribution(),
             'latitude' => $this->latitude,
             'longitude' => $this->longitude,
             'url' => route('destination.detail', $this->id),
@@ -197,7 +223,26 @@ final readonly class Destination
     {
         $text = trim((string) $value);
 
-        return in_array($text, ['', '-', '(kosong)'], true) ? '' : $text;
+        if (in_array($text, ['', '-', '(kosong)'], true)) {
+            return '';
+        }
+
+        $text = preg_replace('/[ \t]+/u', ' ', $text) ?? $text;
+
+        return preg_replace('/\R{3,}/u', "\n\n", $text) ?? $text;
+    }
+
+    private static function location(mixed $value): string
+    {
+        $text = self::text($value);
+
+        if (! str_contains($text, '|')) {
+            return $text;
+        }
+
+        $parts = array_values(array_filter(array_map('trim', explode('|', $text))));
+
+        return $parts[0] ?? '';
     }
 
     /**
@@ -234,6 +279,6 @@ final readonly class Destination
             return null;
         }
 
-        return (float) $value;
+        return max(0.0, min(5.0, (float) $value));
     }
 }

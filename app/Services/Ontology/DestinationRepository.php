@@ -73,12 +73,27 @@ class DestinationRepository
             : 'rating';
 
         $destinations = match ($sort) {
-            'name' => $destinations->sortBy(fn (Destination $destination): string => Str::lower($destination->name)),
+            'name' => $destinations->sortBy(fn (Destination $destination): array => [
+                Str::lower($destination->name),
+                $destination->id,
+            ]),
             'id' => $destinations->sortBy('id'),
-            'rating_asc' => $destinations->sortBy(fn (Destination $destination): float => $destination->rating ?? -1),
-            'price_asc' => $destinations->sortBy(fn (Destination $destination): float => $destination->lowestPrice() ?? PHP_FLOAT_MAX),
-            'price_desc' => $destinations->sortByDesc(fn (Destination $destination): float => $destination->lowestPrice() ?? -PHP_FLOAT_MAX),
-            default => $destinations->sortByDesc(fn (Destination $destination): float => $destination->rating ?? -1),
+            'rating_asc' => $destinations->sortBy(fn (Destination $destination): array => [
+                $destination->rating ?? PHP_FLOAT_MAX,
+                Str::lower($destination->name),
+            ]),
+            'price_asc' => $destinations->sortBy(fn (Destination $destination): array => [
+                $destination->lowestPrice() ?? PHP_FLOAT_MAX,
+                Str::lower($destination->name),
+            ]),
+            'price_desc' => $destinations->sortBy(fn (Destination $destination): array => [
+                -($destination->lowestPrice() ?? -PHP_FLOAT_MAX),
+                Str::lower($destination->name),
+            ]),
+            default => $destinations->sortBy(fn (Destination $destination): array => [
+                -($destination->rating ?? -1),
+                Str::lower($destination->name),
+            ]),
         };
 
         return $destinations->values();
@@ -89,8 +104,9 @@ class DestinationRepository
      */
     public function paginate(array $filters = [], int $perPage = 9): LengthAwarePaginator
     {
-        $page = LengthAwarePaginator::resolveCurrentPage('page');
         $destinations = $this->search($filters);
+        $lastPage = max(1, (int) ceil($destinations->count() / $perPage));
+        $page = min(max(1, LengthAwarePaginator::resolveCurrentPage('page')), $lastPage);
 
         return new LengthAwarePaginator(
             $destinations->forPage($page, $perPage)->values(),
@@ -118,7 +134,10 @@ class DestinationRepository
      */
     public function topRated(int $limit = 6): Collection
     {
-        return $this->search(['sort' => 'rating'])->take($limit);
+        return $this->search(['sort' => 'rating'])
+            ->filter(fn (Destination $destination): bool => $destination->rating !== null)
+            ->take($limit)
+            ->values();
     }
 
     /**
@@ -416,7 +435,10 @@ class DestinationRepository
 
     private function cacheKey(): string
     {
-        $modifiedAt = is_file(base_path($this->ttlPath)) ? (string) filemtime(base_path($this->ttlPath)) : '0';
+        $path = preg_match('/^[A-Za-z]:[\\\\\\/]/', $this->ttlPath) === 1 || str_starts_with($this->ttlPath, DIRECTORY_SEPARATOR)
+            ? $this->ttlPath
+            : base_path($this->ttlPath);
+        $modifiedAt = is_file($path) ? (string) filemtime($path) : '0';
 
         return 'ontology.destinations.'.md5($this->driver.'|'.$this->ttlPath.'|'.$modifiedAt);
     }

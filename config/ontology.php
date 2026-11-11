@@ -15,13 +15,13 @@ return [
 
     'driver' => env('ONTOLOGY_DRIVER', 'auto'),
 
-    'ttl_path' => env('ONTOLOGY_TTL_PATH', 'database/ontology/pariwisata-sumut.ttl'),
+    'ttl_path' => env('ONTOLOGY_TTL_PATH', 'database/ontology/wisata_sumut_v2.ttl'),
 
     'cache_ttl' => (int) env('ONTOLOGY_CACHE_TTL', 600),
 
     'fuseki' => [
         'url' => env('FUSEKI_URL', 'http://localhost:3030'),
-        'dataset' => env('FUSEKI_DATASET', 'pariwisata-sumut'),
+        'dataset' => env('FUSEKI_DATASET', 'WayFinder'),
         'username' => env('FUSEKI_USERNAME'),
         'password' => env('FUSEKI_PASSWORD'),
         'timeout' => (int) env('FUSEKI_TIMEOUT', 5),

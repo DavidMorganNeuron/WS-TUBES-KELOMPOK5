@@ -86,8 +86,8 @@ class OntologyValidate extends Command
             explode('|', $row['jenisDestinasi'] ?? ''),
         )));
 
-        if (preg_match('/^DST-\d{4}$/', $id) !== 1) {
-            $this->errors[] = "{$id}: format ID harus DST-0000.";
+        if (preg_match('/^ws-\d{3}$/', $id) !== 1) {
+            $this->errors[] = "{$id}: format ID harus ws-000.";
         }
 
         if (($row['namaDestinasi'] ?? '') === '') {
