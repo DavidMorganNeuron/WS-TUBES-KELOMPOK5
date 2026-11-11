@@ -1,58 +1,111 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+<div align="center">
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+# Sumatera Heritage &amp; Trails
 
-## About Laravel
+Jelajahi destinasi wisata Sumatera melalui pencarian, peta interaktif, dan panduan AI berbasis data semantik.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+[![PHP](https://img.shields.io/badge/PHP-8.4-777BB4?style=for-the-badge&logo=php&logoColor=white)](https://www.php.net/)
+[![Laravel](https://img.shields.io/badge/Laravel-13-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)](https://laravel.com/)
+[![JavaScript](https://img.shields.io/badge/JavaScript-ES_Modules-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/docs/Web/JavaScript)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![Vite](https://img.shields.io/badge/Vite-8-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vite.dev/)
+[![SQLite](https://img.shields.io/badge/SQLite-Database-003B57?style=for-the-badge&logo=sqlite&logoColor=white)](https://www.sqlite.org/)
+[![Leaflet](https://img.shields.io/badge/Leaflet-Maps-199900?style=for-the-badge&logo=leaflet&logoColor=white)](https://leafletjs.com/)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+</div>
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Tentang proyek
 
-## Learning Laravel
+**Sumatera Heritage & Trails** adalah aplikasi web panduan wisata yang menyajikan informasi destinasi dari data berbasis ontologi. Pengunjung dapat menelusuri destinasi, melihat detail dan lokasinya, serta bertanya kepada **WayFinder AI** tentang informasi wisata.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Fitur
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- Jelajahi dan cari destinasi, dengan saran pencarian langsung.
+- Lihat detail destinasi, kategori, informasi, dan atribusi gambar.
+- Temukan destinasi melalui peta interaktif berbasis Leaflet.
+- Tanyakan informasi destinasi melalui WayFinder AI.
+- Sajikan data dari Apache Jena Fuseki atau gunakan file Turtle lokal sebagai fallback.
+- Validasi data ontologi dan kelola cache melalui perintah Artisan.
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+## Teknologi
 
-## Agentic Development
+| Area | Teknologi |
+| --- | --- |
+| Backend | PHP 8.4, Laravel 13 |
+| Frontend | JavaScript, Blade, Tailwind CSS 4 |
+| Build frontend | Vite 8 |
+| Peta | Leaflet, MarkerCluster |
+| Data semantik | RDF/Turtle, SPARQL, Apache Jena Fuseki (opsional) |
+| Penyimpanan aplikasi | SQLite secara default |
+| Chatbot | Google Gemini API (opsional) |
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## Persyaratan
+
+- PHP 8.4 dan Composer
+- Node.js `^20.19` atau `>=22.12`, beserta npm
+- Ekstensi PHP SQLite/PDO SQLite
+- Apache Jena Fuseki dan kunci Gemini hanya jika ingin menggunakan layanan tersebut
+
+## Menjalankan secara lokal
+
+1. Clone repository dan masuk ke folder proyek.
+2. Jalankan skrip setup:
+
+   ```bash
+   composer run setup
+   ```
+
+   Skrip ini memasang dependensi, menyiapkan `.env`, membuat application key, menjalankan migrasi, memasang dependensi frontend, dan membangun aset.
+
+3. Sesuaikan `.env` bila diperlukan. Secara default aplikasi menggunakan SQLite dan driver ontologi `auto`: mencoba Fuseki terlebih dahulu, lalu memakai file Turtle lokal jika Fuseki tidak tersedia.
+4. Untuk mengaktifkan chatbot, isi `GEMINI_API_KEY` di `.env`. Untuk menggunakan Fuseki, sesuaikan `FUSEKI_URL`, `FUSEKI_DATASET`, dan kredensialnya bila diperlukan. Jangan pernah membagikan atau meng-commit kunci API.
+5. Jalankan aplikasi:
+
+   ```bash
+   php artisan serve
+   ```
+
+   Buka URL yang ditampilkan Artisan, biasanya `http://127.0.0.1:8000`.
+
+Untuk pengembangan frontend dengan hot reload, jalankan di terminal terpisah:
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+npm run dev
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+## Perintah data ontologi
 
-## Contributing
+```bash
+# Memvalidasi data destinasi pada file Turtle
+php artisan ontology:validate
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+# Memanaskan cache ontologi
+php artisan ontology:warm
 
-## Code of Conduct
+# Mendiagnosis konsistensi data antara file Turtle, Fuseki, dan aplikasi
+php artisan ontology:doctor
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Jika Fuseki sudah berjalan dan dikonfigurasi, unggah file Turtle dengan:
 
-## Security Vulnerabilities
+```bash
+php artisan fuseki:load
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Pengujian
 
-## License
+Jalankan pengujian aplikasi dengan:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```bash
+php artisan test
+```
+
+## Struktur data utama
+
+- `database/ontology/wisata_sumut_v2.ttl` — sumber data ontologi dalam format Turtle.
+- `wisata_sumut_v2.json` — berkas data destinasi JSON.
+- `config/ontology.php` — konfigurasi driver, file Turtle, cache, dan koneksi Fuseki.
+
+## Lisensi
+
+Metadata proyek pada `composer.json` mencantumkan lisensi MIT.
