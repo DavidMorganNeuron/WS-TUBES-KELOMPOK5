@@ -22,4 +22,6 @@ Route::get('/map', [MapController::class, 'index'])->name('map');
 
 Route::get('/map/live', [MapController::class, 'live'])->name('map.live');
 
-Route::post('/chatbot/send', [ChatbotController::class, 'chat'])->name('chatbot.send');
+Route::post('/chatbot/send', [ChatbotController::class, 'chat'])
+    ->middleware('throttle:10,1')
+    ->name('chatbot.send');

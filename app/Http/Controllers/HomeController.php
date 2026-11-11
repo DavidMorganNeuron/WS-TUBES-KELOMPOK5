@@ -11,8 +11,18 @@ class HomeController extends Controller
     public function index(DestinationRepository $repository): View
     {
         $facets = $repository->facets();
-        $highlights = $repository->topRated(6);
-        $featured = $highlights->first();
+        $facets['types'] = array_filter($facets['types'], static fn (int $count): bool => $count > 0);
+        $facets['provinces'] = array_filter($facets['provinces'], static fn (int $count): bool => $count > 0);
+
+        $candidates = $repository->topRated(12);
+        $featured = $candidates->first(
+            static fn (Destination $destination): bool => $destination->media !== '' && $destination->shortDescription !== '',
+        ) ?? $candidates->first();
+
+        $highlights = $candidates
+            ->reject(static fn (Destination $destination): bool => $destination->id === $featured?->id)
+            ->take(4)
+            ->values();
 
         $categoryHighlights = collect(DestinationRepository::TYPES)
             ->map(function (string $type) use ($repository, $facets): array {
@@ -25,6 +35,8 @@ class HomeController extends Controller
                     'destination' => $topDestination,
                 ];
             })
+            ->filter(static fn (array $category): bool => $category['count'] > 0)
+            ->values()
             ->all();
 
         return view('home', [

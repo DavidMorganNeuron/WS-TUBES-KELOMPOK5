@@ -17,3 +17,254 @@
   --font-sans: "Plus Jakarta Sans", sans-serif;
   --font-serif: "Playfair Display", serif;
 }
+
+@keyframes chatbot-caret {
+    50% {
+        opacity: 0;
+    }
+}
+
+#chatbot-greeting::after {
+    display: inline-block;
+    margin-left: 0.15em;
+    color: #92400e;
+    content: '|';
+    animation: chatbot-caret 0.9s steps(2, start) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #chatbot-greeting::after {
+        animation: none;
+    }
+}
+
+/* Skeleton shimmer animation for loading and lagging states */
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+.skeleton-shimmer {
+    position: relative;
+    overflow: hidden;
+    --skeleton-background: #f3f4f6;
+    --skeleton-highlight: rgba(255, 255, 255, 0.6);
+    background-color: var(--skeleton-background);
+}
+
+.skeleton-shimmer::after {
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        var(--skeleton-highlight) 50%,
+        transparent 100%
+    );
+    animation: shimmer 1.5s infinite;
+    content: '';
+}
+
+/* Slim top loading bar for page transitions when server/connection lags */
+#global-progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    z-index: 99999;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+#global-progress-bar.active {
+    opacity: 1;
+}
+
+#global-progress-bar-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #0f5132, #b74a1c);
+    box-shadow: 0 0 10px rgba(183, 74, 28, 0.7);
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+html.dark {
+    color-scheme: dark;
+    --color-brand-light: #111827;
+    --color-brand-primary: #a7d6bc;
+    --color-brand-accent: #d97745;
+    --color-brand-text: #e5e7eb;
+    --color-brand-muted: #9ca3af;
+}
+
+html.dark body {
+    background-color: #111827;
+    color: #e5e7eb;
+}
+
+html.dark .bg-white {
+    background-color: #1f2937;
+}
+
+html.dark .bg-gray-50 {
+    background-color: #111827;
+}
+
+html.dark .bg-gray-100 {
+    background-color: #273449;
+}
+
+html.dark .bg-gray-200 {
+    background-color: #374151;
+}
+
+html.dark .bg-gray-300 {
+    background-color: #4b5563;
+}
+
+html.dark .text-gray-900,
+html.dark .text-gray-800 {
+    color: #f3f4f6;
+}
+
+html.dark .text-gray-700 {
+    color: #e5e7eb;
+}
+
+html.dark .text-gray-600 {
+    color: #cbd5e1;
+}
+
+html.dark .text-gray-500,
+html.dark .text-gray-400 {
+    color: #9ca3af;
+}
+
+html.dark .border-gray-100,
+html.dark .border-gray-200 {
+    border-color: #374151;
+}
+
+html.dark .border-gray-300 {
+    border-color: #4b5563;
+}
+
+html.dark .hover\:bg-gray-50:hover,
+html.dark .focus\:bg-gray-50:focus {
+    background-color: #273449;
+}
+
+html.dark .hover\:bg-white:hover {
+    background-color: #273449;
+}
+
+html.dark .bg-orange-50,
+html.dark .bg-yellow-50 {
+    background-color: #3b3024;
+}
+
+html.dark .text-orange-500,
+html.dark .text-yellow-600 {
+    color: #fbbf24;
+}
+
+html.dark .bg-red-50 {
+    background-color: #3b2028;
+}
+
+html.dark .border-red-200 {
+    border-color: #7f1d1d;
+}
+
+html.dark .text-red-800,
+html.dark .text-red-700 {
+    color: #fca5a5;
+}
+
+html.dark #btn-theme-toggle {
+    border-color: #fbbf24;
+    background-color: #fbbf24;
+    color: #111827;
+}
+
+html.dark #btn-theme-toggle:hover {
+    border-color: #fcd34d;
+    background-color: #fcd34d;
+    color: #111827;
+}
+
+html.dark .skeleton-shimmer {
+    --skeleton-background: #273449;
+    --skeleton-highlight: rgba(255, 255, 255, 0.08);
+}
+
+html.dark #map-sidebar > div:first-child,
+html.dark #map-results,
+html.dark #map {
+    background-color: #111827;
+}
+
+html.dark [class~="bg-white/90"] {
+    background-color: rgb(31 41 55 / 0.92);
+}
+
+html.dark [class~="bg-[#e8f5e9]"] {
+    background-color: #17352b;
+}
+
+html.dark [class~="text-[#0f5132]"] {
+    color: #a7d6bc;
+}
+
+html.dark .leaflet-container {
+    color: #e5e7eb;
+}
+
+html.dark .leaflet-tile {
+    filter: invert(1) hue-rotate(180deg) brightness(0.85) contrast(0.9);
+}
+
+html.dark .leaflet-popup-content-wrapper,
+html.dark .leaflet-popup-tip,
+html.dark .leaflet-bar a,
+html.dark .leaflet-bar a:hover {
+    background-color: #1f2937;
+    color: #e5e7eb;
+}
+
+html.dark .leaflet-bar,
+html.dark .leaflet-popup-content-wrapper {
+    border-color: #374151;
+}
+
+html.dark .prose {
+    --tw-prose-body: #d1d5db;
+    --tw-prose-headings: #f9fafb;
+    --tw-prose-lead: #cbd5e1;
+    --tw-prose-links: #a7d6bc;
+    --tw-prose-bold: #f9fafb;
+    --tw-prose-counters: #9ca3af;
+    --tw-prose-bullets: #9ca3af;
+    --tw-prose-hr: #4b5563;
+    --tw-prose-quotes: #e5e7eb;
+    --tw-prose-quote-borders: #4b5563;
+    --tw-prose-captions: #9ca3af;
+    --tw-prose-code: #f3f4f6;
+    --tw-prose-pre-code: #e5e7eb;
+    --tw-prose-pre-bg: #111827;
+    --tw-prose-th-borders: #4b5563;
+    --tw-prose-td-borders: #374151;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .skeleton-shimmer::after {
+        animation: none;
+    }
+}

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" role="img" aria-label="Marine destination placeholder">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#d8eef8"/>
+      <stop offset="1" stop-color="#79bfe0"/>
+    </linearGradient>
+    <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2f8fbe"/>
+      <stop offset="1" stop-color="#0b4f74"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#sky)"/>
+  <circle cx="920" cy="180" r="65" fill="#fff3c4"/>
+  <rect y="520" width="1200" height="280" fill="url(#sea)"/>
+  <path d="M0 520 Q150 480 300 520 T600 520 T900 520 T1200 520 L1200 560 Q1050 590 900 560 T600 560 T300 560 T0 560 Z" fill="#e8f7ff" opacity=".65"/>
+  <path d="M470 620 L600 500 L730 620 Z" fill="#f7f2e4"/>
+  <rect x="592" y="500" width="16" height="130" fill="#6b3410"/>
+  <path d="M610 520 L700 610 L610 610 Z" fill="#c04a2a"/>
+  <text x="70" y="130" fill="#0b3d59" font-family="Georgia, serif" font-size="54" font-weight="700">Marine</text>
+  <text x="70" y="185" fill="#135d80" font-family="Arial, sans-serif" font-size="26" letter-spacing="4">ISLANDS &amp; COASTS</text>
+</svg>

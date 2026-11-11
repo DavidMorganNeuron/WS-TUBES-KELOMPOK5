@@ -11,6 +11,7 @@ class MapController extends Controller
 {
     public function index(Request $request, DestinationRepository $repository): View
     {
+        $this->validateFilterInputs($request);
         $filters = $this->filters($request);
         $matches = $repository->search($filters);
         $results = $matches->take(60);
@@ -29,6 +30,7 @@ class MapController extends Controller
 
     public function live(Request $request, DestinationRepository $repository): JsonResponse
     {
+        $this->validateFilterInputs($request);
         $filters = $this->filters($request);
         $matches = $repository->search($filters);
         $results = $matches->take(60);
@@ -43,6 +45,15 @@ class MapController extends Controller
             'resultCount' => $results->count(),
             'markerCount' => count($markers),
             'markers' => $markers,
+        ]);
+    }
+
+    private function validateFilterInputs(Request $request): void
+    {
+        $request->validate([
+            'q' => ['sometimes', 'nullable', 'string', 'max:200'],
+            'jenis' => ['sometimes', 'nullable', 'string', 'max:64'],
+            'provinsi' => ['sometimes', 'nullable', 'string', 'max:64'],
         ]);
     }
 

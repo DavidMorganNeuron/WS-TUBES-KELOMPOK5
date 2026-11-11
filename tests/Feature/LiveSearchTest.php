@@ -64,4 +64,17 @@ class LiveSearchTest extends TestCase
         $this->assertGreaterThan(0, $response->json('count'));
         $this->assertStringContainsString('Danau', $response->json('html'));
     }
+
+    public function test_search_routes_reject_array_valued_query_parameters_without_server_errors(): void
+    {
+        foreach ([
+            '/destinations?q%5B%5D=Danau',
+            '/destinations/live?q%5B%5D=Danau',
+            '/destinations/suggest?q%5B%5D=Danau',
+            '/map?q%5B%5D=Danau',
+            '/map/live?q%5B%5D=Danau',
+        ] as $url) {
+            $this->getJson($url)->assertUnprocessable();
+        }
+    }
 }

@@ -1,5 +1,19 @@
 @extends('layouts.app')
 
+@php
+    $typeLabels = [
+        'Alam' => 'Nature',
+        'Budaya' => 'Heritage',
+        'Religi' => 'Religious',
+        'Bahari' => 'Marine',
+        'Kuliner' => 'Culinary',
+        'Buatan' => 'Man-made',
+    ];
+    $topKabupaten = $facets['kabupaten'];
+    arsort($topKabupaten);
+    $topKabupaten = array_slice($topKabupaten, 0, 8, true);
+@endphp
+
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full overflow-x-hidden">
 
@@ -11,16 +25,17 @@
         </span>
         <div class="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-6">
             <div>
-                <h1 class="text-4xl md:text-5xl font-serif font-bold text-gray-900 mb-4">Explore North Sumatera Destinations</h1>
+                <h1 class="text-4xl md:text-5xl font-serif font-bold text-gray-900 mb-4">Explore North Sumatra Destinations</h1>
                 <p class="text-gray-600 text-lg max-w-2xl">
-                    {{ number_format($facets['total']) }} destinations curated from the tourism ontology, covering volcanic highlands, Batak heritage, and the Acehnese coast.
+                    {{ number_format($facets['total']) }} destinations curated from the tourism ontology, covering volcanic highlands, Batak heritage, and the Lake Toba caldera.
                 </p>
             </div>
-            <form action="{{ route('destinations') }}" method="GET" class="flex w-full lg:w-auto gap-2" data-live-suggest data-suggest-url="{{ route('destinations.suggest') }}" autocomplete="off">
+            <form action="{{ route('destinations') }}" method="GET" class="flex w-full lg:w-auto gap-2" data-live-suggest data-suggest-url="{{ route('destinations.suggest') }}" autocomplete="off" role="search">
                 <div class="relative flex-grow lg:w-72">
-                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">🔍</span>
-                    <input type="text" name="q" placeholder="Search destinations..." class="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm outline-none focus:border-brand-primary" autocomplete="off" aria-autocomplete="list" aria-controls="dashboard-search-suggestions" aria-expanded="false">
-                    <div id="dashboard-search-suggestions" data-suggest-panel class="absolute left-0 right-0 top-full z-50 mt-2 hidden overflow-hidden rounded-xl border border-gray-200 bg-white shadow-xl" role="listbox"></div>
+                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" aria-hidden="true">🔍</span>
+                    <input type="text" name="q" placeholder="Search destinations..." class="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm outline-none focus:border-brand-primary" autocomplete="off" aria-label="Search destinations" aria-autocomplete="list" aria-haspopup="listbox" aria-controls="dashboard-search-suggestions" aria-expanded="false">
+                    <div id="dashboard-search-suggestions" data-suggest-panel class="absolute left-0 right-0 top-full z-50 mt-2 hidden overflow-hidden rounded-xl border border-gray-200 bg-white shadow-xl" role="listbox" aria-label="Destination suggestions"></div>
+                    <p data-suggest-status class="sr-only" role="status" aria-live="polite"></p>
                 </div>
                 <button type="submit" class="bg-brand-dark hover:bg-gray-800 text-white text-sm font-bold px-5 py-2.5 rounded-xl transition">Search</button>
             </form>
@@ -33,7 +48,7 @@
             <div>
                 <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Total Destinations</p>
                 <h3 class="text-2xl font-bold text-gray-900 mb-1">{{ number_format($facets['total']) }}</h3>
-                <p class="text-sm text-gray-500">Across {{ collect($provinces)->filter()->count() }} regions</p>
+                <p class="text-sm text-gray-500">Across {{ number_format(count($facets['kabupaten'])) }} regencies &amp; cities</p>
             </div>
             <div class="bg-brand-light p-3 rounded-xl text-brand-primary">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
@@ -79,8 +94,9 @@
 
             @if ($featured)
                 <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
-                    <div class="relative h-72 bg-gray-300">
-                        <img src="{{ $featured->imageUrl() }}" alt="{{ $featured->name }}" class="w-full h-full object-cover">
+                    <div class="relative h-72 bg-gray-200 skeleton-shimmer overflow-hidden">
+                        <img src="{{ $featured->imageUrl(1600) }}" alt="{{ $featured->name }}" class="w-full h-full object-cover transition-opacity duration-300" onload="this.closest('.skeleton-shimmer')?.classList.remove('skeleton-shimmer')" onerror="this.closest('.skeleton-shimmer')?.classList.remove('skeleton-shimmer')">
+                        @include('partials.image-attribution', ['destination' => $featured])
                         <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent"></div>
                         <div class="absolute top-4 left-4 flex flex-wrap gap-2">
                             <span class="bg-white/20 backdrop-blur-md text-white text-xs font-bold px-3 py-1 rounded-full">TOP RATED</span>
@@ -95,7 +111,9 @@
                     <div class="p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                         <div class="flex flex-wrap gap-4 text-sm text-gray-600">
                             <span class="font-bold text-brand-primary">⭐ {{ $featured->ratingLabel() }} / 5</span>
-                            <span>🕒 {{ $featured->openingHours !== '' ? $featured->openingHours : 'Hours pending' }}</span>
+                            @if ($featured->openingHours !== '')
+                                <span>🕒 {{ $featured->openingHours }}</span>
+                            @endif
                             <span>🎟️ {{ $featured->priceLabel() }}</span>
                         </div>
                         <a href="{{ route('destination.detail', $featured->id) }}" class="bg-brand-accent hover:bg-orange-800 text-white text-sm font-bold px-5 py-2.5 rounded-full transition">
@@ -133,12 +151,15 @@
                     @foreach ($categoryHighlights as $category)
                         <a href="{{ route('destinations', ['jenis' => $category['type']]) }}" class="group border border-gray-100 rounded-2xl p-5 bg-[#fafaf9] hover:bg-brand-light/60 hover:border-brand-primary/20 transition">
                             <div class="flex justify-between items-center mb-3">
-                                <span class="text-[10px] font-bold uppercase tracking-wider bg-brand-dark text-white px-2 py-1 rounded">{{ $category['type'] }}</span>
+                                <span class="text-[10px] font-bold uppercase tracking-wider bg-brand-dark text-white px-2 py-1 rounded">{{ $typeLabels[$category['type']] ?? $category['type'] }}</span>
                                 <span class="text-[10px] font-bold text-gray-500">{{ $category['count'] }} destinations</span>
                             </div>
                             @if ($category['destination'])
                                 <div class="flex gap-3 items-center">
-                                    <img src="{{ $category['destination']->imageUrl() }}" alt="{{ $category['destination']->name }}" class="w-14 h-14 rounded-xl object-cover flex-shrink-0" loading="lazy">
+                                    <div class="relative w-14 h-14 rounded-xl bg-gray-200 skeleton-shimmer overflow-hidden flex-shrink-0">
+                                        <img src="{{ $category['destination']->imageUrl() }}" alt="{{ $category['destination']->name }}" class="w-full h-full object-cover transition-opacity duration-300" loading="lazy" onload="this.closest('.skeleton-shimmer')?.classList.remove('skeleton-shimmer')" onerror="this.closest('.skeleton-shimmer')?.classList.remove('skeleton-shimmer')">
+                                        @include('partials.image-attribution', ['destination' => $category['destination']])
+                                    </div>
                                     <div class="min-w-0">
                                         <h4 class="font-bold text-sm text-gray-900 truncate group-hover:text-brand-primary">{{ $category['destination']->name }}</h4>
                                         <p class="text-[10px] text-gray-500 truncate">{{ $category['destination']->location }}</p>
@@ -168,7 +189,7 @@
                         @endphp
                         <a href="{{ route('destinations', ['jenis' => $type]) }}" class="block group">
                             <div class="flex justify-between text-xs font-bold text-gray-700 mb-1">
-                                <span class="group-hover:text-brand-primary">{{ $type }}</span>
+                                <span class="group-hover:text-brand-primary">{{ $typeLabels[$type] ?? $type }}</span>
                                 <span>{{ $count }}</span>
                             </div>
                             <div class="w-full bg-gray-100 rounded-full h-2">
@@ -187,6 +208,13 @@
                     @foreach ($provinces as $province => $count)
                         <a href="{{ route('destinations', ['provinsi' => $province]) }}" class="flex justify-between items-center text-sm bg-gray-50 hover:bg-brand-light border border-gray-100 rounded-xl px-4 py-3 transition">
                             <span class="font-bold text-gray-700">{{ $province }}</span>
+                            <span class="text-xs font-bold bg-white border border-gray-200 px-2 py-1 rounded">{{ $count }}</span>
+                        </a>
+                    @endforeach
+
+                    @foreach ($topKabupaten as $kabupaten => $count)
+                        <a href="{{ route('destinations', ['kabupaten' => $kabupaten]) }}" class="flex justify-between items-center text-sm bg-gray-50 hover:bg-brand-light border border-gray-100 rounded-xl px-4 py-3 transition">
+                            <span class="font-bold text-gray-700">{{ $kabupaten }}</span>
                             <span class="text-xs font-bold bg-white border border-gray-200 px-2 py-1 rounded">{{ $count }}</span>
                         </a>
                     @endforeach

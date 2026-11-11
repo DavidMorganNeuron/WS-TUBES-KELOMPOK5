@@ -15,10 +15,11 @@
 </div>
 
 @forelse ($results as $destination)
-    <article class="bg-white rounded-2xl p-4 border border-gray-200 shadow-sm hover:shadow-md hover:border-brand-primary/30 transition cursor-pointer" data-marker-id="{{ $destination->id }}" onclick="focusMarker(@js($destination->id))">
+    <article class="bg-white rounded-2xl p-4 border border-gray-200 shadow-sm hover:shadow-md hover:border-brand-primary/30 transition cursor-pointer focus:outline-none focus:ring-2 focus:ring-brand-primary" data-marker-focus="{{ $destination->id }}" tabindex="0" role="button" aria-label="Focus {{ $destination->name }} on the map">
         <div class="flex gap-3 mb-3">
-            <div class="relative w-20 h-20 rounded-xl overflow-hidden flex-shrink-0">
-                <img src="{{ $destination->imageUrl() }}" alt="{{ $destination->name }}" class="w-full h-full object-cover" loading="lazy">
+            <div class="relative w-20 h-20 rounded-xl overflow-hidden flex-shrink-0 bg-gray-100 skeleton-shimmer">
+                <img src="{{ $destination->imageUrl() }}" alt="{{ $destination->name }}" class="w-full h-full object-cover transition-opacity duration-300" loading="lazy" onload="this.closest('.skeleton-shimmer')?.classList.remove('skeleton-shimmer')" onerror="this.closest('.skeleton-shimmer')?.classList.remove('skeleton-shimmer')">
+                @include('partials.image-attribution', ['destination' => $destination])
                 <span class="absolute bottom-1 left-1 {{ $typeClasses[$destination->primaryType()] ?? 'bg-brand-primary text-white' }} text-[8px] font-bold px-1.5 py-0.5 rounded">{{ $destination->primaryType() }}</span>
             </div>
             <div class="flex-grow min-w-0">
@@ -32,8 +33,8 @@
             </div>
         </div>
         <div class="flex gap-2">
-            <a href="{{ $destination->mapsUrl() }}" target="_blank" rel="noopener" onclick="event.stopPropagation()" class="flex-1 bg-brand-dark text-white text-xs font-bold py-2 rounded-lg flex items-center justify-center gap-1 hover:bg-gray-800">◈ Directions</a>
-            <a href="{{ route('destination.detail', $destination->id) }}" onclick="event.stopPropagation()" class="flex-1 bg-brand-light border border-brand-primary/20 text-brand-dark text-xs font-bold py-2 rounded-lg flex items-center justify-center gap-1 hover:bg-gray-100">View Details</a>
+            <a href="{{ $destination->mapsUrl() }}" target="_blank" rel="noopener" class="flex-1 bg-brand-dark text-white text-xs font-bold py-2 rounded-lg flex items-center justify-center gap-1 hover:bg-gray-800">◈ Directions</a>
+            <a href="{{ route('destination.detail', $destination->id) }}" class="flex-1 bg-brand-light border border-brand-primary/20 text-brand-dark text-xs font-bold rounded-lg py-2 flex items-center justify-center gap-1 hover:bg-gray-100">View Details</a>
         </div>
     </article>
 @empty

@@ -14,6 +14,16 @@
         'Buatan' => 'bg-purple-700 text-white',
     ];
     $phoneHref = 'tel:'.preg_replace('/[^0-9+]/', '', $destination->phone);
+    $placeholderSlugs = [
+        'Alam' => 'alam',
+        'Budaya' => 'budaya',
+        'Religi' => 'religi',
+        'Bahari' => 'bahari',
+        'Kuliner' => 'kuliner',
+        'Buatan' => 'buatan',
+    ];
+    $placeholder = asset('images/placeholders/'.($placeholderSlugs[$destination->primaryType()] ?? 'destinasi').'.svg');
+    $hasContact = $destination->phone !== '' || $destination->email !== '' || $destination->instagram !== '';
 @endphp
 
 @section('content')
@@ -35,7 +45,9 @@
                     {{ $type }}
                 </span>
             @endforeach
-            <span class="bg-gray-100 text-gray-700 text-[10px] font-bold px-3 py-1 rounded-full flex items-center gap-1">⭐ {{ $destination->ratingLabel() }} / 5</span>
+            @if ($destination->rating !== null)
+                <span class="bg-gray-100 text-gray-700 text-[10px] font-bold px-3 py-1 rounded-full flex items-center gap-1">⭐ {{ $destination->ratingLabel() }} / 5</span>
+            @endif
             @if ($destination->hasCoordinates())
                 <span class="bg-[#e8f5e9] text-[#0f5132] text-[10px] font-bold px-3 py-1 rounded-full border border-[#0f5132]/20">📍 Geotagged</span>
             @endif
@@ -53,16 +65,24 @@
                 <p class="text-gray-600 text-lg max-w-3xl">{{ $destination->shortDescription !== '' ? $destination->shortDescription : 'No short description has been recorded for this destination yet.' }}</p>
             </div>
             <div class="flex flex-wrap gap-2 flex-shrink-0">
-                <button type="button" onclick="shareDestination()" class="bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-1 shadow-sm">↗ Share</button>
+                <button
+                    id="btn-share-destination"
+                    type="button"
+                    class="bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-1 shadow-sm"
+                    data-share-title="{{ $destination->name }}"
+                    data-share-text="{{ $destination->shortDescription }}"
+                >↗ Share</button>
                 <a href="{{ $destination->mapsUrl() }}" target="_blank" rel="noopener" class="bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-1 shadow-sm">📍 Google Maps</a>
+                <p id="share-status" class="sr-only" role="status" aria-live="polite"></p>
             </div>
         </div>
     </div>
 
     <!-- Gallery -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10 md:h-[520px]">
-        <div class="md:col-span-2 relative rounded-2xl overflow-hidden h-72 md:h-full min-h-0">
-            <img src="{{ $destination->imageUrl() }}" class="absolute inset-0 w-full h-full object-cover" alt="{{ $destination->name }}">
+        <div class="md:col-span-2 relative rounded-2xl overflow-hidden h-72 md:h-full min-h-0 bg-gray-200 skeleton-shimmer">
+            <img src="{{ $destination->imageUrl(1600) }}" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-300" alt="{{ $destination->name }}" onload="this.closest('.skeleton-shimmer')?.classList.remove('skeleton-shimmer')" onerror="this.closest('.skeleton-shimmer')?.classList.remove('skeleton-shimmer')">
+            @include('partials.image-attribution', ['destination' => $destination])
             <div class="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black/80 to-transparent text-white">
                 <div class="min-w-0">
                     <p class="text-[10px] font-bold text-gray-300 uppercase tracking-widest mb-1">{{ implode(' • ', $destination->types) }}</p>
@@ -84,8 +104,9 @@
 
         <div class="grid grid-cols-3 gap-3 md:grid-cols-1 md:grid-rows-3 md:gap-4 flex-1 min-h-0">
             @foreach ($related->take(3) as $nearby)
-                <a href="{{ route('destination.detail', $nearby->id) }}" class="relative rounded-2xl overflow-hidden h-28 md:h-auto min-h-0 group">
-                    <img src="{{ $nearby->imageUrl() }}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition duration-500" alt="{{ $nearby->name }}" loading="lazy">
+                <a href="{{ route('destination.detail', $nearby->id) }}" class="relative rounded-2xl overflow-hidden h-28 md:h-auto min-h-0 group bg-gray-200 skeleton-shimmer">
+                    <img src="{{ $nearby->imageUrl(600) }}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition duration-500" alt="{{ $nearby->name }}" loading="lazy" onload="this.closest('.skeleton-shimmer')?.classList.remove('skeleton-shimmer')" onerror="this.closest('.skeleton-shimmer')?.classList.remove('skeleton-shimmer')">
+                    @include('partials.image-attribution', ['destination' => $nearby])
                     <div class="absolute bottom-0 left-0 w-full p-3 bg-gradient-to-t from-black/80 to-transparent text-white">
                         <p class="text-[10px] font-bold truncate">{{ $nearby->name }}</p>
                         <p class="text-[9px] text-gray-300 truncate">{{ $nearby->province() }} • {{ $nearby->primaryType() }}</p>
@@ -95,7 +116,7 @@
 
             @for ($index = $related->take(3)->count(); $index < 3; $index++)
                 <div class="relative rounded-2xl overflow-hidden h-28 md:h-auto min-h-0 bg-gray-200">
-                    <img src="https://placehold.co/600x400/e5e9e2/0f5132?text={{ urlencode($destination->primaryType()) }}" class="absolute inset-0 w-full h-full object-cover" alt="Ontology media placeholder">
+                    <img src="{{ $placeholder }}" class="absolute inset-0 w-full h-full object-cover" alt="Placeholder for {{ $destination->primaryType() }} media">
                     <div class="absolute bottom-0 left-0 w-full p-3 bg-gradient-to-t from-black/80 to-transparent text-white">
                         <p class="text-[10px] font-bold truncate">{{ $destination->name }}</p>
                         <p class="text-[9px] text-gray-300">Additional media not recorded</p>
@@ -105,6 +126,13 @@
         </div>
         </div>
     </div>
+
+    @if ($attribution = $destination->imageAttribution())
+        <p class="mb-8 text-xs text-gray-500">
+            Photo by <a href="{{ $attribution['source_url'] }}" target="_blank" rel="noopener noreferrer" class="underline hover:text-brand-primary">{{ $attribution['artist'] }}</a>,
+            licensed under <a href="{{ $attribution['license_url'] }}" target="_blank" rel="noopener noreferrer" class="underline hover:text-brand-primary">{{ $attribution['license'] }}</a> via Wikimedia Commons.
+        </p>
+    @endif
 
     <!-- Content Grid -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
@@ -117,17 +145,24 @@
                         <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-1">Visitor Snapshot</p>
                         <h3 class="text-xl font-serif font-bold text-gray-900 leading-snug">{{ $destination->name }}</h3>
                     </div>
-                    <div class="text-right flex-shrink-0">
-                        <p class="text-[10px] text-gray-400">Rating</p>
-                        <p class="font-bold text-brand-primary">⭐ {{ $destination->ratingLabel() }}</p>
-                    </div>
+                    @if ($destination->rating !== null)
+                        <div class="text-right flex-shrink-0">
+                            <p class="text-[10px] text-gray-400">Rating</p>
+                            <p class="font-bold text-brand-primary">⭐ {{ $destination->ratingLabel() }}</p>
+                        </div>
+                    @endif
                 </div>
 
                 <div class="space-y-2 text-xs text-gray-600 mb-5">
                     <div class="flex justify-between gap-4 border-b border-gray-100 pb-2"><span>Category</span><span class="font-bold text-gray-900 text-right">{{ implode(', ', $destination->types) }}</span></div>
                     <div class="flex justify-between gap-4 border-b border-gray-100 pb-2"><span>Province</span><span class="font-bold text-gray-900 text-right">{{ $destination->province() }}</span></div>
-                    <div class="flex justify-between gap-4 border-b border-gray-100 pb-2"><span>Opening hours</span><span class="font-bold text-gray-900 text-right">{{ $destination->openingHours !== '' ? $destination->openingHours : '—' }}</span></div>
-                    <div class="flex justify-between gap-4"><span>Entry from</span><span class="font-bold text-gray-900 text-right">{{ $destination->priceLabel() }}</span></div>
+                    <div class="flex justify-between gap-4 border-b border-gray-100 pb-2"><span>Ontology ID</span><span class="font-bold text-gray-900 text-right">ID {{ $destination->id }}</span></div>
+                    @if ($destination->openingHours !== '')
+                        <div class="flex justify-between gap-4 border-b border-gray-100 pb-2"><span>Opening hours</span><span class="font-bold text-gray-900 text-right">{{ $destination->openingHours }}</span></div>
+                    @endif
+                    @if ($destination->prices !== [])
+                        <div class="flex justify-between gap-4"><span>Entry from</span><span class="font-bold text-gray-900 text-right">{{ $destination->priceLabel() }}</span></div>
+                    @endif
                 </div>
 
                 <a href="{{ $destination->mapsUrl() }}" target="_blank" rel="noopener" class="block text-center bg-brand-dark hover:bg-gray-800 text-white font-bold text-sm py-3 rounded-lg transition mb-3">
@@ -138,7 +173,7 @@
                 </a>
 
                 <div class="flex justify-center text-[10px] text-gray-500 bg-gray-50 py-2 rounded-lg border border-gray-100 mt-4 text-center">
-                    🛡️ Emergency assistance: National 112<br>Sumut Tourist Police (+62 611 0)
+                    🛡️ Emergency assistance: <a href="tel:112" class="font-bold underline underline-offset-2 hover:text-brand-primary">National 112</a>
                 </div>
             </div>
         </aside>
@@ -178,16 +213,20 @@
                         <p class="font-bold text-sm text-gray-900">{{ $destination->primaryType() }}</p>
                         <p class="text-[10px] text-gray-500">{{ count($destination->types) }} recorded type(s)</p>
                     </div>
-                    <div>
-                        <p class="text-[10px] text-gray-400 font-bold uppercase mb-1">Coordinates</p>
-                        <p class="font-bold text-sm text-gray-900">{{ $destination->hasCoordinates() ? number_format($destination->latitude, 4).', '.number_format($destination->longitude, 4) : '—' }}</p>
-                        <p class="text-[10px] text-gray-500">Latitude, longitude</p>
-                    </div>
-                    <div>
-                        <p class="text-[10px] text-gray-400 font-bold uppercase mb-1">Rating</p>
-                        <p class="font-bold text-sm text-gray-900">{{ $destination->ratingLabel() }} / 5</p>
-                        <p class="text-[10px] text-gray-500">Visitor average</p>
-                    </div>
+                    @if ($destination->hasCoordinates())
+                        <div>
+                            <p class="text-[10px] text-gray-400 font-bold uppercase mb-1">Coordinates</p>
+                            <p class="font-bold text-sm text-gray-900">{{ number_format($destination->latitude, 4) }}, {{ number_format($destination->longitude, 4) }}</p>
+                            <p class="text-[10px] text-gray-500">Latitude, longitude</p>
+                        </div>
+                    @endif
+                    @if ($destination->rating !== null)
+                        <div>
+                            <p class="text-[10px] text-gray-400 font-bold uppercase mb-1">Rating</p>
+                            <p class="font-bold text-sm text-gray-900">{{ $destination->ratingLabel() }} / 5</p>
+                            <p class="text-[10px] text-gray-500">Visitor average</p>
+                        </div>
+                    @endif
                 </div>
             </div>
 
@@ -199,11 +238,13 @@
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="border border-gray-100 bg-gray-50 rounded-xl p-4">
-                        <p class="font-bold text-sm text-gray-900 mb-1 flex items-center gap-2">🕒 Operational Hours</p>
-                        <p class="text-xs text-gray-700 font-bold mb-1">{{ $destination->openingHours !== '' ? $destination->openingHours : 'Not recorded' }}</p>
-                        <p class="text-[10px] text-gray-500">Schedules may change during public holidays or extreme weather.</p>
-                    </div>
+                    @if ($destination->openingHours !== '')
+                        <div class="border border-gray-100 bg-gray-50 rounded-xl p-4">
+                            <p class="font-bold text-sm text-gray-900 mb-1 flex items-center gap-2">🕒 Operational Hours</p>
+                            <p class="text-xs text-gray-700 font-bold mb-1">{{ $destination->openingHours }}</p>
+                            <p class="text-[10px] text-gray-500">Schedules may change during public holidays or extreme weather.</p>
+                        </div>
+                    @endif
 
                     <div class="border border-gray-100 bg-gray-50 rounded-xl p-4">
                         <p class="font-bold text-sm text-gray-900 mb-1 flex items-center gap-2">🎟️ Ticket Prices</p>
@@ -219,29 +260,32 @@
                         <p class="text-[10px] text-gray-500 mt-1">Fees are collected by the destination manager.</p>
                     </div>
 
-                    <div class="border border-gray-100 bg-gray-50 rounded-xl p-4">
-                        <p class="font-bold text-sm text-gray-900 mb-1 flex items-center gap-2">📞 Official Contact</p>
-                        <div class="space-y-1 text-xs text-gray-700">
-                            @if ($destination->phone !== '')
-                                <p><a href="{{ $phoneHref }}" class="font-bold hover:text-brand-primary">{{ $destination->phone }}</a></p>
-                            @endif
-                            @if ($destination->email !== '')
-                                <p><a href="mailto:{{ $destination->email }}" class="font-bold hover:text-brand-primary break-all">{{ $destination->email }}</a></p>
-                            @endif
-                            @if ($destination->instagram !== '')
-                                <p><a href="{{ $destination->instagram }}" target="_blank" rel="noopener" class="font-bold hover:text-brand-primary break-all">Instagram profile ↗</a></p>
-                            @endif
-                            @if ($destination->phone === '' && $destination->email === '' && $destination->instagram === '')
-                                <p class="font-bold">No official contact recorded.</p>
+                    @if ($hasContact)
+                        <div class="border border-gray-100 bg-gray-50 rounded-xl p-4">
+                            <p class="font-bold text-sm text-gray-900 mb-1 flex items-center gap-2">📞 Official Contact</p>
+                            <div class="space-y-1 text-xs text-gray-700">
+                                @if ($destination->phone !== '')
+                                    <p><a href="{{ $phoneHref }}" class="font-bold hover:text-brand-primary">{{ $destination->phone }}</a></p>
+                                @endif
+                                @if ($destination->email !== '')
+                                    <p><a href="mailto:{{ $destination->email }}" class="font-bold hover:text-brand-primary break-all">{{ $destination->email }}</a></p>
+                                @endif
+                                @if ($destination->instagram !== '')
+                                    <p><a href="{{ $destination->instagram }}" target="_blank" rel="noopener" class="font-bold hover:text-brand-primary break-all">Instagram profile ↗</a></p>
+                                @endif
+                            </div>
+                        </div>
+                    @endif
+
+                    @if ($destination->address !== '' || $destination->location !== '')
+                        <div class="border border-gray-100 bg-gray-50 rounded-xl p-4">
+                            <p class="font-bold text-sm text-gray-900 mb-1 flex items-center gap-2">📍 Address</p>
+                            <p class="text-xs text-gray-700 font-bold mb-1">{{ $destination->address !== '' ? $destination->address : $destination->location }}</p>
+                            @if ($destination->location !== '')
+                                <p class="text-[10px] text-gray-500">{{ $destination->location }}</p>
                             @endif
                         </div>
-                    </div>
-
-                    <div class="border border-gray-100 bg-gray-50 rounded-xl p-4">
-                        <p class="font-bold text-sm text-gray-900 mb-1 flex items-center gap-2">📍 Address</p>
-                        <p class="text-xs text-gray-700 font-bold mb-1">{{ $destination->address !== '' ? $destination->address : $destination->location }}</p>
-                        <p class="text-[10px] text-gray-500">{{ $destination->location }}</p>
-                    </div>
+                    @endif
                 </div>
             </div>
 
@@ -292,7 +336,15 @@
                 </div>
 
                 @if ($destination->hasCoordinates())
-                    <div class="rounded-xl overflow-hidden h-64 border border-gray-200 bg-gray-100 relative z-0" id="detail-map"></div>
+                    <div
+                        class="rounded-xl overflow-hidden h-64 border border-gray-200 bg-gray-100 relative z-0"
+                        id="detail-map"
+                        data-latitude="{{ json_encode($destination->latitude) }}"
+                        data-longitude="{{ json_encode($destination->longitude) }}"
+                        data-name="{{ $destination->name }}"
+                        data-location="{{ $destination->location }}"
+                        aria-label="Map showing {{ $destination->name }}"
+                    ></div>
                 @else
                     <div class="rounded-xl overflow-hidden h-64 border border-gray-200 bg-gray-100 flex items-center justify-center text-sm text-gray-500">
                         No coordinates recorded for this destination.
@@ -335,51 +387,3 @@
     </div>
 </div>
 @endsection
-
-@push('styles')
-@if ($destination->hasCoordinates())
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-@endif
-@endpush
-
-@push('scripts')
-<script>
-    function shareDestination() {
-        const shareData = {
-            title: @json($destination->name),
-            text: @json($destination->shortDescription),
-            url: window.location.href,
-        };
-
-        if (navigator.share) {
-            navigator.share(shareData).catch(() => {});
-            return;
-        }
-
-        navigator.clipboard?.writeText(window.location.href)
-            .then(() => alert('Link copied to clipboard.'))
-            .catch(() => alert('Copy this page URL to share it.'));
-    }
-</script>
-
-@if ($destination->hasCoordinates())
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const latitude = {{ $destination->latitude }};
-            const longitude = {{ $destination->longitude }};
-            const map = L.map('detail-map', { scrollWheelZoom: false }).setView([latitude, longitude], 13);
-
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 19,
-                attribution: '© OpenStreetMap contributors'
-            }).addTo(map);
-
-            L.marker([latitude, longitude])
-                .addTo(map)
-                .bindPopup(@json('<strong>'.e($destination->name).'</strong><br>'.e($destination->location)))
-                .openPopup();
-        });
-    </script>
-@endif
-@endpush

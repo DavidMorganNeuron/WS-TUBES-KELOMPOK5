@@ -11,6 +11,7 @@ class DestinationController extends Controller
 {
     public function index(Request $request, DestinationRepository $repository): View
     {
+        $this->validateFilterInputs($request);
         $sorts = $this->sorts();
 
         $facets = $repository->facets();
@@ -30,6 +31,7 @@ class DestinationController extends Controller
 
     public function live(Request $request, DestinationRepository $repository): JsonResponse
     {
+        $this->validateFilterInputs($request);
         $sorts = $this->sorts();
 
         $facets = $repository->facets();
@@ -53,6 +55,10 @@ class DestinationController extends Controller
 
     public function suggest(Request $request, DestinationRepository $repository): JsonResponse
     {
+        $request->validate([
+            'q' => ['sometimes', 'nullable', 'string', 'max:200'],
+        ]);
+
         $query = $request->string('q')->trim()->toString();
 
         $destinations = $query === ''
@@ -87,10 +93,22 @@ class DestinationController extends Controller
     private function sorts(): array
     {
         return [
-            'name' => 'Nama A-Z',
-            'price_desc' => 'Harga Tertinggi',
-            'price_asc' => 'Harga Terendah',
+            'name' => 'Name A–Z',
+            'rating' => 'Rating: high to low',
+            'rating_asc' => 'Rating: low to high',
+            'price_desc' => 'Price: high to low',
+            'price_asc' => 'Price: low to high',
         ];
+    }
+
+    private function validateFilterInputs(Request $request): void
+    {
+        $request->validate([
+            'q' => ['sometimes', 'nullable', 'string', 'max:200'],
+            'jenis' => ['sometimes', 'nullable', 'string', 'max:64'],
+            'kabupaten' => ['sometimes', 'nullable', 'string', 'max:100'],
+            'sort' => ['sometimes', 'nullable', 'string', 'max:32'],
+        ]);
     }
 
     /**

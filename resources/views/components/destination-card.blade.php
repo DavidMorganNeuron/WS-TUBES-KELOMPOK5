@@ -22,10 +22,11 @@
 @endphp
 
 <article class="bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100 flex flex-col hover:shadow-md transition">
-    <div class="relative h-56">
+    <div class="relative h-56 bg-gray-100 skeleton-shimmer overflow-hidden">
         <a href="{{ $detailUrl }}" class="block h-full">
-            <img src="{{ $destination->imageUrl() }}" alt="{{ $destination->name }}" class="w-full h-full object-cover" loading="lazy">
+            <img src="{{ $destination->imageUrl() }}" alt="{{ $destination->name }}" class="w-full h-full object-cover transition-opacity duration-300" loading="lazy" onload="this.closest('.skeleton-shimmer')?.classList.remove('skeleton-shimmer')" onerror="this.closest('.skeleton-shimmer')?.classList.remove('skeleton-shimmer')">
         </a>
+        @include('partials.image-attribution', ['destination' => $destination])
         <div class="absolute top-3 left-3 right-3 flex flex-wrap gap-1">
             @foreach ($types as $type)
                 <span class="{{ $typeClasses[$type] ?? 'bg-brand-primary text-white' }} text-[10px] font-bold px-2 py-1 rounded">
