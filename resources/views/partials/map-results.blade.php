@@ -34,7 +34,7 @@
         </div>
         <div class="flex gap-2">
             <a href="{{ $destination->mapsUrl() }}" target="_blank" rel="noopener" class="flex-1 bg-brand-dark text-white text-xs font-bold py-2 rounded-lg flex items-center justify-center gap-1 hover:bg-gray-800">◈ Directions</a>
-            <a href="{{ route('destination.detail', $destination->id) }}" class="flex-1 bg-brand-light border border-brand-primary/20 text-brand-dark text-xs font-bold rounded-lg py-2 flex items-center justify-center gap-1 hover:bg-gray-100">View Details</a>
+            <a href="{{ route('destination.detail', $destination->id) }}" class="destination-details-link flex-1 bg-brand-light border border-brand-primary/20 text-brand-dark text-xs font-bold rounded-lg py-2 flex items-center justify-center gap-1 hover:bg-gray-100">View Details</a>
         </div>
     </article>
 @empty

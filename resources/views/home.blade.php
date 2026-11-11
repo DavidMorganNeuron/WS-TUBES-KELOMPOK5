@@ -117,7 +117,7 @@
                             <span>🎟️ {{ $featured->priceLabel() }}</span>
                         </div>
                         <a href="{{ route('destination.detail', $featured->id) }}" class="bg-brand-accent hover:bg-orange-800 text-white text-sm font-bold px-5 py-2.5 rounded-full transition">
-                            Explore Destination →
+                            Explore Destination
                         </a>
                     </div>
                 </div>
@@ -129,7 +129,7 @@
                         <p class="text-xs font-bold text-brand-accent uppercase tracking-widest mb-1">Curated Highlights</p>
                         <h2 class="text-3xl font-serif font-bold text-gray-900">Highest rated destinations</h2>
                     </div>
-                    <a href="{{ route('destinations', ['sort' => 'rating']) }}" class="text-xs font-bold text-brand-accent hover:underline whitespace-nowrap">View all →</a>
+                    <a href="{{ route('destinations', ['sort' => 'rating']) }}" class="text-xs font-bold text-brand-accent hover:underline whitespace-nowrap">View all</a>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -149,7 +149,7 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     @foreach ($categoryHighlights as $category)
-                        <a href="{{ route('destinations', ['jenis' => $category['type']]) }}" class="group border border-gray-100 rounded-2xl p-5 bg-[#fafaf9] hover:bg-brand-light/60 hover:border-brand-primary/20 transition">
+                        <a href="{{ route('destinations', ['jenis' => $category['type']]) }}" class="category-spotlight-card group border border-gray-100 rounded-2xl p-5 bg-[#fafaf9] hover:bg-brand-light/60 hover:border-brand-primary/20 transition">
                             <div class="flex justify-between items-center mb-3">
                                 <span class="text-[10px] font-bold uppercase tracking-wider bg-brand-dark text-white px-2 py-1 rounded">{{ $typeLabels[$category['type']] ?? $category['type'] }}</span>
                                 <span class="text-[10px] font-bold text-gray-500">{{ $category['count'] }} destinations</span>

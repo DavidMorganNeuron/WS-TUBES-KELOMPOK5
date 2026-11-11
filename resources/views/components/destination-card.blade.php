@@ -71,8 +71,8 @@
                 <p class="text-[10px] text-gray-400">Ticket Fee</p>
                 <p class="font-bold text-sm text-gray-900 truncate">{{ $destination->priceLabel() }}</p>
             </div>
-            <a href="{{ $detailUrl }}" class="bg-brand-light text-brand-dark text-xs font-bold px-4 py-2 rounded-full hover:bg-gray-100 transition whitespace-nowrap">
-                View Details →
+            <a href="{{ $detailUrl }}" class="destination-details-link bg-brand-light text-brand-dark text-xs font-bold px-4 py-2 rounded-full hover:bg-gray-100 transition whitespace-nowrap">
+                View Details
             </a>
         </div>
     </div>

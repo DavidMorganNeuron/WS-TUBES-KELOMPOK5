@@ -40,7 +40,7 @@
                     {{ number_format($facets['with_coordinates']) }} geotagged
                 </span>
                 <a href="{{ route('map') }}" class="bg-white border border-gray-200 text-gray-800 text-xs font-bold px-4 py-2 rounded-full shadow-sm hover:bg-gray-50 flex items-center gap-2">
-                    ↗ Open Map Atlas
+                    Open Map Atlas
                 </a>
             </div>
         </div>

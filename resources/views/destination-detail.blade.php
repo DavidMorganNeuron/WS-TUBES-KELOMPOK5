@@ -71,7 +71,7 @@
                     class="bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-1 shadow-sm"
                     data-share-title="{{ $destination->name }}"
                     data-share-text="{{ $destination->shortDescription }}"
-                >↗ Share</button>
+                >Share</button>
                 <a href="{{ $destination->mapsUrl() }}" target="_blank" rel="noopener" class="bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-1 shadow-sm">📍 Google Maps</a>
                 <p id="share-status" class="sr-only" role="status" aria-live="polite"></p>
             </div>
@@ -98,7 +98,7 @@
                         <p class="text-[10px] font-bold text-brand-accent uppercase tracking-widest">Recommendations</p>
                         <h2 class="text-lg font-serif font-bold text-gray-900 leading-tight">You may also like</h2>
                     </div>
-                    <a href="{{ route('destinations', ['jenis' => $destination->primaryType()]) }}" class="text-[11px] font-bold text-brand-accent hover:underline whitespace-nowrap">See more →</a>
+                    <a href="{{ route('destinations', ['jenis' => $destination->primaryType()]) }}" class="text-[11px] font-bold text-brand-accent hover:underline whitespace-nowrap">See more</a>
                 </div>
             @endif
 
@@ -271,7 +271,7 @@
                                     <p><a href="mailto:{{ $destination->email }}" class="font-bold hover:text-brand-primary break-all">{{ $destination->email }}</a></p>
                                 @endif
                                 @if ($destination->instagram !== '')
-                                    <p><a href="{{ $destination->instagram }}" target="_blank" rel="noopener" class="font-bold hover:text-brand-primary break-all">Instagram profile ↗</a></p>
+                                    <p><a href="{{ $destination->instagram }}" target="_blank" rel="noopener" class="font-bold hover:text-brand-primary break-all">Instagram profile</a></p>
                                 @endif
                             </div>
                         </div>
@@ -332,7 +332,7 @@
                         <h2 class="text-2xl font-serif font-bold text-gray-900 mb-1">Location &amp; Access</h2>
                         <p class="text-xs text-gray-500">{{ $destination->address !== '' ? $destination->address : $destination->location }}</p>
                     </div>
-                    <a href="{{ $destination->mapsUrl() }}" target="_blank" rel="noopener" class="text-brand-accent hover:underline text-xs font-bold flex items-center gap-1 whitespace-nowrap">Open in Google Maps ↗</a>
+                    <a href="{{ $destination->mapsUrl() }}" target="_blank" rel="noopener" class="text-brand-accent hover:underline text-xs font-bold flex items-center gap-1 whitespace-nowrap">Open in Google Maps</a>
                 </div>
 
                 @if ($destination->hasCoordinates())
@@ -369,7 +369,7 @@
             <h2 class="text-2xl font-serif font-bold text-gray-900">Discover other kinds of experiences</h2>
             <p class="text-xs text-gray-500 mt-1">Beyond {{ implode(', ', $destination->types) }}: try {{ implode(', ', $otherTypes) }}.</p>
         </div>
-        <a href="{{ route('destinations', ['jenis' => $otherTypes[0]]) }}" class="text-xs font-bold text-brand-accent hover:underline whitespace-nowrap">View category →</a>
+        <a href="{{ route('destinations', ['jenis' => $otherTypes[0]]) }}" class="text-xs font-bold text-brand-accent hover:underline whitespace-nowrap">View category</a>
     </div>
 
     @if ($crossCategory->isEmpty())

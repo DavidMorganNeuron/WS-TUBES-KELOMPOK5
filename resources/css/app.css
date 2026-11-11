@@ -147,6 +147,33 @@ html.dark .text-gray-400 {
     color: #9ca3af;
 }
 
+html.dark .category-spotlight-card {
+    background-color: #273449;
+    border-color: #374151;
+}
+
+html.dark .category-spotlight-card:hover {
+    background-color: #374151;
+    border-color: #4b5563;
+}
+
+html.dark .destination-details-link {
+    color: #a7d6bc;
+}
+
+html.dark .destination-details-link:hover {
+    background-color: #273449;
+}
+
+html.dark .destination-pagination [aria-current="page"] {
+    background-color: #0b2921;
+    color: #f3f4f6;
+}
+
+html.dark .destination-pagination .hover\:bg-gray-100:hover {
+    background-color: #374151;
+}
+
 html.dark .border-gray-100,
 html.dark .border-gray-200 {
     border-color: #374151;

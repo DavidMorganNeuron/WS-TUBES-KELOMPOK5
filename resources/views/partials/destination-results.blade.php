@@ -22,7 +22,7 @@
             Showing {{ $firstItem }}–{{ $lastItem }} of {{ number_format($destinations->total()) }} attractions
         </span>
         <div>
-            {{ $destinations->links() }}
+            {{ $destinations->onEachSide(1)->links('pagination.text') }}
         </div>
     </div>
 @endif

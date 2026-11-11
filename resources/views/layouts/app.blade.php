@@ -72,9 +72,8 @@
 
                 <!-- Dropdown Jenis Wisata (Categories) -->
                 <div class="relative group">
-                    <button type="button" aria-haspopup="true" class="flex items-center gap-1 hover:text-brand-primary focus:outline-none {{ in_array($activeJenis, $availableTypes->keys()->all(), true) ? 'border-b-2 border-brand-accent pb-1 text-brand-text' : '' }}">
+                    <button type="button" aria-haspopup="true" class="hover:text-brand-primary focus:outline-none {{ in_array($activeJenis, $availableTypes->keys()->all(), true) ? 'border-b-2 border-brand-accent pb-1 text-brand-text' : '' }}">
                         Categories
-                        <svg class="w-4 h-4 transition-transform group-hover:rotate-180 group-focus-within:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </button>
 
                     <div class="absolute left-0 top-full pt-3 hidden group-hover:block group-focus-within:block">
@@ -172,7 +171,7 @@
                 <h4 class="font-bold mb-4 uppercase tracking-wider text-sm text-gray-300">Emergency & Assistance</h4>
                 <ul class="space-y-2 text-sm text-gray-400">
                     <li><a href="tel:112" class="text-orange-400 hover:text-orange-300 underline underline-offset-4">National Emergency (112)</a></li>
-                    <li><a href="https://basarnas.go.id/" target="_blank" rel="noopener" class="hover:text-white">Basarnas Search & Rescue ↗</a></li>
+                    <li><a href="https://basarnas.go.id/" target="_blank" rel="noopener" class="hover:text-white">Basarnas Search & Rescue</a></li>
                     <li>Gunung Leuser Ranger Post</li>
                     <li><a href="{{ route('destinations') }}" class="hover:text-white">Medan Visitor Information</a></li>
                 </ul>
