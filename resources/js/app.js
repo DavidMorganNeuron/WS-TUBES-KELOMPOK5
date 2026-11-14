@@ -10,7 +10,7 @@ const debounce = (callback, delay = 250) => {
     };
 };
 
-const numberFormatter = new Intl.NumberFormat('en-US');
+const numberFormatter = new Intl.NumberFormat('id-ID');
 
 const initThemeToggle = () => {
     const button = document.getElementById('btn-theme-toggle');
@@ -25,7 +25,7 @@ const initThemeToggle = () => {
 
     const syncThemeControl = () => {
         const isDark = root.classList.contains('dark');
-        const label = isDark ? 'Switch to light mode' : 'Switch to dark mode';
+        const label = isDark ? 'Aktifkan mode terang' : 'Aktifkan mode gelap';
 
         button.setAttribute('aria-label', label);
         button.setAttribute('title', label);
@@ -189,7 +189,7 @@ const renderLiveError = (container, message, retry) => {
 
     const heading = document.createElement('p');
     heading.className = 'mb-2 text-sm font-bold text-red-800';
-    heading.textContent = 'We could not load these results.';
+    heading.textContent = 'Hasil tidak dapat dimuat.';
 
     const detail = document.createElement('p');
     detail.className = 'mb-4 text-xs text-red-700';
@@ -198,7 +198,7 @@ const renderLiveError = (container, message, retry) => {
     const button = document.createElement('button');
     button.type = 'button';
     button.className = 'rounded-full bg-brand-accent px-5 py-2 text-xs font-bold text-white transition hover:bg-orange-800';
-    button.textContent = 'Try again';
+    button.textContent = 'Coba lagi';
     button.addEventListener('click', retry);
 
     panel.append(heading, detail, button);
@@ -237,7 +237,7 @@ const initLiveDestinations = () => {
         controller = new AbortController();
         results.setAttribute('aria-busy', 'true');
         renderCardSkeleton(results);
-        announce('destination-live-status', 'Loading destinations.');
+        announce('destination-live-status', 'Memuat destinasi.');
 
         if (scrollToTop) {
             results.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -253,7 +253,7 @@ const initLiveDestinations = () => {
             results.innerHTML = payload.html;
 
             if (showing) {
-                showing.textContent = `Showing ${payload.first_item}–${payload.last_item} of ${numberFormatter.format(payload.total)}`;
+                showing.textContent = `Menampilkan ${numberFormatter.format(payload.first_item)}–${numberFormatter.format(payload.last_item)} dari ${numberFormatter.format(payload.total)}`;
             }
 
             if (reset) {
@@ -263,8 +263,8 @@ const initLiveDestinations = () => {
             announce(
                 'destination-live-status',
                 payload.total === 0
-                    ? 'No destinations match the current filters.'
-                    : `Showing ${payload.first_item} to ${payload.last_item} of ${payload.total} destinations.`,
+                    ? 'Tidak ada destinasi yang sesuai dengan saringan saat ini.'
+                    : `Menampilkan ${numberFormatter.format(payload.first_item)} hingga ${numberFormatter.format(payload.last_item)} dari ${numberFormatter.format(payload.total)} destinasi.`,
             );
 
             window.history.replaceState({}, '', urlWithParams(form.action, params).toString());
@@ -275,10 +275,10 @@ const initLiveDestinations = () => {
 
             renderLiveError(
                 results,
-                'Check your connection and try the filters again.',
+                'Periksa koneksi Anda, lalu coba gunakan saringan kembali.',
                 () => update(overrideParams, scrollToTop),
             );
-            announce('destination-live-status', 'Destination results failed to load.');
+            announce('destination-live-status', 'Hasil destinasi gagal dimuat.');
         } finally {
             if (currentRequest === requestId) {
                 results.removeAttribute('aria-busy');
@@ -381,7 +381,7 @@ const initLiveMap = () => {
         controller = new AbortController();
         results.setAttribute('aria-busy', 'true');
         renderMapSkeleton(results);
-        announce('map-live-status', 'Loading mapped destinations.');
+        announce('map-live-status', 'Memuat destinasi pada peta.');
 
         try {
             const payload = await requestJson(urlWithParams(liveUrl, params), controller.signal);
@@ -401,7 +401,7 @@ const initLiveMap = () => {
                 window.LiveMap.update(payload.markers);
             }
 
-            announce('map-live-status', `${payload.matchCount} destinations match; ${payload.markerCount} have coordinates.`);
+            announce('map-live-status', `${numberFormatter.format(payload.matchCount)} destinasi ditemukan; ${numberFormatter.format(payload.markerCount)} memiliki koordinat.`);
 
             window.history.replaceState({}, '', urlWithParams(form.action, params).toString());
         } catch (error) {
@@ -411,10 +411,10 @@ const initLiveMap = () => {
 
             renderLiveError(
                 results,
-                'The map list could not be refreshed. Check your connection and try again.',
+                'Daftar peta gagal diperbarui. Periksa koneksi Anda, lalu coba lagi.',
                 update,
             );
-            announce('map-live-status', 'Mapped destinations failed to load.');
+            announce('map-live-status', 'Destinasi pada peta gagal dimuat.');
         } finally {
             if (currentRequest === requestId) {
                 results.removeAttribute('aria-busy');
@@ -543,7 +543,7 @@ const initDashboardSuggestions = () => {
         }
 
         controller = new AbortController();
-        setSuggestionStatus('Loading suggestions.');
+        setSuggestionStatus('Memuat saran pencarian.');
         panel.innerHTML = suggestionSkeleton();
         panel.classList.remove('hidden');
         input.setAttribute('aria-expanded', 'true');
@@ -569,11 +569,11 @@ const initDashboardSuggestions = () => {
 
             if (items.length === 0) {
                 closePanel();
-                setSuggestionStatus('No suggestions found.');
+                setSuggestionStatus('Saran tidak ditemukan.');
             } else {
                 panel.classList.remove('hidden');
                 input.setAttribute('aria-expanded', 'true');
-                setSuggestionStatus(`${items.length} suggestions available. Use the arrow keys to browse.`);
+                setSuggestionStatus(`${numberFormatter.format(items.length)} saran tersedia. Gunakan tombol panah untuk menelusuri.`);
             }
         } catch (error) {
             if (error.name === 'AbortError' || currentRequest !== requestId) {
@@ -581,7 +581,7 @@ const initDashboardSuggestions = () => {
             }
 
             closePanel();
-            setSuggestionStatus('Suggestions could not be loaded.');
+            setSuggestionStatus('Saran pencarian gagal dimuat.');
         }
     };
 
@@ -635,7 +635,7 @@ const initMobileNavigation = () => {
         menu.classList.toggle('hidden', ! open);
         menu.setAttribute('aria-hidden', open ? 'false' : 'true');
         button.setAttribute('aria-expanded', open ? 'true' : 'false');
-        button.setAttribute('aria-label', open ? 'Close navigation menu' : 'Open navigation menu');
+        button.setAttribute('aria-label', open ? 'Tutup menu navigasi' : 'Buka menu navigasi');
     };
 
     button.addEventListener('click', () => {
@@ -701,9 +701,9 @@ const initShareButton = () => {
         if (navigator.share) {
             try {
                 await navigator.share(shareData);
-                announceShare('Destination shared.');
+                announceShare('Destinasi berhasil dibagikan.');
             } catch {
-                announceShare('Sharing was cancelled.');
+                announceShare('Berbagi dibatalkan.');
             }
 
             return;
@@ -711,9 +711,9 @@ const initShareButton = () => {
 
         try {
             await navigator.clipboard.writeText(window.location.href);
-            announceShare('Link copied to clipboard.');
+            announceShare('Tautan disalin ke papan klip.');
         } catch {
-            announceShare('Copy the address bar URL to share this destination.');
+            announceShare('Salin alamat URL dari bilah alamat untuk membagikan destinasi ini.');
         }
     });
 };

@@ -24,7 +24,7 @@ class LiveSearchTest extends TestCase
 
         $response->assertOk();
         $this->assertSame(0, $response->json('total'));
-        $this->assertStringContainsString('No destinations match your filters', $response->json('html'));
+        $this->assertStringContainsString('Tidak ada destinasi yang sesuai dengan saringan', $response->json('html'));
     }
 
     public function test_destinations_live_endpoint_applies_sort_and_kabupaten_filters(): void

@@ -35,7 +35,7 @@
             @endforeach
         </div>
         <div class="absolute bottom-3 left-3 right-3 text-white text-[10px] font-bold bg-black/50 px-2 py-1 rounded truncate">
-            {{ $destination->province() }} • {{ $destination->location !== '' ? $destination->location : 'Location pending' }}
+            {{ $destination->province() }} • {{ $destination->location !== '' ? $destination->location : 'Lokasi belum tersedia' }}
         </div>
     </div>
 
@@ -55,24 +55,24 @@
 
         @if ($showDescription)
             <p class="text-xs text-gray-500 mb-4 line-clamp-2">
-                {{ $destination->shortDescription !== '' ? $destination->shortDescription : 'Description is not available yet.' }}
+                {{ $destination->shortDescription !== '' ? $destination->shortDescription : 'Deskripsi belum tersedia.' }}
             </p>
         @endif
 
         <div class="flex flex-col gap-1 text-[11px] text-gray-500 mb-4">
-            <span class="flex items-center gap-1">📍 {{ $destination->location !== '' ? $destination->location : 'Location pending' }}</span>
+            <span class="flex items-center gap-1"><span aria-hidden="true">📍</span> {{ $destination->location !== '' ? $destination->location : 'Lokasi belum tersedia' }}</span>
             @if ($destination->openingHours !== '')
-                <span class="flex items-center gap-1">🕒 {{ $destination->openingHours }}</span>
+                <span class="flex items-center gap-1"><span aria-hidden="true">🕒</span> {{ $destination->openingHours }}</span>
             @endif
         </div>
 
         <div class="flex justify-between items-center border-t border-gray-100 pt-3 mt-auto gap-2">
             <div class="min-w-0">
-                <p class="text-[10px] text-gray-400">Ticket Fee</p>
+                <p class="text-[10px] text-gray-400">Harga Tiket</p>
                 <p class="font-bold text-sm text-gray-900 truncate">{{ $destination->priceLabel() }}</p>
             </div>
             <a href="{{ $detailUrl }}" class="destination-details-link bg-brand-light text-brand-dark text-xs font-bold px-4 py-2 rounded-full hover:bg-gray-100 transition whitespace-nowrap">
-                View Details
+                Lihat Detail
             </a>
         </div>
     </div>

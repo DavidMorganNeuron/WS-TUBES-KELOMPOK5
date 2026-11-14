@@ -4,6 +4,11 @@
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 
+:focus-visible {
+    outline: 3px solid #b74a1c;
+    outline-offset: 3px;
+}
+
 @theme {
     /* Warna kustom dari desain Figma */
   --color-brand-dark: #0b2921;
@@ -102,6 +107,10 @@ html.dark {
     --color-brand-accent: #d97745;
     --color-brand-text: #e5e7eb;
     --color-brand-muted: #9ca3af;
+}
+
+html.dark :focus-visible {
+    outline-color: #fbbf24;
 }
 
 html.dark body {
@@ -291,6 +300,15 @@ html.dark .prose {
 }
 
 @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+
     .skeleton-shimmer::after {
         animation: none;
     }

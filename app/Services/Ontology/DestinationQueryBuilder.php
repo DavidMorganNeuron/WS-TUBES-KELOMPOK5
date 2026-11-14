@@ -94,6 +94,26 @@ SELECT ?destination ?idDestinasi ?nameSort ?ratingSort ?priceSort ?total WHERE {
 SPARQL;
     }
 
+    public function dashboard(string $facetsQuery): string
+    {
+        $facetsSelection = substr($facetsQuery, (int) strpos($facetsQuery, 'SELECT '));
+        $topRatedSelection = substr(
+            $this->ids(['sort' => 'rating'], 5, 0, true),
+            strlen(self::PREFIXES) + 1,
+        );
+
+        return self::PREFIXES."\n".<<<SPARQL
+SELECT ?kind ?label ?count ?total ?rated ?average ?coordinates ?media ?idDestinasi WHERE {
+    { {$facetsSelection} }
+    UNION {
+        SELECT ("top_rated" AS ?kind) ?idDestinasi WHERE {
+            { {$topRatedSelection} }
+        }
+    }
+}
+SPARQL;
+    }
+
     /**
      * @param  list<string>  $ids
      */

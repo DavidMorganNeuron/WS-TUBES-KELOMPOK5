@@ -11,9 +11,13 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/destinations', [DestinationController::class, 'index'])->name('destinations');
 
-Route::get('/destinations/live', [DestinationController::class, 'live'])->name('destinations.live');
+Route::get('/destinations/live', [DestinationController::class, 'live'])
+    ->middleware('throttle:60,1')
+    ->name('destinations.live');
 
-Route::get('/destinations/suggest', [DestinationController::class, 'suggest'])->name('destinations.suggest');
+Route::get('/destinations/suggest', [DestinationController::class, 'suggest'])
+    ->middleware('throttle:60,1')
+    ->name('destinations.suggest');
 
 Route::get('/destinations/{id}/rdf.{format}', DestinationRdfController::class)
     ->where(['id' => 'ws-\d{3}', 'format' => '[A-Za-z0-9]+'])
@@ -26,7 +30,9 @@ Route::get('/destinations/{id}', [DestinationController::class, 'show'])
 
 Route::get('/map', [MapController::class, 'index'])->name('map');
 
-Route::get('/map/live', [MapController::class, 'live'])->name('map.live');
+Route::get('/map/live', [MapController::class, 'live'])
+    ->middleware('throttle:60,1')
+    ->name('map.live');
 
 Route::post('/chatbot/send', [ChatbotController::class, 'chat'])
     ->middleware('throttle:10,1')

@@ -59,7 +59,48 @@ class SparqlDestinationSourceTest extends TestCase
     {
         $queries = [];
         Http::fake(function (Request $request) use (&$queries) {
-            $queries[] = (string) ($request->data()['query'] ?? '');
+            $query = (string) ($request->data()['query'] ?? '');
+            $queries[] = $query;
+
+            if (str_contains($query, 'GROUP_CONCAT')) {
+                return Http::response($this->response(array_map(
+                    fn (int $number): array => $this->destinationRow(
+                        sprintf('ws-%03d', $number),
+                        'Destination '.$number,
+                    ),
+                    range(1, 5),
+                )));
+            }
+
+            if (str_contains($query, 'LIMIT 5')) {
+                return Http::response($this->response([
+                    [
+                        'kind' => ['type' => 'literal', 'value' => 'overall'],
+                        'total' => ['type' => 'literal', 'value' => '10'],
+                        'rated' => ['type' => 'literal', 'value' => '8'],
+                        'average' => ['type' => 'literal', 'value' => '4.25'],
+                        'coordinates' => ['type' => 'literal', 'value' => '10'],
+                        'media' => ['type' => 'literal', 'value' => '9'],
+                    ],
+                    [
+                        'kind' => ['type' => 'literal', 'value' => 'district'],
+                        'label' => ['type' => 'literal', 'value' => 'Kabupaten Toba'],
+                        'count' => ['type' => 'literal', 'value' => '2'],
+                    ],
+                    [
+                        'kind' => ['type' => 'literal', 'value' => 'district'],
+                        'label' => ['type' => 'literal', 'value' => 'Kabupaten Karo'],
+                        'count' => ['type' => 'literal', 'value' => '2'],
+                    ],
+                    ...array_map(
+                        static fn (int $number): array => [
+                            'kind' => ['type' => 'literal', 'value' => 'top_rated'],
+                            'idDestinasi' => ['type' => 'literal', 'value' => sprintf('ws-%03d', $number)],
+                        ],
+                        range(1, 5),
+                    ),
+                ]));
+            }
 
             return Http::response($this->response([
                 [
@@ -96,6 +137,24 @@ class SparqlDestinationSourceTest extends TestCase
         $this->assertStringNotContainsString('Aceh', $queries[0]);
         $this->assertStringNotContainsString('province', $queries[0]);
         Http::assertSentCount(1);
+
+        Cache::flush();
+        $dashboard = app(DestinationRepository::class)->dashboard();
+
+        $this->assertSame(10, $dashboard['total']);
+        $this->assertSame(['Kabupaten Karo' => 2, 'Kabupaten Toba' => 2], $dashboard['kabupaten']);
+        $this->assertSame(['label' => 'Kabupaten Karo', 'count' => 2], $dashboard['top_region']);
+        $this->assertSame(
+            ['ws-001', 'ws-002', 'ws-003', 'ws-004', 'ws-005'],
+            $dashboard['top_rated']->pluck('id')->all(),
+        );
+        $this->assertStringContainsString('FILTER(BOUND(?ratingValue))', $queries[1]);
+        $this->assertStringContainsString('LIMIT 5', $queries[1]);
+        $cachedDashboard = app(DestinationRepository::class)->dashboard();
+        $this->assertSame($dashboard['top_rated']->pluck('id')->all(), $cachedDashboard['top_rated']->pluck('id')->all());
+        $this->assertSame($dashboard['top_region'], $cachedDashboard['top_region']);
+        $this->assertCount(3, $queries);
+        Http::assertSentCount(3);
     }
 
     public function test_map_markers_require_coordinates_in_the_sparql_query(): void

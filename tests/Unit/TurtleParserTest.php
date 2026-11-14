@@ -114,8 +114,8 @@ class TurtleParserTest extends TestCase
         ]);
 
         $this->assertSame(0.0, $destination->lowestPrice());
-        $this->assertSame('Free', $destination->priceLabel());
-        $this->assertSame(['Free', 'Rp 15.000'], $destination->priceLabels());
+        $this->assertSame('Gratis', $destination->priceLabel());
+        $this->assertSame(['Gratis', 'Rp 15.000'], $destination->priceLabels());
     }
 
     public function test_it_uses_configured_unknown_labels_for_missing_rating_and_price(): void

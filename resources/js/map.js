@@ -26,6 +26,7 @@ const toggleSidebar = (show) => {
 
     sidebar.classList.toggle('hidden', ! show);
     sidebar.classList.toggle('flex', show);
+    document.querySelector('[data-toggle-sidebar="true"]')?.setAttribute('aria-expanded', String(show));
 };
 
 const initMapPage = () => {
@@ -79,11 +80,11 @@ const initMapPage = () => {
             const marker = L.marker([latitude, longitude], { icon }).bindPopup(`
                 <div style="min-width:180px">
                     <img src="${escapeHtml(destination.image)}" alt="${escapeHtml(destination.name)}" style="width:100%;height:90px;object-fit:cover;border-radius:8px;margin-bottom:8px">
-                    ${destination.image_attribution ? `<span style="display:block;font-size:9px;color:#4b5563">Photo: ${escapeHtml(destination.image_attribution.artist)} · ${escapeHtml(destination.image_attribution.license)} — <a href="${escapeHtml(destination.image_attribution.source_url)}" target="_blank" rel="noopener noreferrer">source</a> · <a href="${escapeHtml(destination.image_attribution.license_url)}" target="_blank" rel="noopener noreferrer">license</a></span>` : ''}
+                    ${destination.image_attribution ? `<span style="display:block;font-size:9px;color:#4b5563">Foto: ${escapeHtml(destination.image_attribution.artist)} · ${escapeHtml(destination.image_attribution.license)} — <a href="${escapeHtml(destination.image_attribution.source_url)}" target="_blank" rel="noopener noreferrer">sumber</a> · <a href="${escapeHtml(destination.image_attribution.license_url)}" target="_blank" rel="noopener noreferrer">lisensi</a></span>` : ''}
                     <strong style="display:block;font-size:13px">${escapeHtml(destination.name)}</strong>
                     <span style="font-size:11px;color:#4b5563">${escapeHtml(destination.province)} • ${escapeHtml(destination.type)}</span><br>
                     <span style="font-size:11px;color:#4b5563">⭐ ${escapeHtml(destination.rating_label)} • ${escapeHtml(destination.price)}</span><br>
-                    <a href="${escapeHtml(destination.url)}" style="display:inline-block;margin-top:6px;font-size:11px;font-weight:700;color:#b74a1c">View details</a>
+                    <a href="${escapeHtml(destination.url)}" style="display:inline-block;margin-top:6px;font-size:11px;font-weight:700;color:#b74a1c">Lihat detail</a>
                 </div>
             `);
 
@@ -110,8 +111,10 @@ const initMapPage = () => {
         map.addLayer(nextGroup);
 
         button.setAttribute('aria-pressed', String(showAllIndividually));
-        button.setAttribute('aria-label', showAllIndividually ? 'Show marker clusters' : 'Show markers individually');
-        button.setAttribute('title', showAllIndividually ? 'Show marker clusters' : 'Show markers individually');
+        const label = showAllIndividually ? 'Tampilkan penanda berkelompok' : 'Tampilkan penanda satu per satu';
+        button.textContent = showAllIndividually ? 'KELOMPOK' : 'SATUAN';
+        button.setAttribute('aria-label', label);
+        button.setAttribute('title', label);
         button.classList.toggle('bg-brand-accent', showAllIndividually);
         button.classList.toggle('text-white', showAllIndividually);
         button.classList.toggle('bg-white', ! showAllIndividually);

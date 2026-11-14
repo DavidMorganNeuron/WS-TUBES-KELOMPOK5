@@ -39,6 +39,17 @@ class DestinationRepositoryGoldenTest extends TestCase
         }
 
         $this->assertSame($golden['facets'], $repository->facets());
+        $dashboard = $repository->dashboard();
+        $dashboardFacets = array_intersect_key($dashboard, $golden['facets']);
+        $this->assertSame($golden['facets'], $dashboardFacets);
+        $this->assertSame(
+            ['ws-070', 'ws-019', 'ws-054', 'ws-127', 'ws-180'],
+            $dashboard['top_rated']->pluck('id')->all(),
+        );
+        $this->assertSame(
+            ['label' => 'Kabupaten Karo', 'count' => 26],
+            $dashboard['top_region'],
+        );
         $this->assertSame([], $repository->search(['q' => '!!!'])->all());
         $this->assertSame([], $repository->search(['kabupaten' => 'Kabupaten Tidak Dikenal'])->all());
     }

@@ -255,6 +255,27 @@ class InMemoryDestinationSource implements DestinationSource
     }
 
     /**
+     * @return array{total: int, types: array<string, int>, provinces: array<string, int>, kabupaten: array<string, int>, average_rating: float|null, rated_count: int, with_coordinates: int, with_media: int, top_rated: Collection<int, Destination>, top_region: array{label: string, count: int}|null}
+     */
+    public function dashboard(): array
+    {
+        $facets = $this->facets();
+        $districtLabels = array_keys($facets['kabupaten']);
+        usort($districtLabels, static fn (string $left, string $right): int => (
+            $facets['kabupaten'][$right] <=> $facets['kabupaten'][$left]
+        ) ?: strcmp($left, $right));
+        $topDistrict = $districtLabels[0] ?? null;
+
+        return $facets + [
+            'top_rated' => $this->topRated(5),
+            'top_region' => $topDistrict === null ? null : [
+                'label' => $topDistrict,
+                'count' => $facets['kabupaten'][$topDistrict],
+            ],
+        ];
+    }
+
+    /**
      * @return array{total: int, rated: int, unrated: int, average_rating: float|null, with_coordinates: int, with_media: int}
      */
     public function statistics(): array

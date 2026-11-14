@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex">
-    <title>@yield('title', 'Terjadi kesalahan') · WayFinder</title>
+    <title>@yield('title', 'Terjadi kesalahan') | WayFinder</title>
     <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
     <link rel="alternate icon" href="{{ asset('favicon.ico') }}">
     <script>
@@ -54,6 +54,29 @@
         a {
             color: inherit;
             text-decoration: none;
+        }
+
+        a:focus-visible,
+        button:focus-visible {
+            outline: 3px solid var(--brand-accent);
+            outline-offset: 3px;
+        }
+
+        .skip-link {
+            position: absolute;
+            left: 1rem;
+            top: 1rem;
+            z-index: 100;
+            transform: translateY(-200%);
+            border-radius: 0.5rem;
+            background: var(--brand-dark);
+            color: #ffffff;
+            padding: 0.75rem 1rem;
+            font-weight: 700;
+        }
+
+        .skip-link:focus {
+            transform: translateY(0);
         }
 
         .site-header {
@@ -292,6 +315,17 @@
             border-color: #374151;
         }
 
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                scroll-behavior: auto !important;
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
         @media (max-width: 640px) {
             .site-nav a:not(.nav-cta) {
                 display: none;
@@ -307,31 +341,32 @@
     </style>
 </head>
 <body>
+    <a class="skip-link" href="#main-content">Lewati ke konten utama</a>
     <header class="site-header">
         <div class="site-header__inner">
-            <a href="{{ url('/') }}" class="brand" aria-label="Sumatera Heritage and Trails home">
+            <a href="{{ url('/') }}" class="brand" aria-label="WayFinder, ke beranda">
                 <svg fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2L2 22h20L12 2zm0 4.5l6.5 13.5h-13L12 6.5z"/></svg>
-                <span>Sumatera Heritage &amp; Trails</span>
+                <span>WayFinder</span>
             </a>
 
-            <nav class="site-nav" aria-label="Error page navigation">
-                <a href="{{ url('/') }}">Dashboard</a>
-                <a href="{{ url('/destinations') }}">Destinations</a>
-                <a href="{{ url('/map') }}">Map View</a>
-                <button id="btn-theme-toggle" class="theme-toggle" type="button" aria-label="Switch to dark mode" aria-pressed="false" title="Switch to dark mode">
+            <nav class="site-nav" aria-label="Navigasi halaman kesalahan">
+                <a href="{{ url('/') }}">Beranda</a>
+                <a href="{{ url('/destinations') }}">Destinasi</a>
+                <a href="{{ url('/map') }}">Peta</a>
+                <button id="btn-theme-toggle" class="theme-toggle" type="button" aria-label="Aktifkan mode gelap" aria-pressed="false" title="Aktifkan mode gelap">
                     <svg data-theme-icon="moon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
                     <svg data-theme-icon="sun" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4" stroke-width="2"/><path stroke-linecap="round" stroke-width="2" d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg>
                 </button>
-                <a href="{{ url('/destinations') }}" class="nav-cta">Explore</a>
+                <a href="{{ url('/destinations') }}" class="nav-cta">Jelajahi</a>
             </nav>
         </div>
     </header>
 
-    <main>
+    <main id="main-content" tabindex="-1">
         <section class="error-card" aria-labelledby="error-title">
-            <span class="error-code">@yield('code', 'Error')</span>
-            <h1 id="error-title">@yield('title', 'Something went wrong')</h1>
-            <p>@yield('message', 'Please try again. If the problem continues, return to the dashboard and explore another page.')</p>
+            <span class="error-code">@yield('code', 'Kesalahan')</span>
+            <h1 id="error-title">@yield('title', 'Terjadi kesalahan')</h1>
+            <p>@yield('message', 'Silakan coba lagi. Jika masalah berlanjut, kembali ke beranda atau buka halaman lain.')</p>
             <div class="error-actions">
                 @yield('actions')
             </div>
@@ -340,8 +375,8 @@
 
     <footer class="site-footer">
         <div class="site-footer__inner">
-            <span>&copy; {{ date('Y') }} Sumatera Heritage &amp; Trails</span>
-            <span>Tourism ontology project · North Sumatra</span>
+            <span>&copy; {{ \App\Support\IndonesianFormat::year((int) date('Y')) }} WayFinder</span>
+            <span>Proyek ontologi pariwisata · Sumatera Utara</span>
         </div>
     </footer>
     <script>
@@ -355,7 +390,7 @@
 
             const syncThemeControl = () => {
                 const isDark = root.classList.contains('dark');
-                const label = isDark ? 'Switch to light mode' : 'Switch to dark mode';
+                const label = isDark ? 'Aktifkan mode terang' : 'Aktifkan mode gelap';
 
                 button.setAttribute('aria-label', label);
                 button.setAttribute('title', label);

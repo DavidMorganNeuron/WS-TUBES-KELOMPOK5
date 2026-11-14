@@ -6,6 +6,7 @@ use App\Data\Destination;
 use App\Services\Ontology\DestinationLinkedDataProvider;
 use App\Services\Ontology\DestinationRepository;
 use App\Services\Ontology\WikidataRegionRepository;
+use App\Support\IndonesianFormat;
 use Tests\TestCase;
 
 class DestinationPagesTest extends TestCase
@@ -31,6 +32,9 @@ class DestinationPagesTest extends TestCase
         $response->assertSee('data-theme-icon="sun"', false);
         $response->assertSee('skeleton-shimmer');
         $response->assertSee('wayfinder.theme');
+        $response->assertSee('Lewati ke konten utama');
+        $response->assertSee('WayFinder');
+        $response->assertDontSee('Sumatera Heritage &amp; Trails');
     }
 
     public function test_chatbot_is_available_as_a_fullscreen_ready_dialog_from_the_navigation(): void
@@ -53,10 +57,10 @@ class DestinationPagesTest extends TestCase
         $response = $this->get('/destinations');
 
         $response->assertOk();
-        $response->assertSee('Explore North Sumatra');
-        $response->assertSee('Showing 1');
+        $response->assertSee('Jelajahi Destinasi Sumatera Utara');
+        $response->assertSee('Menampilkan 1');
         $destinations = $this->repository()->search(['sort' => 'name']);
-        $response->assertSee('of '.number_format($destinations->count()));
+        $response->assertSee('dari '.IndonesianFormat::number($destinations->count()));
         $response->assertSeeInOrder($destinations->take(2)->pluck('name')->all());
         $response->assertDontSee('name="provinsi"', false);
     }
@@ -103,15 +107,15 @@ class DestinationPagesTest extends TestCase
         $lastPageFirstItem = ((int) ceil($total / 9) - 1) * 9 + 1;
 
         $response->assertOk();
-        $response->assertSee('Showing '.$lastPageFirstItem);
-        $response->assertSee('of '.number_format($total));
+        $response->assertSee('Menampilkan '.IndonesianFormat::number($lastPageFirstItem));
+        $response->assertSee('dari '.IndonesianFormat::number($total));
     }
 
     public function test_destinations_page_shows_an_empty_state_for_unmatched_search(): void
     {
         $this->get('/destinations?q=zzzz')
             ->assertOk()
-            ->assertSee('No destinations match your filters');
+            ->assertSee('Tidak ada destinasi yang sesuai dengan saringan');
     }
 
     public function test_detail_page_renders_destination_data(): void
@@ -161,6 +165,8 @@ class DestinationPagesTest extends TestCase
             'schema:TouristAttraction ws:DestinasiWisata',
             $xpath->evaluate('string(//*[@typeof="schema:TouristAttraction ws:DestinasiWisata"]/@typeof)'),
         );
+        $response->assertSee('Referensi wilayah eksternal');
+        $response->assertSee('Snapshot diambil');
         $this->assertSame(1, $xpath->query('//link[@rel="alternate" and @type="text/turtle"]')->length);
         $linkedRegion = app(DestinationLinkedDataProvider::class)->forDestination('ws-148')->region;
         $this->assertNotNull($linkedRegion);
@@ -190,9 +196,9 @@ class DestinationPagesTest extends TestCase
 
         $response->assertOk();
         $response->assertSee($destination->name);
-        $response->assertSee('No ticket information recorded.');
+        $response->assertSee('Tiket mulai dari');
+        $response->assertSee($destination->priceLabel());
         $response->assertSee('⭐ -');
-        $response->assertSee('Entry from');
         $response->assertDontSee('N/A');
         $response->assertSee('data-latitude="'.json_encode($destination->latitude).'"', false);
     }
@@ -214,9 +220,9 @@ class DestinationPagesTest extends TestCase
         $response->assertOk();
         $response->assertSee('WayFinderMapConfig');
         $response->assertSee('ws-002');
-        $response->assertSee('mapped points');
+        $response->assertSee('titik pada peta');
         $response->assertSee('data-map-all');
-        $response->assertSee('>ALL</button>', false);
+        $response->assertSee('>SATUAN</button>', false);
         $response->assertDontSee('unpkg.com');
         $response->assertDontSee('Serambi');
     }

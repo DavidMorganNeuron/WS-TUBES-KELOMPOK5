@@ -204,7 +204,52 @@ final class SparqlDestinationSource implements DestinationSource
      */
     public function facets(): array
     {
-        $facetQuery = <<<'SPARQL'
+        return $this->mapFacets($this->selectCached($this->facetsQuery()));
+    }
+
+    /**
+     * @return array{total: int, types: array<string, int>, provinces: array<string, int>, kabupaten: array<string, int>, average_rating: float|null, rated_count: int, with_coordinates: int, with_media: int, top_rated: Collection<int, Destination>, top_region: array{label: string, count: int}|null}
+     */
+    public function dashboard(): array
+    {
+        $rows = $this->selectCached($this->queryBuilder->dashboard($this->facetsQuery()));
+        $facets = $this->mapFacets($rows);
+        $topRatedIds = [];
+
+        foreach ($rows as $row) {
+            if (($row['kind'] ?? null) !== 'top_rated') {
+                continue;
+            }
+
+            $id = $row['idDestinasi'] ?? null;
+            if (! is_string($id) || preg_match('/^ws-\\d{3}$/', $id) !== 1) {
+                throw OntologyUnavailableException::badResponse();
+            }
+
+            $topRatedIds[] = $id;
+        }
+
+        $districtLabels = array_keys($facets['kabupaten']);
+        usort($districtLabels, static fn (string $left, string $right): int => (
+            $facets['kabupaten'][$right] <=> $facets['kabupaten'][$left]
+        ) ?: strcmp($left, $right));
+        $topDistrict = $districtLabels[0] ?? null;
+
+        return $facets + [
+            'top_rated' => $this->destinationsForIds($topRatedIds),
+            'top_region' => $topDistrict === null ? null : [
+                'label' => $topDistrict,
+                'count' => $facets['kabupaten'][$topDistrict],
+            ],
+        ];
+    }
+
+    /**
+     * @return list<array<string, string|null>>
+     */
+    private function facetsQuery(): string
+    {
+        return <<<'SPARQL'
 PREFIX ws: <http://pariwisatasumut.org/ontology/v2#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 SELECT ?kind ?label ?count ?total ?rated ?average ?coordinates ?media WHERE {
@@ -242,8 +287,14 @@ SELECT ?kind ?label ?count ?total ?rated ?average ?coordinates ?media WHERE {
     }
 }
 SPARQL;
+    }
 
-        $rows = $this->selectCached($facetQuery);
+    /**
+     * @param  list<array<string, string|null>>  $rows
+     * @return array{total: int, types: array<string, int>, provinces: array<string, int>, kabupaten: array<string, int>, average_rating: float|null, rated_count: int, with_coordinates: int, with_media: int}
+     */
+    private function mapFacets(array $rows): array
+    {
         $overall = null;
         $types = array_fill_keys(DestinationRepository::TYPES, 0);
         $districts = [];

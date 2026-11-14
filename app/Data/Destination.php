@@ -2,6 +2,7 @@
 
 namespace App\Data;
 
+use App\Support\IndonesianFormat;
 use Illuminate\Support\Str;
 
 final readonly class Destination
@@ -172,12 +173,10 @@ final readonly class Destination
     private static function formatPrice(string $price): string
     {
         if (! is_numeric($price)) {
-            return Str::lower(trim($price)) === 'gratis' ? 'Free' : $price;
+            return Str::lower(trim($price)) === 'gratis' ? 'Gratis' : $price;
         }
 
-        $amount = (float) $price;
-
-        return $amount <= 0.0 ? 'Free' : 'Rp '.number_format($amount, 0, ',', '.');
+        return IndonesianFormat::currency((float) $price);
     }
 
     private function mediaWithWidth(string $url, int $width): string
@@ -195,7 +194,7 @@ final readonly class Destination
 
     public function ratingLabel(): string
     {
-        return $this->rating === null ? (string) config('ontology.unknown_label') : number_format($this->rating, 1);
+        return IndonesianFormat::rating($this->rating);
     }
 
     public function mapsUrl(): string

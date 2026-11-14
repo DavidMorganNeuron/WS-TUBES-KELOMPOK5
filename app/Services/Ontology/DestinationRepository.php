@@ -96,6 +96,14 @@ final class DestinationRepository
     }
 
     /**
+     * @return array{total: int, types: array<string, int>, provinces: array<string, int>, kabupaten: array<string, int>, average_rating: float|null, rated_count: int, with_coordinates: int, with_media: int, top_rated: Collection<int, Destination>, top_region: array{label: string, count: int}|null}
+     */
+    public function dashboard(): array
+    {
+        return $this->source->dashboard();
+    }
+
+    /**
      * @return array{total: int, rated: int, unrated: int, average_rating: float|null, with_coordinates: int, with_media: int}
      */
     public function statistics(): array
