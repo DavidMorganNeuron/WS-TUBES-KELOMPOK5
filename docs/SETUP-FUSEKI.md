@@ -1,36 +1,36 @@
-# Apache Jena Fuseki setup
+# Menyiapkan Apache Jena Fuseki
 
-WayFinder uses Apache Jena Fuseki as its default destination store. The local v3 Turtle file can be used without a Fuseki server by setting `ONTOLOGY_DRIVER=ttl`.
+WayFinder menggunakan Apache Jena Fuseki sebagai penyimpanan destinasi bawaan. Berkas Turtle v3 lokal dapat digunakan tanpa server Fuseki dengan mengatur `ONTOLOGY_DRIVER=ttl`.
 
-## Requirements and installation
+## Persyaratan dan instalasi
 
-1. Install Java 17 or later for Apache Jena Fuseki 5.1.0.
-2. Download the [Apache Jena Fuseki 5.1.0 binary distribution](https://archive.apache.org/dist/jena/binaries/apache-jena-fuseki-5.1.0.zip) from the official Apache archive.
-3. Use Fuseki Full if you need the browser-based Admin UI. Fuseki Main is a command-line server and does not provide the UI or HTTP administration functions for creating datasets.
+1. Pasang Java 17 atau yang lebih baru untuk Apache Jena Fuseki 5.1.0. [POM resmi Jena 5.1.0](https://github.com/apache/jena/blob/jena-5.1.0/pom.xml) menetapkan `java.version` ke 17.
+2. Unduh [distribusi biner Apache Jena Fuseki 5.1.0](https://archive.apache.org/dist/jena/binaries/apache-jena-fuseki-5.1.0.zip) dari arsip resmi Apache.
+3. Gunakan Fuseki Full jika memerlukan Admin UI berbasis peramban. Fuseki Main adalah server command-line dan tidak menyediakan UI atau fungsi administrasi HTTP untuk membuat dataset.
 
-The official Fuseki documentation:
+Dokumentasi resmi Fuseki:
 
-- [Fuseki configuration](https://jena.apache.org/documentation/fuseki2/fuseki-configuration.html)
-- [Endpoint operations and command-line equivalents](https://jena.apache.org/documentation/fuseki2/fuseki-config-endpoint.html)
-- [Fuseki HTTP administration protocol](https://jena.apache.org/documentation/fuseki2/fuseki-server-protocol.html)
-- [TDB2 command-line tools](https://jena.apache.org/documentation/tdb2/tdb2_cmds.html)
-- [Fuseki security](https://jena.apache.org/documentation/fuseki2/fuseki-security.html)
+- [Konfigurasi Fuseki](https://jena.apache.org/documentation/fuseki2/fuseki-configuration.html)
+- [Operasi endpoint dan padanan command-line](https://jena.apache.org/documentation/fuseki2/fuseki-config-endpoint.html)
+- [Protokol administrasi HTTP Fuseki](https://jena.apache.org/documentation/fuseki2/fuseki-server-protocol.html)
+- [Perintah TDB2](https://jena.apache.org/documentation/tdb2/tdb2_cmds.html)
+- [Keamanan Fuseki](https://jena.apache.org/documentation/fuseki2/fuseki-security.html)
 
-## Start a persistent TDB2 dataset on Windows
+## Menjalankan dataset TDB2 persisten di Windows
 
-From the extracted Fuseki distribution directory, run:
+Dari direktori distribusi Fuseki yang sudah diekstrak, jalankan:
 
 ```powershell
 .\fuseki-server.bat --update --tdb2 --loc .\run\wayfinder /WayFinder
 ```
 
-The `--update` option enables SPARQL Update and Graph Store writes. TDB2 stores the dataset in the directory passed to `--loc`; keep that directory persistent and include it in the server's own backup policy. Do not use TDB1 tools on a TDB2 store.
+Opsi `--update` mengaktifkan SPARQL Update dan penulisan Graph Store. TDB2 menyimpan dataset di direktori yang diberikan melalui `--loc`; pertahankan direktori tersebut dan sertakan dalam kebijakan pencadangan server. Jangan gunakan alat TDB1 pada penyimpanan TDB2.
 
-For Fuseki Full, open `http://localhost:3030/`, create a persistent TDB2 dataset named `WayFinder` through the Admin UI if it does not already exist, then verify `http://localhost:3030/$/ping` returns HTTP 200. Dataset names are case-sensitive. WayFinder does not create missing Fuseki datasets automatically.
+Untuk Fuseki Full, buka `http://localhost:3030/`, buat dataset TDB2 persisten bernama `WayFinder` melalui Admin UI jika belum ada, lalu pastikan `http://localhost:3030/$/ping` mengembalikan HTTP 200. Nama dataset peka huruf besar-kecil. WayFinder tidak membuat dataset Fuseki yang belum ada secara otomatis.
 
-## Configure WayFinder
+## Mengonfigurasi WayFinder
 
-Set these values in the untracked application `.env` file:
+Atur nilai berikut di berkas aplikasi `.env` yang tidak dilacak Git:
 
 ```dotenv
 ONTOLOGY_DRIVER=fuseki
@@ -46,11 +46,11 @@ FUSEKI_WRITE_USERNAME=
 FUSEKI_WRITE_PASSWORD=
 ```
 
-`FUSEKI_URL` is the server base URL only: do not append the dataset or credentials, and do not put credentials in the URL. Read credentials are used for SPARQL queries and backup exports. If the optional write-credential pair is blank, writes use the read-credential pair. Configure both values of a credential pair together. Use TLS and appropriately restricted credentials for non-local deployments; do not rely on Fuseki's development defaults.
+`FUSEKI_URL` hanya berisi URL dasar server: jangan tambahkan dataset atau kredensial, dan jangan masukkan kredensial ke dalam URL. Kredensial baca digunakan untuk kueri SPARQL dan ekspor cadangan. Jika pasangan kredensial tulis opsional kosong, operasi tulis menggunakan pasangan kredensial baca. Isi kedua nilai dalam setiap pasangan kredensial secara bersamaan. Untuk deployment nonlokal, gunakan TLS dan kredensial dengan hak akses yang dibatasi; jangan mengandalkan pengaturan pengembangan bawaan Fuseki.
 
-## Validate and load the ontology
+## Memvalidasi dan memuat ontologi
 
-Run these commands from the Laravel project root:
+Jalankan perintah berikut dari direktori utama proyek Laravel:
 
 ```powershell
 php artisan ontology:validate
@@ -60,17 +60,17 @@ php artisan ontology:doctor
 php artisan ontology:warm
 ```
 
-`fuseki:load` validates the v3 file before making a change and saves a backup under `storage/app/ontology-backups`. The newest five backups are retained. The regular load replaces the default graph with a Graph Store Protocol `PUT`. Use `--fresh` only when named graphs should also be removed; it requests confirmation and clears named graphs after replacing the default graph.
+`fuseki:load` memvalidasi berkas v3 sebelum mengubah apa pun dan menyimpan cadangan di `storage/app/ontology-backups`. Lima cadangan terbaru dipertahankan. Pemuatan biasa mengganti graph default menggunakan Graph Store Protocol `PUT`. Gunakan `--fresh` hanya jika graph bernama juga harus dihapus; opsi ini meminta konfirmasi lalu mengosongkan graph bernama setelah graph default diganti.
 
-The application backup is a local recovery copy, separate from Fuseki's TDB2 storage and its server-side backups. Keep both when operating a persistent service. Check the command result and run `ontology:doctor` before serving traffic after any failed load.
+Cadangan aplikasi adalah salinan pemulihan lokal, terpisah dari penyimpanan TDB2 Fuseki dan cadangan sisi server. Pertahankan keduanya saat menjalankan layanan persisten. Periksa hasil perintah dan jalankan `ontology:doctor` sebelum melayani trafik setelah pemuatan yang gagal.
 
-## Switch to local Turtle mode
+## Beralih ke mode Turtle lokal
 
-To run without Fuseki, configure:
+Untuk menjalankan tanpa Fuseki, atur:
 
 ```dotenv
 ONTOLOGY_DRIVER=ttl
 ONTOLOGY_V3_TTL_PATH=database/ontology/wisata_sumut_v3.ttl
 ```
 
-This mode reads the generated v3 file selected by `ONTOLOGY_V3_TTL_PATH`. `ONTOLOGY_V2_TTL_PATH` is only the v2 migration input and is not overwritten by Fuseki loads.
+Mode ini membaca berkas v3 hasil generator yang dipilih oleh `ONTOLOGY_V3_TTL_PATH`. `ONTOLOGY_V2_TTL_PATH` hanya digunakan sebagai masukan migrasi v2 dan tidak ditimpa oleh pemuatan Fuseki.
