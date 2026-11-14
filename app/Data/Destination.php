@@ -76,11 +76,6 @@ final readonly class Destination
             : 'Sumatera Utara';
     }
 
-    public function isAceh(): bool
-    {
-        return $this->province() === 'Aceh';
-    }
-
     public function primaryType(): string
     {
         return $this->types[0] ?? 'Destinasi';
@@ -114,7 +109,28 @@ final readonly class Destination
             $attributions = require __DIR__.'/destination_images.php';
         }
 
-        return $attributions[$this->id] ?? null;
+        $attribution = $attributions[$this->id] ?? null;
+        if ($attribution === null) {
+            return null;
+        }
+
+        $mediaPath = parse_url($this->media, PHP_URL_PATH);
+        $sourcePath = parse_url($attribution['source_url'], PHP_URL_PATH);
+        $mediaHost = parse_url($this->media, PHP_URL_HOST);
+        $sourceHost = parse_url($attribution['source_url'], PHP_URL_HOST);
+        $mediaPrefix = '/wiki/Special:FilePath/';
+        $sourcePrefix = '/wiki/File:';
+        if ($mediaHost !== 'commons.wikimedia.org' || $sourceHost !== 'commons.wikimedia.org'
+            || ! is_string($mediaPath) || ! is_string($sourcePath)
+            || ! str_starts_with($mediaPath, $mediaPrefix)
+            || ! str_starts_with($sourcePath, $sourcePrefix)) {
+            return null;
+        }
+
+        $mediaFile = str_replace('_', ' ', rawurldecode(substr($mediaPath, strlen($mediaPrefix))));
+        $sourceFile = str_replace('_', ' ', rawurldecode(substr($sourcePath, strlen($sourcePrefix))));
+
+        return $mediaFile === $sourceFile ? $attribution : null;
     }
 
     /**
@@ -144,7 +160,7 @@ final readonly class Destination
             return self::formatPrice((string) min(array_map(floatval(...), $numeric)));
         }
 
-        return isset($this->prices[0]) ? self::formatPrice($this->prices[0]) : '—';
+        return isset($this->prices[0]) ? self::formatPrice($this->prices[0]) : 'N/A';
     }
 
     /**
@@ -183,7 +199,7 @@ final readonly class Destination
 
     public function ratingLabel(): string
     {
-        return $this->rating === null ? '—' : number_format($this->rating, 1);
+        return $this->rating === null ? 'N/A' : number_format($this->rating, 1);
     }
 
     public function mapsUrl(): string

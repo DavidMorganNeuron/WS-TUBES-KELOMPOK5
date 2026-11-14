@@ -69,7 +69,7 @@
         <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex justify-between items-start">
             <div>
                 <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Visitor Rating</p>
-                <h3 class="text-2xl font-bold text-gray-900 mb-1">{{ $facets['average_rating'] !== null ? number_format($facets['average_rating'], 2) : '—' }} / 5</h3>
+                <h3 class="text-2xl font-bold text-gray-900 mb-1">{{ $facets['average_rating'] !== null ? number_format($facets['average_rating'], 2) : 'N/A' }} / 5</h3>
                 <p class="text-sm text-gray-500">From {{ number_format($facets['rated_count']) }} rated destinations</p>
             </div>
             <div class="bg-yellow-50 p-3 rounded-xl text-yellow-600">⭐</div>
