@@ -175,14 +175,12 @@ SPARQL;
         }
 
         $limit = $this->escaper->number(max(1, $limit));
-        $targetProvince = $this->escaper->literal($destination->province());
         $targetIri = $this->escaper->destinationIri($destination->id);
 
         return self::PREFIXES."\n".<<<SPARQL
 SELECT ?idDestinasi (SAMPLE(?nameValue) AS ?nameSort)
     (COUNT(DISTINCT ?candidateType) AS ?overlap)
     (MAX(?ratingValue) AS ?ratingSort)
-    (MAX(IF(?candidateProvince = {$targetProvince}, 5, 0)) AS ?provinceBonus)
 WHERE {
     {$targetIri} ws:berkategori ?targetType .
     ?candidate a ws:DestinasiWisata ;
@@ -191,12 +189,9 @@ WHERE {
         ws:berkategori ?candidateType .
     FILTER(?candidate != {$targetIri} && ?candidateType = ?targetType)
     OPTIONAL { ?candidate ws:ratingPengunjung ?ratingValue . FILTER(isNumeric(?ratingValue)) }
-    OPTIONAL { ?candidate ws:berlokasiDi/rdfs:label ?candidateLocation }
-    OPTIONAL { ?candidate ws:alamat ?candidateAddress }
-    BIND(IF(REGEX(LCASE(CONCAT(STR(COALESCE(?candidateLocation, "")), " ", STR(COALESCE(?candidateAddress, "")))), "aceh|banda aceh|sabang", "i"), "Aceh", "Sumatera Utara") AS ?candidateProvince)
 }
 GROUP BY ?candidate ?idDestinasi
-ORDER BY DESC((COUNT(DISTINCT ?candidateType) * 100) + COALESCE(MAX(?ratingValue), 0) + MAX(IF(?candidateProvince = {$targetProvince}, 5, 0)))
+ORDER BY DESC((COUNT(DISTINCT ?candidateType) * 100) + COALESCE(MAX(?ratingValue), 0))
     STR(?idDestinasi)
 LIMIT {$limit}
 SPARQL;
@@ -241,13 +236,11 @@ SPARQL;
         }
 
         $targetIri = $this->escaper->destinationIri($destination->id);
-        $targetProvince = $this->escaper->literal($destination->province());
         $types = implode(' ', array_map($this->escaper->literal(...), $excludedTypes));
 
         return self::PREFIXES."\n".<<<SPARQL
 SELECT ?idDestinasi ?type (SAMPLE(?nameValue) AS ?nameSort)
     (MAX(?ratingValue) AS ?ratingSort)
-    (MAX(IF(?candidateProvince = {$targetProvince}, 5, 0)) AS ?provinceBonus)
 WHERE {
     VALUES ?allowedType { {$types} }
     ?candidate a ws:DestinasiWisata ;
@@ -261,12 +254,9 @@ WHERE {
         {$targetIri} ws:berkategori ?targetType .
     }
     OPTIONAL { ?candidate ws:ratingPengunjung ?ratingValue . FILTER(isNumeric(?ratingValue)) }
-    OPTIONAL { ?candidate ws:berlokasiDi/rdfs:label ?candidateLocation }
-    OPTIONAL { ?candidate ws:alamat ?candidateAddress }
-    BIND(IF(REGEX(LCASE(CONCAT(STR(COALESCE(?candidateLocation, "")), " ", STR(COALESCE(?candidateAddress, "")))), "aceh|banda aceh|sabang", "i"), "Aceh", "Sumatera Utara") AS ?candidateProvince)
 }
 GROUP BY ?candidate ?idDestinasi ?type
-ORDER BY STR(?type) DESC(COALESCE(MAX(?ratingValue), 0) + MAX(IF(?candidateProvince = {$targetProvince}, 5, 0)))
+ORDER BY STR(?type) DESC(COALESCE(MAX(?ratingValue), 0))
     STR(?idDestinasi)
 SPARQL;
     }
@@ -312,24 +302,7 @@ SPARQL;
             }
         }
 
-        $province = $filters['provinsi'] ?? null;
-        if (is_string($province) && in_array($province, DestinationRepository::PROVINCES, true)) {
-            if ($province === 'Lainnya') {
-                $where .= "\nFILTER(false)";
-            } else {
-                $expected = $province === 'Aceh' ? 'Aceh' : 'Sumatera Utara';
-                $where .= "\nOPTIONAL { ?destination ws:berlokasiDi/rdfs:label ?provinceLocation . }"
-                    ."\nOPTIONAL { ?destination ws:alamat ?provinceAddress . }"
-                    ."\nFILTER(".($expected === 'Aceh' ? '' : '!').$this->provinceExpression().')';
-            }
-        }
-
         return $where;
-    }
-
-    private function provinceExpression(): string
-    {
-        return 'REGEX(LCASE(CONCAT(STR(COALESCE(?provinceLocation, "")), " ", STR(COALESCE(?provinceAddress, "")))), "aceh|banda aceh|sabang", "i")';
     }
 
     private function sort(mixed $sort): string

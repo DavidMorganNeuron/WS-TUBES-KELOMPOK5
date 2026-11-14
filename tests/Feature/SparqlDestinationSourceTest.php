@@ -57,7 +57,10 @@ class SparqlDestinationSourceTest extends TestCase
 
     public function test_facets_are_mapped_from_a_single_sparql_request(): void
     {
-        Http::fake(function () {
+        $queries = [];
+        Http::fake(function (Request $request) use (&$queries) {
+            $queries[] = (string) ($request->data()['query'] ?? '');
+
             return Http::response($this->response([
                 [
                     'kind' => ['type' => 'literal', 'value' => 'overall'],
@@ -77,11 +80,6 @@ class SparqlDestinationSourceTest extends TestCase
                     'label' => ['type' => 'literal', 'value' => 'Kabupaten Toba'],
                     'count' => ['type' => 'literal', 'value' => '2'],
                 ],
-                [
-                    'kind' => ['type' => 'literal', 'value' => 'province'],
-                    'label' => ['type' => 'literal', 'value' => 'Sumatera Utara'],
-                    'count' => ['type' => 'literal', 'value' => '2'],
-                ],
             ]));
         });
 
@@ -90,11 +88,13 @@ class SparqlDestinationSourceTest extends TestCase
         $this->assertSame(2, $facets['total']);
         $this->assertSame(2, $facets['types']['Alam']);
         $this->assertSame(['Kabupaten Toba' => 2], $facets['kabupaten']);
-        $this->assertSame(2, $facets['provinces']['Sumatera Utara']);
+        $this->assertSame(['Sumatera Utara' => 2], $facets['provinces']);
         $this->assertSame(4.25, $facets['average_rating']);
         $this->assertSame(2, $facets['rated_count']);
         $this->assertSame(2, $facets['with_coordinates']);
         $this->assertSame(1, $facets['with_media']);
+        $this->assertStringNotContainsString('Aceh', $queries[0]);
+        $this->assertStringNotContainsString('province', $queries[0]);
         Http::assertSentCount(1);
     }
 

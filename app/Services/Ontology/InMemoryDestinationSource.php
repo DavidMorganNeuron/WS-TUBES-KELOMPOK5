@@ -144,9 +144,8 @@ class InMemoryDestinationSource implements DestinationSource
             ->reject(fn (Destination $item): bool => $item->id === $destination->id)
             ->sortByDesc(function (Destination $item) use ($destination): float {
                 $overlap = count(array_intersect($item->types, $destination->types));
-                $provinceBonus = $item->province() === $destination->province() ? 5.0 : 0.0;
 
-                return ($overlap * 100) + ($item->rating ?? 0) + $provinceBonus;
+                return ($overlap * 100) + ($item->rating ?? 0);
             })
             ->take($limit)
             ->values();
@@ -165,7 +164,7 @@ class InMemoryDestinationSource implements DestinationSource
             return collect();
         }
 
-        $score = fn (Destination $item): float => ($item->province() === $destination->province() ? 5.0 : 0.0) + ($item->rating ?? 0);
+        $score = fn (Destination $item): float => $item->rating ?? 0;
 
         // Kandidat: bukan destinasi ini dan tidak punya kategori yang sama dengan destinasi utama
         $candidates = $this->all()->filter(

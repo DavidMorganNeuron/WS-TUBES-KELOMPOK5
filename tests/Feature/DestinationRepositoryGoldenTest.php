@@ -42,4 +42,19 @@ class DestinationRepositoryGoldenTest extends TestCase
         $this->assertSame([], $repository->search(['q' => '!!!'])->all());
         $this->assertSame([], $repository->search(['kabupaten' => 'Kabupaten Tidak Dikenal'])->all());
     }
+
+    public function test_province_is_fixed_to_north_sumatra_and_legacy_filters_are_no_ops(): void
+    {
+        $repository = app(DestinationRepository::class);
+        $destination = $repository->find('ws-046');
+        $allIds = $repository->search(['sort' => 'id'])->pluck('id')->all();
+
+        $this->assertNotNull($destination);
+        $this->assertSame('Sumatera Utara', $destination->province());
+        $this->assertSame(['Sumatera Utara' => 228], $repository->facets()['provinces']);
+        $this->assertSame(
+            $allIds,
+            $repository->search(['provinsi' => 'Aceh', 'sort' => 'id'])->pluck('id')->all(),
+        );
+    }
 }

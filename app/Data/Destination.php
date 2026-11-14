@@ -69,11 +69,7 @@ final readonly class Destination
 
     public function province(): string
     {
-        $haystack = Str::lower($this->location.' '.$this->address);
-
-        return Str::contains($haystack, ['aceh', 'banda aceh', 'sabang'])
-            ? 'Aceh'
-            : 'Sumatera Utara';
+        return 'Sumatera Utara';
     }
 
     public function primaryType(): string

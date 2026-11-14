@@ -39,7 +39,7 @@ return [
     'facets' => [
         'total' => 228,
         'types' => ['Alam' => 97, 'Budaya' => 43, 'Religi' => 25, 'Bahari' => 39, 'Kuliner' => 16, 'Buatan' => 34],
-        'provinces' => ['Sumatera Utara' => 228, 'Aceh' => 0, 'Lainnya' => 0],
+        'provinces' => ['Sumatera Utara' => 228],
         'kabupaten' => [
             'Kabupaten Asahan' => 2,
             'Kabupaten Batu Bara' => 8,

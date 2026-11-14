@@ -240,16 +240,6 @@ SELECT ?kind ?label ?count ?total ?rated ?average ?coordinates ?media WHERE {
         }
         GROUP BY ?districtValue
     }
-    UNION
-    {
-        SELECT ("province" AS ?kind) (STR(?provinceValue) AS ?label) (COUNT(DISTINCT ?provinceDestination) AS ?count) WHERE {
-            ?provinceDestination a ws:DestinasiWisata .
-            OPTIONAL { ?provinceDestination ws:berlokasiDi/rdfs:label ?location }
-            OPTIONAL { ?provinceDestination ws:alamat ?address }
-            BIND(IF(REGEX(LCASE(CONCAT(STR(COALESCE(?location, "")), " ", STR(COALESCE(?address, "")))), "aceh|banda aceh|sabang", "i"), "Aceh", "Sumatera Utara") AS ?provinceValue)
-        }
-        GROUP BY ?provinceValue
-    }
 }
 SPARQL;
 
@@ -267,8 +257,6 @@ SPARQL;
                 $types[$label] = $this->integer($row['count'] ?? null);
             } elseif ($kind === 'district' && is_string($label)) {
                 $districts[$label] = $this->integer($row['count'] ?? null);
-            } elseif ($kind === 'province' && is_string($label) && array_key_exists($label, $provinces)) {
-                $provinces[$label] = $this->integer($row['count'] ?? null);
             }
         }
 
@@ -277,9 +265,11 @@ SPARQL;
         }
 
         ksort($districts);
+        $total = $this->integer($overall['total'] ?? null);
+        $provinces['Sumatera Utara'] = $total;
 
         return [
-            'total' => $this->integer($overall['total'] ?? null),
+            'total' => $total,
             'types' => $types,
             'provinces' => $provinces,
             'kabupaten' => $districts,

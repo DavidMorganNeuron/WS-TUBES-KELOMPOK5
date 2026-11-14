@@ -10,7 +10,7 @@ final class DestinationRepository
 {
     public const TYPES = ['Alam', 'Budaya', 'Religi', 'Bahari', 'Kuliner', 'Buatan'];
 
-    public const PROVINCES = ['Sumatera Utara', 'Aceh', 'Lainnya'];
+    public const PROVINCES = ['Sumatera Utara'];
 
     public const SORTS = ['rating', 'rating_asc', 'name', 'id', 'price_desc', 'price_asc'];
 
