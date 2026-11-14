@@ -1,130 +1,150 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Console\Commands;
 
 use App\Services\Ontology\DestinationRepository;
+use App\Services\Ontology\FusekiBackup;
 use App\Services\Ontology\FusekiClient;
-use App\Services\Ontology\OntologyInspector;
-use App\Services\Ontology\TurtleLinter;
+use App\Services\Ontology\OntologyDataVersion;
+use App\Services\Ontology\OntologyValidator;
+use App\Services\Ontology\TurtleParser;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Cache;
+use Throwable;
 
-class FusekiLoad extends Command
+final class FusekiLoad extends Command
 {
     protected $signature = 'fuseki:load
-        {--file= : Lokasi file Turtle yang akan diunggah}
-        {--fresh : Kosongkan SELURUH graph (default dan bernama) sebelum mengunggah}
-        {--force : Lewati konfirmasi untuk --fresh}
-        {--skip-lint : Unggah walau file Turtle melanggar aturan kardinalitas}';
+        {--file= : File Turtle ontologi v3 yang akan dimuat}
+        {--dry-run : Validasi dan tampilkan rencana tanpa mengubah Fuseki}
+        {--fresh : Ganti seluruh graph pada dataset Fuseki}
+        {--force : Lewati konfirmasi untuk --fresh}';
 
-    protected $description = 'Unggah file Turtle ke dataset Fuseki melalui Graph Store Protocol';
+    protected $description = 'Validasi, backup, dan muat ontologi v3 ke dataset Fuseki';
 
     public function handle(
         FusekiClient $client,
+        FusekiBackup $backup,
         DestinationRepository $repository,
-        OntologyInspector $inspector,
-        TurtleLinter $linter,
-    ): int
-    {
-        $path = $this->option('file') ?: config('ontology.ttl_path');
-        $resolvedPath = $this->resolvePath((string) $path);
-
-        if (! is_file($resolvedPath)) {
-            $this->error("File Turtle tidak ditemukan: {$resolvedPath}");
+        OntologyDataVersion $dataVersion,
+        TurtleParser $parser,
+        OntologyValidator $validator,
+    ): int {
+        $file = (string) ($this->option('file') ?: config('ontology.ttl_path'));
+        $path = $this->resolvePath($file);
+        if (! is_file($path)) {
+            $this->error("File Turtle tidak ditemukan: {$path}");
 
             return self::FAILURE;
         }
 
-        $this->line('File   : '.$resolvedPath);
-        $this->line('SHA256 : '.hash_file('sha256', $resolvedPath));
+        $turtle = file_get_contents($path);
+        if ($turtle === false) {
+            $this->error("File Turtle tidak dapat dibaca: {$path}");
 
-        if (! $this->passesLint($linter, $resolvedPath)) {
             return self::FAILURE;
+        }
+
+        try {
+            $triples = $parser->parseTriples($turtle);
+            $validation = $validator->validate($triples, (string) config('ontology.unknown_label'));
+        } catch (Throwable $exception) {
+            $this->error('Validasi ontologi gagal: '.$exception->getMessage());
+
+            return self::FAILURE;
+        }
+
+        if ($validation['errors'] !== []) {
+            $this->error('File ontologi v3 tidak lolos validasi:');
+            foreach ($validation['errors'] as $error) {
+                $this->line(' - '.$error);
+            }
+
+            return self::FAILURE;
+        }
+
+        $hash = hash('sha256', $turtle);
+        $this->table(['Informasi', 'Nilai'], [
+            ['File', $path],
+            ['Dataset', $client->datasetUrl()],
+            ['SHA256', $hash],
+            ['Destinasi', $validation['destination_count']],
+            ['Triple', count($triples)],
+            ['Mode', $this->option('fresh') ? 'ganti seluruh graph' : 'ganti graph default'],
+        ]);
+
+        if ($this->option('dry-run')) {
+            $this->info('Dry-run lulus. Tidak ada koneksi tulis, backup, atau perubahan Fuseki.');
+
+            return self::SUCCESS;
         }
 
         if (! $client->isAvailable()) {
-            $this->error('Fuseki tidak dapat diakses. Jalankan Fuseki terlebih dahulu dan periksa FUSEKI_URL.');
+            $this->error('Fuseki tidak dapat diakses. Periksa server dan FUSEKI_URL.');
+
+            return self::FAILURE;
+        }
+
+        try {
+            if (! $client->datasetExists()) {
+                $this->error('Dataset Fuseki tidak ditemukan. Buat dataset melalui Fuseki Admin UI, lalu ulangi perintah.');
+
+                return self::FAILURE;
+            }
+        } catch (Throwable $exception) {
+            $this->error('Pemeriksaan dataset Fuseki gagal: '.$exception->getMessage());
 
             return self::FAILURE;
         }
 
         if ($this->option('fresh') && ! $this->option('force')
-            && ! $this->confirm('Semua graph di dataset '.$client->datasetUrl().' akan dikosongkan. Lanjutkan?', false)) {
-            $this->warn('Dibatalkan.');
+            && ! $this->confirm(
+                'Semua graph di dataset '.$client->datasetUrl().' akan diganti. Lanjutkan?',
+                false,
+            )) {
+            $this->warn('Dibatalkan; Fuseki tidak diubah.');
 
             return self::FAILURE;
         }
 
         try {
+            $backupPath = $backup->create($client);
+            $this->info("Backup dataset tersimpan: {$backupPath}");
+
             if ($this->option('fresh')) {
-                $client->clearAll();
+                $client->replaceDataset($turtle, clearNamedGraphs: true);
+            } else {
+                $client->upload($turtle);
             }
 
-            $client->upload((string) file_get_contents($resolvedPath));
-        } catch (\Throwable $exception) {
-            $this->error('Gagal mengunggah data: '.$exception->getMessage());
+            $dataVersion->refresh($hash);
+            $repository->forgetCache();
+            $loadedCount = $repository->all()->count();
+            if ($loadedCount !== $validation['destination_count']) {
+                $this->error(
+                    "Verifikasi jumlah destinasi gagal: file berisi {$validation['destination_count']}, Fuseki terbaca {$loadedCount}.",
+                );
+
+                return self::FAILURE;
+            }
+
+            $tripleCountRows = $client->select('SELECT (COUNT(*) AS ?count) WHERE { ?s ?p ?o }');
+            $loadedTripleCount = (int) ($tripleCountRows[0]['count'] ?? -1);
+            if ($loadedTripleCount !== count($triples)) {
+                $this->error(
+                    'Verifikasi jumlah triple gagal: file berisi '.count($triples).", Fuseki terbaca {$loadedTripleCount}. Backup dipertahankan.",
+                );
+
+                return self::FAILURE;
+            }
+        } catch (Throwable $exception) {
+            $this->error('Pemuatan atau verifikasi Fuseki gagal: '.$exception->getMessage());
 
             return self::FAILURE;
         }
 
-        $repository->forgetCache();
-        Cache::forget('ontology.destinations');
-
-        $this->info('Dataset berhasil diunggah ke '.$client->datasetUrl());
-
-        return $this->verify($inspector);
-    }
-
-    private function passesLint(TurtleLinter $linter, string $path): bool
-    {
-        try {
-            $result = $linter->lint($path);
-        } catch (\Throwable $exception) {
-            $this->error($exception->getMessage());
-
-            return false;
-        }
-
-        if ($result['violations'] === []) {
-            $this->info("Lint Turtle: OK ({$result['blocks']} destinasi).");
-
-            return true;
-        }
-
-        $this->error('Lint Turtle: file melanggar aturan data. Perbaiki baris berikut:');
-        $this->table(['Subjek', 'Properti', 'Baris', 'Nilai'], array_map(
-            static fn (array $v): array => [$v['subject'], $v['property'], implode(', ', $v['lines']), implode(' | ', $v['values'])],
-            $result['violations'],
-        ));
-
-        if ($this->option('skip-lint')) {
-            $this->warn('--skip-lint aktif: unggah tetap dilanjutkan.');
-
-            return true;
-        }
-
-        $this->line('Unggah dibatalkan. Perbaiki file, atau gunakan --skip-lint bila disengaja.');
-
-        return false;
-    }
-
-    private function verify(OntologyInspector $inspector): int
-    {
-        try {
-            $issues = count($inspector->duplicateIds()) + count($inspector->cardinalityViolations()) + count($inspector->graphs());
-        } catch (\Throwable $exception) {
-            $this->warn('Verifikasi pasca-unggah dilewati: '.$exception->getMessage());
-
-            return self::SUCCESS;
-        }
-
-        if ($issues > 0) {
-            $this->warn("Verifikasi menemukan {$issues} masalah. Jalankan: php artisan ontology:doctor");
-
-            return self::FAILURE;
-        }
-
-        $this->info('Verifikasi: data konsisten.');
+        $this->info("Dataset berhasil dimuat dan diverifikasi ({$loadedCount} destinasi, {$loadedTripleCount} triple).");
 
         return self::SUCCESS;
     }

@@ -9,7 +9,7 @@ Jelajahi destinasi wisata Sumatera melalui pencarian, peta interaktif, dan pandu
 [![JavaScript](https://img.shields.io/badge/JavaScript-ES_Modules-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/docs/Web/JavaScript)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
 [![Vite](https://img.shields.io/badge/Vite-8-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vite.dev/)
-[![SQLite](https://img.shields.io/badge/SQLite-Database-003B57?style=for-the-badge&logo=sqlite&logoColor=white)](https://www.sqlite.org/)
+[![MySQL](https://img.shields.io/badge/MySQL-Database-4479A1?style=for-the-badge&logo=mysql&logoColor=white)](https://www.mysql.com/)
 [![Leaflet](https://img.shields.io/badge/Leaflet-Maps-199900?style=for-the-badge&logo=leaflet&logoColor=white)](https://leafletjs.com/)
 
 </div>
@@ -24,7 +24,7 @@ Jelajahi destinasi wisata Sumatera melalui pencarian, peta interaktif, dan pandu
 - Lihat detail destinasi, kategori, informasi, dan atribusi gambar.
 - Temukan destinasi melalui peta interaktif berbasis Leaflet.
 - Tanyakan informasi destinasi melalui WayFinder AI.
-- Sajikan data dari Apache Jena Fuseki atau gunakan file Turtle lokal sebagai fallback.
+- Sajikan data destinasi dari Apache Jena Fuseki; mode file Turtle tersedia untuk pengembangan atau pengujian.
 - Validasi data ontologi dan kelola cache melalui perintah Artisan.
 
 ## Teknologi
@@ -35,16 +35,17 @@ Jelajahi destinasi wisata Sumatera melalui pencarian, peta interaktif, dan pandu
 | Frontend | JavaScript, Blade, Tailwind CSS 4 |
 | Build frontend | Vite 8 |
 | Peta | Leaflet, MarkerCluster |
-| Data semantik | RDF/Turtle, SPARQL, Apache Jena Fuseki (opsional) |
-| Penyimpanan aplikasi | SQLite secara default |
+| Data semantik | RDF/Turtle, SPARQL, Apache Jena Fuseki |
+| Penyimpanan aplikasi | MySQL (session, cache, dan queue) |
 | Chatbot | Google Gemini API (opsional) |
 
 ## Persyaratan
 
 - PHP 8.4 dan Composer
 - Node.js `^20.19` atau `>=22.12`, beserta npm
-- Ekstensi PHP SQLite/PDO SQLite
-- Apache Jena Fuseki dan kunci Gemini hanya jika ingin menggunakan layanan tersebut
+- Ekstensi PHP PDO MySQL
+- Apache Jena Fuseki untuk data destinasi
+- Kunci Gemini hanya jika ingin menggunakan chatbot
 
 ## Menjalankan secara lokal
 
@@ -57,8 +58,8 @@ Jelajahi destinasi wisata Sumatera melalui pencarian, peta interaktif, dan pandu
 
    Skrip ini memasang dependensi, menyiapkan `.env`, membuat application key, menjalankan migrasi, memasang dependensi frontend, dan membangun aset.
 
-3. Sesuaikan `.env` bila diperlukan. Secara default aplikasi menggunakan SQLite dan driver ontologi `auto`: mencoba Fuseki terlebih dahulu, lalu memakai file Turtle lokal jika Fuseki tidak tersedia.
-4. Untuk mengaktifkan chatbot, isi `GEMINI_API_KEY` di `.env`. Untuk menggunakan Fuseki, sesuaikan `FUSEKI_URL`, `FUSEKI_DATASET`, dan kredensialnya bila diperlukan. Jangan pernah membagikan atau meng-commit kunci API.
+3. Sesuaikan `.env` bila diperlukan. Konfigurasi contoh memakai MySQL untuk session, cache, dan queue, serta Fuseki dengan dataset `WayFinder` untuk data destinasi. Pastikan MySQL dan Fuseki berjalan dan sesuaikan `DB_*` serta `FUSEKI_URL`/kredensialnya dengan lingkungan lokal.
+4. Driver data destinasi default adalah Fuseki. Untuk memakai file ontologi v3 lokal pada pengembangan atau pengujian, atur `ONTOLOGY_DRIVER=ttl`. `ONTOLOGY_V3_TTL_PATH` adalah satu-satunya path graph v3 untuk runtime dan pemuatan Fuseki; `ONTOLOGY_V2_TTL_PATH` hanya dipakai sebagai sumber migrasi v2. Untuk mengaktifkan chatbot, isi `GEMINI_API_KEY` di `.env`. Jangan pernah membagikan atau meng-commit kunci API.
 5. Jalankan aplikasi:
 
    ```bash
@@ -89,8 +90,17 @@ php artisan ontology:doctor
 Jika Fuseki sudah berjalan dan dikonfigurasi, unggah file Turtle dengan:
 
 ```bash
+# Periksa file dan rencana tanpa mengubah Fuseki
+php artisan fuseki:load --dry-run
+
+# Unggah ke graph default; backup otomatis dibuat terlebih dahulu
 php artisan fuseki:load
+
+# Ganti graph default dan graph bernama (perlu konfirmasi)
+php artisan fuseki:load --fresh
 ```
+
+Panduan instalasi, pembuatan dataset, akses, dan backup Fuseki tersedia di [docs/SETUP-FUSEKI.md](docs/SETUP-FUSEKI.md).
 
 ## Pengujian
 
@@ -102,7 +112,8 @@ php artisan test
 
 ## Struktur data utama
 
-- `database/ontology/wisata_sumut_v2.ttl` — sumber data ontologi dalam format Turtle.
+- `database/ontology/wisata_sumut_v2.ttl` — sumber migrasi v2 dalam format Turtle; tidak ditimpa oleh proses pemuatan.
+- `database/ontology/wisata_sumut_v3.ttl` — graph v3 untuk runtime lokal dan Fuseki, ditentukan oleh `ONTOLOGY_V3_TTL_PATH`.
 - `wisata_sumut_v2.json` — berkas data destinasi JSON.
 - `config/ontology.php` — konfigurasi driver, file Turtle, cache, dan koneksi Fuseki.
 
