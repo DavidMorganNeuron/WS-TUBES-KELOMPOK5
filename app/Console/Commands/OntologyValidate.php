@@ -86,7 +86,7 @@ final class OntologyValidate extends Command
             ['Destinasi berating', $result['rating_stats']['rated']],
             ['Destinasi tanpa rating', $result['rating_stats']['unrated']],
             ['Rata-rata rating', $result['rating_stats']['average'] === null
-                ? 'N/A'
+                ? (string) config('ontology.unknown_label')
                 : number_format($result['rating_stats']['average'], 2)],
         ]);
 

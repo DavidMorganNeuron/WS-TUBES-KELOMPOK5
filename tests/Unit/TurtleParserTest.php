@@ -118,15 +118,17 @@ class TurtleParserTest extends TestCase
         $this->assertSame(['Free', 'Rp 15.000'], $destination->priceLabels());
     }
 
-    public function test_it_uses_na_labels_for_missing_rating_and_price(): void
+    public function test_it_uses_configured_unknown_labels_for_missing_rating_and_price(): void
     {
         $destination = Destination::fromArray([
             'idDestinasi' => 'ws-test',
             'namaDestinasi' => 'Contoh',
         ]);
 
-        $this->assertSame('N/A', $destination->ratingLabel());
-        $this->assertSame('N/A', $destination->priceLabel());
+        $this->assertSame(config('ontology.unknown_label'), $destination->ratingLabel());
+        $this->assertSame(config('ontology.unknown_label'), $destination->priceLabel());
+        $this->assertSame(config('ontology.unknown_label'), $destination->toMapMarker()['rating_label']);
+        $this->assertSame(config('ontology.unknown_label'), $destination->toMapMarker()['price']);
     }
 
     public function test_it_handles_a_minimal_inline_turtle_document(): void

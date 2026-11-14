@@ -166,6 +166,7 @@ class DestinationPagesTest extends TestCase
     {
         $destination = $this->repository()->all()->first(
             static fn (Destination $destination): bool => $destination->prices === []
+                && $destination->rating === null
                 && $destination->phone === ''
                 && $destination->email === ''
                 && $destination->instagram === ''
@@ -178,6 +179,9 @@ class DestinationPagesTest extends TestCase
         $response->assertOk();
         $response->assertSee($destination->name);
         $response->assertSee('No ticket information recorded.');
+        $response->assertSee('⭐ -');
+        $response->assertSee('Entry from');
+        $response->assertDontSee('N/A');
         $response->assertSee('data-latitude="'.json_encode($destination->latitude).'"', false);
     }
 

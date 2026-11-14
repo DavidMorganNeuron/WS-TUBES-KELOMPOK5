@@ -37,7 +37,9 @@ final class OntologyWarm extends Command
             ['Driver', (string) config('ontology.driver')],
             ['Total destinasi', number_format($destinations->count())],
             ['Destinasi berating', number_format($facets['rated_count'])],
-            ['Rata-rata rating', $facets['average_rating'] === null ? 'N/A' : number_format($facets['average_rating'], 2)],
+            ['Rata-rata rating', $facets['average_rating'] === null
+                ? (string) config('ontology.unknown_label')
+                : number_format($facets['average_rating'], 2)],
             ['Destinasi berkoordinat', number_format($facets['with_coordinates'])],
             ['Marker peta', number_format(count($markers))],
             ['Kabupaten/kota', number_format(count($facets['kabupaten']))],

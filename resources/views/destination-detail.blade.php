@@ -53,8 +53,8 @@
                     'class' => ($typeClasses[$type] ?? 'bg-brand-primary text-white').' text-[10px] font-bold px-3 py-1 rounded-full flex items-center gap-1',
                 ])
             @endforeach
+            <span class="bg-gray-100 text-gray-700 text-[10px] font-bold px-3 py-1 rounded-full flex items-center gap-1">⭐ {{ $destination->ratingLabel() }}@if ($destination->rating !== null) / 5 @endif</span>
             @if ($destination->rating !== null)
-                <span class="bg-gray-100 text-gray-700 text-[10px] font-bold px-3 py-1 rounded-full flex items-center gap-1">⭐ {{ $destination->ratingLabel() }} / 5</span>
                 <meta property="ws:ratingPengunjung" content="{{ json_encode($destination->rating, JSON_PRESERVE_ZERO_FRACTION) }}" datatype="xsd:decimal">
             @endif
             @if ($destination->hasCoordinates())
@@ -169,12 +169,10 @@
                         <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-1">Visitor Snapshot</p>
                         <h3 class="text-xl font-serif font-bold text-gray-900 leading-snug">{{ $destination->name }}</h3>
                     </div>
-                    @if ($destination->rating !== null)
-                        <div class="text-right flex-shrink-0">
-                            <p class="text-[10px] text-gray-400">Rating</p>
-                            <p class="font-bold text-brand-primary">⭐ {{ $destination->ratingLabel() }}</p>
-                        </div>
-                    @endif
+                    <div class="text-right flex-shrink-0">
+                        <p class="text-[10px] text-gray-400">Rating</p>
+                        <p class="font-bold text-brand-primary">⭐ {{ $destination->ratingLabel() }}</p>
+                    </div>
                 </div>
 
                 <div class="space-y-2 text-xs text-gray-600 mb-5">
@@ -189,9 +187,7 @@
                             <meta property="ws:hargaMasuk" content="{{ $price }}" datatype="xsd:decimal">
                         @endif
                     @endforeach
-                    @if ($destination->prices !== [])
-                        <div class="flex justify-between gap-4"><span>Entry from</span><span class="font-bold text-gray-900 text-right">{{ $destination->priceLabel() }}</span></div>
-                    @endif
+                    <div class="flex justify-between gap-4"><span>Entry from</span><span class="font-bold text-gray-900 text-right">{{ $destination->priceLabel() }}</span></div>
                 </div>
 
                 <a href="{{ $destination->mapsUrl() }}" target="_blank" rel="noopener" class="block text-center bg-brand-dark hover:bg-gray-800 text-white font-bold text-sm py-3 rounded-lg transition mb-3">
@@ -253,13 +249,11 @@
                             </div>
                         </div>
                     @endif
-                    @if ($destination->rating !== null)
-                        <div>
-                            <p class="text-[10px] text-gray-400 font-bold uppercase mb-1">Rating</p>
-                            <p class="font-bold text-sm text-gray-900">{{ $destination->ratingLabel() }} / 5</p>
-                            <p class="text-[10px] text-gray-500">Visitor average</p>
-                        </div>
-                    @endif
+                    <div>
+                        <p class="text-[10px] text-gray-400 font-bold uppercase mb-1">Rating</p>
+                        <p class="font-bold text-sm text-gray-900">{{ $destination->ratingLabel() }}@if ($destination->rating !== null) / 5 @endif</p>
+                        <p class="text-[10px] text-gray-500">Visitor average</p>
+                    </div>
                 </div>
             </div>
 

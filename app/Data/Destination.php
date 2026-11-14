@@ -156,7 +156,7 @@ final readonly class Destination
             return self::formatPrice((string) min(array_map(floatval(...), $numeric)));
         }
 
-        return isset($this->prices[0]) ? self::formatPrice($this->prices[0]) : 'N/A';
+        return isset($this->prices[0]) ? self::formatPrice($this->prices[0]) : (string) config('ontology.unknown_label');
     }
 
     /**
@@ -195,7 +195,7 @@ final readonly class Destination
 
     public function ratingLabel(): string
     {
-        return $this->rating === null ? 'N/A' : number_format($this->rating, 1);
+        return $this->rating === null ? (string) config('ontology.unknown_label') : number_format($this->rating, 1);
     }
 
     public function mapsUrl(): string
