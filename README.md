@@ -86,7 +86,15 @@ php artisan ontology:warm
 
 # Mendiagnosis konsistensi data antara file Turtle, Fuseki, dan aplikasi
 php artisan ontology:doctor
+
+# Uji konektivitas Wikidata secara eksplisit; tanpa opsi ini doctor tidak menghubungi layanan eksternal
+php artisan ontology:doctor --eksternal
+
+# Memperbarui data wilayah dari Wikidata dan menyusun kandidat tautan destinasi untuk tinjauan
+php artisan wikidata:refresh --candidates
 ```
+
+`ontology:warm` hanya memanaskan cache aplikasi/Fuseki; sesuai desain snapshot-first, perintah itu tidak memanggil Wikidata. Perintah `wikidata:refresh` saja yang menyegarkan snapshot wilayah, termasuk situs resmi bila tersedia. Kueri hanya mengirim QID wilayah yang sudah diverifikasi. Detail wilayah tersimpan terpisah dari sumber v2; kandidat tautan destinasi tidak menambahkan `owl:sameAs`. `EXTERNAL_CONTACT` dipakai untuk identitas User-Agent bila diisi, selain itu aplikasi memakai URL repositori publik. Snapshot yang kedaluwarsa hanya digunakan bila `WIKIDATA_ALLOW_STALE=true`.
 
 Jika Fuseki sudah berjalan dan dikonfigurasi, unggah file Turtle dengan:
 
@@ -117,6 +125,8 @@ php artisan test
 
 - `database/ontology/wisata_sumut_v2.ttl` — sumber migrasi v2 dalam format Turtle; tidak ditimpa oleh proses pemuatan.
 - `database/ontology/wisata_sumut_v3.ttl` — graph v3 untuk runtime lokal dan Fuseki, ditentukan oleh `ONTOLOGY_V3_TTL_PATH`.
+- `database/ontology/external/wikidata-wilayah.json` — snapshot QID dan pasangan batas wilayah yang disetujui.
+- `database/ontology/external/wikidata-wilayah-detail.json` — snapshot detail wilayah terakhir yang diverifikasi dari Wikidata.
 - `wisata_sumut_v2.json` — berkas data destinasi JSON.
 - `config/ontology.php` — konfigurasi driver, file Turtle, cache, dan koneksi Fuseki.
 

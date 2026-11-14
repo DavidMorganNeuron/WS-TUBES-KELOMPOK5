@@ -5,6 +5,35 @@
 - Perbaikan otomatis dibatasi pada trim, deduplikasi, tipe literal, pemecahan kata kunci, dan aturan sentinel.
 - Anomali semantik di bawah tidak diperbaiki otomatis.
 
+## Bukti D13: dua pasangan batas tambahan
+
+Pada 2026-11-14, kueri langsung ke [Wikidata Query Service](https://query.wikidata.org/sparql) mengembalikan relasi P47 berikut untuk tiga QID yang diperiksa:
+
+```sparql
+PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+PREFIX wd: <http://www.wikidata.org/entity/>
+SELECT DISTINCT ?a ?b WHERE {
+  VALUES ?a { wd:Q5804 wd:Q5810 wd:Q5903 }
+  VALUES ?b { wd:Q5804 wd:Q5810 wd:Q5903 }
+  ?a wdt:P47 ?b .
+  FILTER(?a != ?b)
+}
+ORDER BY ?a ?b
+```
+
+Binding live yang relevan:
+
+| Subjek | Objek | Pasangan wilayah |
+| --- | --- | --- |
+| Q5903 | Q5804 | Kabupaten Simalungun — Kabupaten Deli Serdang |
+| Q5903 | Q5810 | Kabupaten Simalungun — Kabupaten Karo |
+
+Respons juga mengembalikan Q5804–Q5810 dan arah baliknya; itu bukan pasangan tambahan yang sedang dinilai. Untuk dua pasangan D13 di atas, Wikidata saat pemeriksaan memberikan pernyataan P47 dari Q5903 ke wilayah tetangga; arah balik tidak wajib muncul sebagai pernyataan terpisah karena `berbatasanDengan` pada ontologi dinyatakan simetris. Kedua pasangan telah disetujui pemilik, sehingga 51 pasangan (102 triple berarah) dipertahankan. Dataset v2 tidak diubah.
+
+## Catatan hitungan sentinel email
+
+Dataset v2 memiliki 195 literal email bernilai `"-"` dan dua nilai email kosong (`""`). Sesuai kebijakan sentinel, migrator menormalkan dua nilai kosong tersebut menjadi `"-"`; karena itu ontologi v3 dan `ontology:validate` menghitung 197 sentinel email. Dataset v2 tidak diubah. Angka 195 adalah hitungan tanda `"-"` mentah pada sumber, bukan hitungan seluruh nilai yang dinormalisasi sebagai tidak tersedia.
+
 ## Kabupaten/kota pada `beradaDi` tidak ditemukan pada alamat
 - ws-028 — Danau Toba: Kabupaten Toba; alamat: Jl. Siborongborong - Parapat, Sibaganding, Kecamatan Girsang Sipangan Bolon, Kabupaten Simalungun, Sumatera Utara 21174
 - ws-036 — Gunung Toba: Kabupaten Toba; alamat: Ronggur Nihuta, Kecamatan Ronggur Nihuta, Kabupaten Samosir, Sumatera Utara
