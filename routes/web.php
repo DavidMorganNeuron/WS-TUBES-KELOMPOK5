@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\DestinationController;
+use App\Http\Controllers\DestinationRdfController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MapController;
 use Illuminate\Support\Facades\Route;
@@ -14,8 +15,13 @@ Route::get('/destinations/live', [DestinationController::class, 'live'])->name('
 
 Route::get('/destinations/suggest', [DestinationController::class, 'suggest'])->name('destinations.suggest');
 
+Route::get('/destinations/{id}/rdf.{format}', DestinationRdfController::class)
+    ->where(['id' => 'ws-\d{3}', 'format' => '[A-Za-z0-9]+'])
+    ->middleware('throttle:60,1')
+    ->name('destination.rdf');
+
 Route::get('/destinations/{id}', [DestinationController::class, 'show'])
-    ->where('id', '[A-Za-z0-9_\-]+')
+    ->where('id', 'ws-\d{3}')
     ->name('destination.detail');
 
 Route::get('/map', [MapController::class, 'index'])->name('map');

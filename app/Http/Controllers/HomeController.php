@@ -4,11 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Data\Destination;
 use App\Services\Ontology\DestinationRepository;
+use App\Services\Seo\SeoDataFactory;
 use Illuminate\View\View;
 
 class HomeController extends Controller
 {
-    public function index(DestinationRepository $repository): View
+    public function index(DestinationRepository $repository, SeoDataFactory $seoDataFactory): View
     {
         $facets = $repository->facets();
         $facets['types'] = array_filter($facets['types'], static fn (int $count): bool => $count > 0);
@@ -45,6 +46,7 @@ class HomeController extends Controller
             'highlights' => $highlights,
             'categoryHighlights' => $categoryHighlights,
             'provinces' => $facets['provinces'],
+            'seo' => $seoDataFactory->home(),
         ]);
     }
 }

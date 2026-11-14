@@ -14,16 +14,12 @@
         ->filter(fn (string $label, string $jenis): bool => ($navFacets['types'][$jenis] ?? 0) > 0);
 @endphp
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Sumatera Heritage & Trails')</title>
-    <meta name="description" content="@yield('meta_description', 'Explore curated destinations across North Sumatra through the WayFinder tourism ontology.')">
-    <meta property="og:title" content="@yield('title', 'Sumatera Heritage & Trails')">
-    <meta property="og:description" content="@yield('meta_description', 'Explore curated destinations across North Sumatra through the WayFinder tourism ontology.')">
-    <meta property="og:type" content="website">
+    @include('partials.seo', ['seo' => $seo ?? app(\App\Services\Seo\SeoDataFactory::class)->default()])
     <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
     <link rel="alternate icon" href="{{ asset('favicon.ico') }}">
     <script>

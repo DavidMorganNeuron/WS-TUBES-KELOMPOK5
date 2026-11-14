@@ -106,6 +106,30 @@ final class FusekiClient
         return $rows;
     }
 
+    public function construct(string $query, string $accept): string
+    {
+        if (! in_array($accept, ['text/turtle', 'application/rdf+xml', 'application/ld+json'], true)) {
+            throw new \InvalidArgumentException('Media type ekspor RDF tidak didukung.');
+        }
+
+        try {
+            $response = $this->request()
+                ->withHeaders(['Accept' => $accept])
+                ->asForm()
+                ->post($this->datasetUrl().'/sparql', ['query' => $query]);
+        } catch (ConnectionException $exception) {
+            throw OntologyUnavailableException::serverUnavailable($exception);
+        }
+
+        $this->ensureSuccessful($response);
+        $contentType = strtolower(trim(strtok((string) $response->header('Content-Type'), ';')));
+        if ($contentType !== $accept) {
+            throw OntologyUnavailableException::badResponse();
+        }
+
+        return $response->body();
+    }
+
     public function update(string $update, ?int $timeout = null): void
     {
         $this->postUpdate($update, $timeout ?? $this->timeout);

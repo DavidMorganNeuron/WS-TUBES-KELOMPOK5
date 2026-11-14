@@ -22,6 +22,7 @@ Jelajahi destinasi wisata Sumatera melalui pencarian, peta interaktif, dan pandu
 
 - Jelajahi dan cari destinasi, dengan saran pencarian langsung.
 - Lihat detail destinasi, kategori, informasi, dan atribusi gambar.
+- Bagikan halaman detail dengan metadata Open Graph, RDFa, dan ekspor RDF dalam Turtle, RDF/XML, atau JSON-LD.
 - Temukan destinasi melalui peta interaktif berbasis Leaflet.
 - Tanyakan informasi destinasi melalui WayFinder AI.
 - Sajikan data destinasi dari Apache Jena Fuseki; mode file Turtle tersedia untuk pengembangan atau pengujian.
@@ -101,6 +102,8 @@ php artisan fuseki:load --fresh
 ```
 
 Panduan instalasi, pembuatan dataset, akses, dan backup Fuseki tersedia di [docs/SETUP-FUSEKI.md](docs/SETUP-FUSEKI.md).
+
+Panduan metadata RDFa/Open Graph dan contoh endpoint ekspor tersedia di [docs/validasi-rdfa-ogp.md](docs/validasi-rdfa-ogp.md).
 
 ## Pengujian
 

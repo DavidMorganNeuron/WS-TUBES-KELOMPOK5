@@ -1,6 +1,7 @@
 <?php
 
 use App\Services\Ontology\OntologyUnavailableException;
+use App\Services\Ontology\RdfFormatUnavailableException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -36,5 +37,14 @@ return Application::configure(basePath: dirname(__DIR__))
             return response()->view('errors.503', [
                 'message' => $exception->getMessage(),
             ], 503);
+        });
+        $exceptions->render(function (RdfFormatUnavailableException $exception, Request $request) {
+            if ($request->expectsJson()) {
+                return response()->json(['message' => $exception->getMessage()], 501);
+            }
+
+            return response()->view('errors.501', [
+                'message' => $exception->getMessage(),
+            ], 501);
         });
     })->create();

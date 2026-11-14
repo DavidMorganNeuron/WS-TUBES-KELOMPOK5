@@ -121,13 +121,45 @@ class DestinationPagesTest extends TestCase
 
         $response->assertOk();
         $response->assertSee($destination->name);
-        $response->assertSee('ID '.$destination->id);
+        $response->assertSee('property="ws:idDestinasi"', false);
+        $response->assertSee($destination->id);
         if ($destination->priceLabels() !== []) {
             $response->assertSee($destination->priceLabels()[0]);
         }
         if ($destination->facilities !== []) {
             $response->assertSee($destination->facilities[0]);
         }
+    }
+
+    public function test_detail_page_includes_open_graph_and_rdfa_metadata(): void
+    {
+        $destination = $this->repository()->find('ws-148');
+        $this->assertNotNull($destination);
+
+        $response = $this->get('/destinations/'.$destination->id);
+        $response->assertOk();
+
+        $document = new \DOMDocument;
+        $previousErrorMode = libxml_use_internal_errors(true);
+        try {
+            $loaded = $document->loadHTML($response->getContent() ?? '');
+        } finally {
+            libxml_clear_errors();
+            libxml_use_internal_errors($previousErrorMode);
+        }
+
+        $this->assertTrue($loaded);
+        $xpath = new \DOMXPath($document);
+        $this->assertSame($destination->name.' — WayFinder', $xpath->evaluate('string(//meta[@property="og:title"]/@content)'));
+        $this->assertSame('website', $xpath->evaluate('string(//meta[@property="og:type"]/@content)'));
+        $this->assertNotSame('', $xpath->evaluate('string(//meta[@property="place:location:latitude"]/@content)'));
+        $this->assertSame(route('destination.detail', $destination->id), $xpath->evaluate('string(//link[@rel="canonical"]/@href)'));
+        $this->assertSame($destination->name, $xpath->evaluate('string(//*[@property="schema:name ws:namaDestinasi"])'));
+        $this->assertSame(
+            'schema:TouristAttraction ws:DestinasiWisata',
+            $xpath->evaluate('string(//*[@typeof="schema:TouristAttraction ws:DestinasiWisata"]/@typeof)'),
+        );
+        $this->assertSame(1, $xpath->query('//link[@rel="alternate" and @type="text/turtle"]')->length);
     }
 
     public function test_detail_page_handles_sparse_destination_data(): void
@@ -154,7 +186,7 @@ class DestinationPagesTest extends TestCase
         $response = $this->get('/destinations/DST-9999');
 
         $response->assertNotFound();
-        $response->assertSee('Page not found');
+        $response->assertSee('Halaman tidak ditemukan');
         $response->assertSee(url('/destinations'));
         $response->assertSee('id="btn-theme-toggle"', false);
     }

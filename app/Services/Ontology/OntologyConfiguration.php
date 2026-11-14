@@ -32,6 +32,45 @@ final class OntologyConfiguration
             throw new InvalidArgumentException('Sentinel ontologi wajib berupa teks yang tidak kosong.');
         }
 
+        $namespaces = $configuration['namespaces'] ?? null;
+        $requiredNamespaces = ['ws', 'data', 'schema', 'rdf', 'rdfs', 'xsd', 'owl'];
+        if (! is_array($namespaces)) {
+            throw new InvalidArgumentException('Peta namespace ontologi tidak valid.');
+        }
+
+        foreach ($requiredNamespaces as $prefix) {
+            $namespace = $namespaces[$prefix] ?? null;
+            $parts = is_string($namespace) ? parse_url($namespace) : false;
+            if (! is_string($namespace)
+                || ! is_array($parts)
+                || ! in_array(strtolower((string) ($parts['scheme'] ?? '')), ['http', 'https'], true)
+                || ! is_string($parts['host'] ?? null)
+                || isset($parts['user'])
+                || isset($parts['pass'])
+                || preg_match('/[\x00-\x20\x7f]/', $namespace) === 1) {
+                throw new InvalidArgumentException("Namespace ontologi {$prefix} harus berupa IRI http/https yang valid.");
+            }
+        }
+
+        $placeholder = $configuration['og_image_placeholder'] ?? null;
+        if (! is_string($placeholder)
+            || preg_match('~^[A-Za-z0-9_-]+(?:/[A-Za-z0-9_-]+)*\.(?:png|jpe?g)$~i', $placeholder) !== 1) {
+            throw new InvalidArgumentException('Path gambar placeholder Open Graph harus berupa path lokal relatif.');
+        }
+
+        $rdfExport = $configuration['rdf_export'] ?? null;
+        $expectedFormats = [
+            'ttl' => ['media_type' => 'text/turtle', 'extension' => 'ttl'],
+            'rdf' => ['media_type' => 'application/rdf+xml', 'extension' => 'rdf'],
+            'jsonld' => ['media_type' => 'application/ld+json', 'extension' => 'jsonld'],
+        ];
+        if (! is_array($rdfExport)
+            || ! is_int($rdfExport['cache_ttl'] ?? null)
+            || $rdfExport['cache_ttl'] < 0
+            || ($rdfExport['formats'] ?? null) !== $expectedFormats) {
+            throw new InvalidArgumentException('Konfigurasi format dan cache ekspor RDF tidak valid.');
+        }
+
         $nearby = $configuration['nearby'] ?? null;
         if (! is_array($nearby)
             || ! is_numeric($nearby['radius_km'] ?? null)

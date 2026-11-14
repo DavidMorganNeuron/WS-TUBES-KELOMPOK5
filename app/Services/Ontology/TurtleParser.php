@@ -86,7 +86,7 @@ class TurtleParser
     }
 
     /**
-     * Parse the deterministic, one-triple-per-statement Turtle emitted by TurtleWriter.
+     * Parse the project Turtle subset, including grouped predicates and objects.
      *
      * @return list<array{
      *     subject: string,
@@ -106,30 +106,43 @@ class TurtleParser
                 continue;
             }
 
-            $tokens = array_values(array_filter(
-                array_map('trim', $this->splitTopLevel($statement, ' ')),
-                static fn (string $token): bool => $token !== '',
-            ));
+            $subject = null;
+            foreach ($this->splitTopLevel($statement, ';') as $pair) {
+                $pair = trim($pair);
+                if ($pair === '') {
+                    continue;
+                }
 
-            if (count($tokens) !== 3) {
-                throw new InvalidArgumentException('Pernyataan Turtle harus berisi tepat satu triple.');
+                $tokens = preg_split('/\s+/', $pair, $subject === null ? 3 : 2);
+                if (! is_array($tokens) || count($tokens) !== ($subject === null ? 3 : 2)) {
+                    throw new InvalidArgumentException('Pernyataan Turtle tidak valid.');
+                }
+
+                if ($subject === null) {
+                    $parsedSubject = $this->parseRdfTerm($tokens[0]);
+                    if ($parsedSubject['kind'] !== 'iri') {
+                        throw new InvalidArgumentException('Subjek Turtle harus berupa IRI.');
+                    }
+                    $subject = $parsedSubject['value'];
+                    $predicateToken = $tokens[1];
+                    $objectList = $tokens[2];
+                } else {
+                    $predicateToken = $tokens[0];
+                    $objectList = $tokens[1];
+                }
+
+                $predicate = $predicateToken === 'a'
+                    ? 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'
+                    : $this->expandName($predicateToken);
+
+                foreach ($this->splitTopLevel($objectList, ',') as $objectToken) {
+                    $triples[] = [
+                        'subject' => $subject,
+                        'predicate' => $predicate,
+                        'object' => $this->parseRdfTerm($objectToken),
+                    ];
+                }
             }
-
-            $subject = $this->parseRdfTerm($tokens[0]);
-            $predicate = $tokens[1] === 'a'
-                ? 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'
-                : $this->expandName($tokens[1]);
-            $object = $this->parseRdfTerm($tokens[2]);
-
-            if ($subject['kind'] !== 'iri' || $predicate === '') {
-                throw new InvalidArgumentException('Subjek atau predikat Turtle tidak valid.');
-            }
-
-            $triples[] = [
-                'subject' => $subject['value'],
-                'predicate' => $predicate,
-                'object' => $object,
-            ];
         }
 
         return $triples;

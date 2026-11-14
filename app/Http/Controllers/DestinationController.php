@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\Ontology\DestinationLinkedDataProvider;
 use App\Services\Ontology\DestinationRepository;
+use App\Services\Seo\SeoDataFactory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class DestinationController extends Controller
 {
-    public function index(Request $request, DestinationRepository $repository): View
+    public function index(Request $request, DestinationRepository $repository, SeoDataFactory $seoDataFactory): View
     {
         $this->validateFilterInputs($request);
         $sorts = $this->sorts();
@@ -26,6 +28,7 @@ class DestinationController extends Controller
             'facets' => $facets,
             'types' => DestinationRepository::TYPES,
             'sorts' => $sorts,
+            'seo' => $seoDataFactory->destinations($request, $filters),
         ]);
     }
 
@@ -73,14 +76,20 @@ class DestinationController extends Controller
         ]);
     }
 
-    public function show(string $id, DestinationRepository $repository): View
-    {
+    public function show(
+        string $id,
+        DestinationRepository $repository,
+        DestinationLinkedDataProvider $linkedDataProvider,
+        SeoDataFactory $seoDataFactory,
+    ): View {
         $destination = $repository->find($id);
 
         abort_if($destination === null, 404);
 
         return view('destination-detail', [
             'destination' => $destination,
+            'linkedData' => $linkedDataProvider->forDestination($id),
+            'seo' => $seoDataFactory->destination($destination),
             'related' => $repository->related($destination, 4),
             'otherTypes' => $repository->otherTypes($destination),
             'crossCategory' => $repository->crossCategory($destination, 4),

@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Services\Ontology\DestinationQueryBuilder;
+use App\Services\Ontology\DestinationRdfQueryBuilder;
 use App\Services\Ontology\DestinationRepository;
 use App\Services\Ontology\DestinationSource;
 use App\Services\Ontology\FusekiClient;
@@ -45,6 +46,12 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(OntologyGraphMapper::class);
         $this->app->singleton(SparqlEscaper::class);
         $this->app->singleton(SparqlRowMapper::class);
+
+        $this->app->singleton(DestinationRdfQueryBuilder::class, function ($app): DestinationRdfQueryBuilder {
+            OntologyConfiguration::validate(config('ontology'));
+
+            return new DestinationRdfQueryBuilder($app->make(SparqlEscaper::class));
+        });
 
         $this->app->singleton(DestinationQueryBuilder::class, function ($app): DestinationQueryBuilder {
             $ontologyConfig = config('ontology');

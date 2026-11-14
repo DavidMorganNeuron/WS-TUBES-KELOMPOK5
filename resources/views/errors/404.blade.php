@@ -2,11 +2,11 @@
 
 @section('code', '404')
 
-@section('title', 'Page not found')
+@section('title', 'Halaman tidak ditemukan')
 
-@section('message', 'The page you are looking for may have moved, or the destination ID does not exist in the ontology.')
+@section('message', $message ?? 'Halaman yang Anda cari tidak ditemukan atau ID destinasi tidak tersedia di dalam ontologi.')
 
 @section('actions')
-    <a href="{{ url('/') }}" class="button button--primary">Back to dashboard</a>
-    <a href="{{ url('/destinations') }}" class="button button--secondary">Browse destinations</a>
+    <a href="{{ url('/') }}" class="button button--primary">Kembali ke beranda</a>
+    <a href="{{ url('/destinations') }}" class="button button--secondary">Jelajahi destinasi</a>
 @endsection

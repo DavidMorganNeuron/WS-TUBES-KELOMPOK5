@@ -3,13 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Services\Ontology\DestinationRepository;
+use App\Services\Seo\SeoDataFactory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class MapController extends Controller
 {
-    public function index(Request $request, DestinationRepository $repository): View
+    public function index(Request $request, DestinationRepository $repository, SeoDataFactory $seoDataFactory): View
     {
         $this->validateFilterInputs($request);
         $filters = $this->filters($request);
@@ -25,6 +26,7 @@ class MapController extends Controller
             'markers' => $markers,
             'types' => DestinationRepository::TYPES,
             'provinces' => DestinationRepository::PROVINCES,
+            'seo' => $seoDataFactory->map(),
         ]);
     }
 

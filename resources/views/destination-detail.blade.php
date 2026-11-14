@@ -27,7 +27,12 @@
 @endphp
 
 @section('content')
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full overflow-x-clip">
+<div
+    class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full overflow-x-clip"
+    prefix="{{ $seo->rdfaPrefixes }}"
+    typeof="schema:TouristAttraction ws:DestinasiWisata"
+    resource="{{ $linkedData->iri }}"
+>
 
     <!-- Breadcrumb -->
     <div class="text-[11px] text-gray-500 font-medium mb-4 flex flex-wrap items-center gap-2">
@@ -41,12 +46,16 @@
     <div class="mb-6">
         <div class="flex flex-wrap gap-2 mb-3">
             @foreach ($destination->types as $type)
-                <span class="{{ $typeClasses[$type] ?? 'bg-brand-primary text-white' }} text-[10px] font-bold px-3 py-1 rounded-full flex items-center gap-1">
-                    {{ $type }}
-                </span>
+                @include('partials.rdfa-resource-label', [
+                    'resource' => $linkedData->categoryForLabel($type),
+                    'relation' => 'ws:berkategori',
+                    'label' => $type,
+                    'class' => ($typeClasses[$type] ?? 'bg-brand-primary text-white').' text-[10px] font-bold px-3 py-1 rounded-full flex items-center gap-1',
+                ])
             @endforeach
             @if ($destination->rating !== null)
                 <span class="bg-gray-100 text-gray-700 text-[10px] font-bold px-3 py-1 rounded-full flex items-center gap-1">⭐ {{ $destination->ratingLabel() }} / 5</span>
+                <meta property="ws:ratingPengunjung" content="{{ json_encode($destination->rating, JSON_PRESERVE_ZERO_FRACTION) }}" datatype="xsd:decimal">
             @endif
             @if ($destination->hasCoordinates())
                 <span class="bg-[#e8f5e9] text-[#0f5132] text-[10px] font-bold px-3 py-1 rounded-full border border-[#0f5132]/20">📍 Geotagged</span>
@@ -58,11 +67,15 @@
 
         <div class="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-6">
             <div class="min-w-0">
-                <h1 class="text-4xl md:text-5xl font-serif font-bold text-gray-900 mb-2 leading-tight">{{ $destination->name }}</h1>
+                <h1 class="text-4xl md:text-5xl font-serif font-bold text-gray-900 mb-2 leading-tight" property="schema:name ws:namaDestinasi">{{ $destination->name }}</h1>
                 @if ($destination->alternativeName !== '' && $destination->alternativeName !== $destination->name)
                     <p class="text-lg text-gray-500 italic mb-2">{{ $destination->alternativeName }}</p>
                 @endif
-                <p class="text-gray-600 text-lg max-w-3xl">{{ $destination->shortDescription !== '' ? $destination->shortDescription : 'No short description has been recorded for this destination yet.' }}</p>
+                @if ($destination->shortDescription !== '')
+                    <p class="text-gray-600 text-lg max-w-3xl" property="schema:description">{{ $destination->shortDescription }}</p>
+                @else
+                    <p class="text-gray-600 text-lg max-w-3xl">Deskripsi singkat destinasi belum tersedia.</p>
+                @endif
             </div>
             <div class="flex flex-wrap gap-2 flex-shrink-0">
                 <button
@@ -78,10 +91,21 @@
         </div>
     </div>
 
+    @if ($seo->alternates !== [])
+        <div class="mb-6 flex flex-wrap items-center gap-2 text-xs">
+            <span class="font-semibold text-gray-600">Data RDF:</span>
+            @foreach ($seo->alternates as $alternate)
+                <a href="{{ $alternate['url'] }}" class="rounded-full border border-gray-200 bg-white px-3 py-1.5 font-semibold text-brand-primary hover:bg-brand-light">
+                    {{ $alternate['label'] }}
+                </a>
+            @endforeach
+        </div>
+    @endif
+
     <!-- Gallery -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10 md:h-[520px]">
         <div class="md:col-span-2 relative rounded-2xl overflow-hidden h-72 md:h-full min-h-0 bg-gray-200 skeleton-shimmer">
-            <img src="{{ $destination->imageUrl(1600) }}" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-300" alt="{{ $destination->name }}" onload="this.closest('.skeleton-shimmer')?.classList.remove('skeleton-shimmer')" onerror="this.closest('.skeleton-shimmer')?.classList.remove('skeleton-shimmer')">
+            <img src="{{ $destination->media === '' ? $destination->imageUrl(1600) : $seo->imageUrl }}" @if (! $seo->isPlaceholderImage) property="schema:image" @endif class="absolute inset-0 w-full h-full object-cover transition-opacity duration-300" alt="{{ $destination->name }}" onload="this.closest('.skeleton-shimmer')?.classList.remove('skeleton-shimmer')" onerror="this.closest('.skeleton-shimmer')?.classList.remove('skeleton-shimmer')">
             @include('partials.image-attribution', ['destination' => $destination])
             <div class="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black/80 to-transparent text-white">
                 <div class="min-w-0">
@@ -156,10 +180,15 @@
                 <div class="space-y-2 text-xs text-gray-600 mb-5">
                     <div class="flex justify-between gap-4 border-b border-gray-100 pb-2"><span>Category</span><span class="font-bold text-gray-900 text-right">{{ implode(', ', $destination->types) }}</span></div>
                     <div class="flex justify-between gap-4 border-b border-gray-100 pb-2"><span>Province</span><span class="font-bold text-gray-900 text-right">{{ $destination->province() }}</span></div>
-                    <div class="flex justify-between gap-4 border-b border-gray-100 pb-2"><span>Ontology ID</span><span class="font-bold text-gray-900 text-right">ID {{ $destination->id }}</span></div>
+                    <div class="flex justify-between gap-4 border-b border-gray-100 pb-2"><span>Ontology ID</span><span class="font-bold text-gray-900 text-right">ID <span property="ws:idDestinasi">{{ $destination->id }}</span></span></div>
                     @if ($destination->openingHours !== '')
-                        <div class="flex justify-between gap-4 border-b border-gray-100 pb-2"><span>Opening hours</span><span class="font-bold text-gray-900 text-right">{{ $destination->openingHours }}</span></div>
+                        <div class="flex justify-between gap-4 border-b border-gray-100 pb-2"><span>Opening hours</span><span class="font-bold text-gray-900 text-right" property="ws:keteranganJadwal">{{ $destination->openingHours }}</span></div>
                     @endif
+                    @foreach ($destination->prices as $price)
+                        @if (preg_match('/^[+-]?\d+(?:\.\d+)?$/', $price) === 1)
+                            <meta property="ws:hargaMasuk" content="{{ $price }}" datatype="xsd:decimal">
+                        @endif
+                    @endforeach
                     @if ($destination->prices !== [])
                         <div class="flex justify-between gap-4"><span>Entry from</span><span class="font-bold text-gray-900 text-right">{{ $destination->priceLabel() }}</span></div>
                     @endif
@@ -218,6 +247,10 @@
                             <p class="text-[10px] text-gray-400 font-bold uppercase mb-1">Coordinates</p>
                             <p class="font-bold text-sm text-gray-900">{{ number_format($destination->latitude, 4) }}, {{ number_format($destination->longitude, 4) }}</p>
                             <p class="text-[10px] text-gray-500">Latitude, longitude</p>
+                            <div property="schema:geo" typeof="schema:GeoCoordinates">
+                                <meta property="schema:latitude" content="{{ json_encode($destination->latitude, JSON_PRESERVE_ZERO_FRACTION) }}" datatype="xsd:decimal">
+                                <meta property="schema:longitude" content="{{ json_encode($destination->longitude, JSON_PRESERVE_ZERO_FRACTION) }}" datatype="xsd:decimal">
+                            </div>
                         </div>
                     @endif
                     @if ($destination->rating !== null)
@@ -265,13 +298,13 @@
                             <p class="font-bold text-sm text-gray-900 mb-1 flex items-center gap-2">📞 Official Contact</p>
                             <div class="space-y-1 text-xs text-gray-700">
                                 @if ($destination->phone !== '')
-                                    <p><a href="{{ $phoneHref }}" class="font-bold hover:text-brand-primary">{{ $destination->phone }}</a></p>
+                                    <p><a href="{{ $phoneHref }}" property="schema:telephone" content="{{ $destination->phone }}" class="font-bold hover:text-brand-primary">{{ $destination->phone }}</a></p>
                                 @endif
                                 @if ($destination->email !== '')
-                                    <p><a href="mailto:{{ $destination->email }}" class="font-bold hover:text-brand-primary break-all">{{ $destination->email }}</a></p>
+                                    <p><a href="mailto:{{ $destination->email }}" property="schema:email" content="{{ $destination->email }}" class="font-bold hover:text-brand-primary break-all">{{ $destination->email }}</a></p>
                                 @endif
                                 @if ($destination->instagram !== '')
-                                    <p><a href="{{ $destination->instagram }}" target="_blank" rel="noopener" class="font-bold hover:text-brand-primary break-all">Instagram profile</a></p>
+                                    <p><a href="{{ $destination->instagram }}" property="ws:urlInstagram" content="{{ $destination->instagram }}" target="_blank" rel="noopener" class="font-bold hover:text-brand-primary break-all">Instagram profile</a></p>
                                 @endif
                             </div>
                         </div>
@@ -301,7 +334,12 @@
                             @if ($destination->facilities !== [])
                                 <div class="flex flex-wrap gap-2">
                                     @foreach ($destination->facilities as $facility)
-                                        <span class="text-xs bg-white border border-brand-primary/15 text-gray-700 rounded-full px-3 py-1">{{ $facility }}</span>
+                                        @include('partials.rdfa-resource-label', [
+                                            'resource' => $linkedData->facilityForLabel($facility),
+                                            'relation' => 'ws:menyediakanFasilitas',
+                                            'label' => $facility,
+                                            'class' => 'text-xs bg-white border border-brand-primary/15 text-gray-700 rounded-full px-3 py-1',
+                                        ])
                                     @endforeach
                                 </div>
                             @else
@@ -314,7 +352,12 @@
                             @if ($destination->activities !== [])
                                 <div class="flex flex-wrap gap-2">
                                     @foreach ($destination->activities as $activity)
-                                        <span class="text-xs bg-white border border-brand-accent/15 text-gray-700 rounded-full px-3 py-1">{{ $activity }}</span>
+                                        @include('partials.rdfa-resource-label', [
+                                            'resource' => $linkedData->activityForLabel($activity),
+                                            'relation' => 'ws:menawarkanAktivitas',
+                                            'label' => $activity,
+                                            'class' => 'text-xs bg-white border border-brand-accent/15 text-gray-700 rounded-full px-3 py-1',
+                                        ])
                                     @endforeach
                                 </div>
                             @else
@@ -330,7 +373,24 @@
                 <div class="flex justify-between items-end gap-4 mb-4">
                     <div class="min-w-0">
                         <h2 class="text-2xl font-serif font-bold text-gray-900 mb-1">Location &amp; Access</h2>
-                        <p class="text-xs text-gray-500">{{ $destination->address !== '' ? $destination->address : $destination->location }}</p>
+                        @if ($destination->address !== '')
+                            <p class="text-xs text-gray-500" property="schema:address">{{ $destination->address }}</p>
+                        @endif
+                        @if ($linkedData->region !== null)
+                            <p class="text-xs text-gray-500">
+                                @if ($destination->address !== '')
+                                    Wilayah:
+                                @endif
+                                @include('partials.rdfa-resource-label', [
+                                    'resource' => $linkedData->region,
+                                    'relation' => 'ws:berlokasiDi',
+                                    'label' => $destination->location,
+                                    'class' => '',
+                                ])
+                            </p>
+                        @elseif ($destination->address === '' && $destination->location !== '')
+                            <p class="text-xs text-gray-500">{{ $destination->location }}</p>
+                        @endif
                     </div>
                     <a href="{{ $destination->mapsUrl() }}" target="_blank" rel="noopener" class="text-brand-accent hover:underline text-xs font-bold flex items-center gap-1 whitespace-nowrap">Open in Google Maps</a>
                 </div>
@@ -358,6 +418,23 @@
                     </div>
                 @endif
             </div>
+
+            @if ($linkedData->neighbors !== [])
+                <div class="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm">
+                    <h2 class="text-xl font-serif font-bold text-gray-900 mb-4">Destinasi terdekat</h2>
+                    <div class="flex flex-wrap gap-2">
+                        @foreach ($linkedData->neighbors as $neighbor)
+                            <span class="rounded-full border border-gray-200 px-3 py-1 text-xs text-gray-700" rel="ws:dekatDengan" resource="{{ $neighbor->iri }}" typeof="{{ $neighbor->type }}">
+                                @if ($neighbor->destinationId !== null)
+                                    <a property="{{ $neighbor->labelProperty }}" href="{{ route('destination.detail', $neighbor->destinationId) }}" class="hover:text-brand-primary">{{ $neighbor->label }}</a>
+                                @else
+                                    <span property="{{ $neighbor->labelProperty }}">{{ $neighbor->label }}</span>
+                                @endif
+                            </span>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
 
             <!-- Related -->
             <!-- Other Categories -->

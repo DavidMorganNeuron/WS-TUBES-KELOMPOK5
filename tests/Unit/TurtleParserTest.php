@@ -155,4 +155,31 @@ TTL;
         $this->assertSame(['gunung', 'air terjun'], $destination->keywords);
         $this->assertSame(1.234, $destination->latitude);
     }
+
+    public function test_it_parses_grouped_fuseki_turtle_statements_and_decimal_terms(): void
+    {
+        $turtle = <<<'TTL'
+PREFIX data: <http://pariwisatasumut.org/resource/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX ws: <http://pariwisatasumut.org/ontology/v2#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+data:ws-002 rdf:type ws:DestinasiWisata ;
+    ws:bujur 98.34891832517512 ;
+    ws:kataKunci "Air Terjun", "Danau" ;
+    ws:namaDestinasi "Air Terjun Lae Mbilulu"@id .
+TTL;
+
+        $triples = $this->parser->parseTriples($turtle);
+
+        $this->assertCount(5, $triples);
+        $this->assertSame(
+            'http://pariwisatasumut.org/resource/ws-002',
+            $triples[0]['subject'],
+        );
+        $this->assertSame('http://www.w3.org/2001/XMLSchema#decimal', $triples[1]['object']['datatype']);
+        $this->assertSame('98.34891832517512', $triples[1]['object']['value']);
+        $this->assertSame('Air Terjun Lae Mbilulu', $triples[4]['object']['value']);
+        $this->assertSame('id', $triples[4]['object']['language']);
+    }
 }
