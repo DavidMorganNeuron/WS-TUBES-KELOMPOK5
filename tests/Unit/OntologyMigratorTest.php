@@ -25,6 +25,17 @@ class OntologyMigratorTest extends TestCase
 
         $this->assertSame(1, $result['stats']['destinations']);
         $this->assertSame(
+            [
+                'https://www.wikidata.org/entity/Q1',
+                'https://www.wikidata.org/entity/Q2',
+                'https://www.wikidata.org/entity/Q3',
+            ],
+            array_map(static fn (array $triple): string => $triple['object']['value'], array_values(array_filter(
+                $result['triples'],
+                static fn (array $triple): bool => $triple['predicate'] === OntologyMigrator::OWL_NS.'sameAs',
+            ))),
+        );
+        $this->assertSame(
             ['ws-001'],
             $this->literalValues(
                 $result['triples'],
@@ -46,7 +57,14 @@ class OntologyMigratorTest extends TestCase
         $turtle = $writer->write($triples);
         $parsedTriples = (new TurtleParser)->parseTriples($turtle);
         $validator = new OntologyValidator;
-        $validation = $validator->validate($parsedTriples, $unknownLabel);
+        $validation = $validator->validate(
+            $parsedTriples,
+            $unknownLabel,
+            regionQidsByName: [
+                'Kabupaten Samosir' => 'Q1',
+                'Kabupaten Toba' => 'Q2',
+            ],
+        );
 
         $unknownTariff = OntologyMigrator::DATA_NS.'tarif-ws-005';
         $freeTariff = OntologyMigrator::DATA_NS.'tarif-ws-006';
@@ -105,6 +123,65 @@ class OntologyMigratorTest extends TestCase
         ], $comparison['source_comparison']);
         $this->assertContains('Jumlah destinasi v2 dan v3 berbeda: 3 != 2.', $comparison['errors']);
         $this->assertContains('Destinasi sumber v2 tidak ditemukan di v3: ws-007.', $comparison['errors']);
+    }
+
+    public function test_validator_rejects_destination_same_as_and_non_snapshot_region_qids(): void
+    {
+        $rows = (new TurtleParser)->parse(str_replace('"-"', '"-"', $this->fixtureTurtle()));
+        $result = (new OntologyMigrator)->migrate($rows, $this->boundarySource(), '-', 15.0, 3);
+        $validator = new OntologyValidator;
+        $expectedRegions = [
+            'Kabupaten Samosir' => 'Q1',
+            'Kabupaten Toba' => 'Q2',
+        ];
+        $validTriples = $result['triples'];
+        $destinationIri = OntologyMigrator::DATA_NS.'ws-005';
+        $validTriples[] = [
+            'subject' => $destinationIri,
+            'predicate' => OntologyMigrator::OWL_NS.'sameAs',
+            'object' => [
+                'kind' => 'iri',
+                'value' => 'https://www.wikidata.org/entity/Q999',
+                'datatype' => null,
+                'language' => null,
+            ],
+        ];
+
+        $invalid = $validator->validate(
+            $validTriples,
+            '-',
+            regionQidsByName: $expectedRegions,
+        );
+
+        $this->assertContains("{$destinationIri}: owl:sameAs destinasi tidak diizinkan.", $invalid['errors']);
+
+        $wrongRegion = array_values(array_filter(
+            $result['triples'],
+            static fn (array $triple): bool => ! (
+                $triple['subject'] === OntologyMigrator::DATA_NS.'wilayah-kabupaten-toba'
+                && $triple['predicate'] === OntologyMigrator::OWL_NS.'sameAs'
+            ),
+        ));
+        $wrongRegion[] = [
+            'subject' => OntologyMigrator::DATA_NS.'wilayah-kabupaten-toba',
+            'predicate' => OntologyMigrator::OWL_NS.'sameAs',
+            'object' => [
+                'kind' => 'iri',
+                'value' => 'https://www.wikidata.org/entity/Q999',
+                'datatype' => null,
+                'language' => null,
+            ],
+        ];
+        $invalidMapping = $validator->validate(
+            $wrongRegion,
+            '-',
+            regionQidsByName: $expectedRegions,
+        );
+
+        $this->assertContains(
+            'Wilayah Kabupaten Toba: owl:sameAs harus menunjuk tepat ke https://www.wikidata.org/entity/Q2.',
+            $invalidMapping['errors'],
+        );
     }
 
     private function firstDestinationFixture(): string

@@ -12,20 +12,20 @@ use App\Services\Ontology\OntologyGraphMapper;
 use App\Services\Ontology\OntologyInspector;
 use App\Services\Ontology\OntologyValidator;
 use App\Services\Ontology\TurtleParser;
+use App\Services\Ontology\WikidataClient;
+use App\Services\Ontology\WikidataQueryBuilder;
+use App\Services\Ontology\WikidataRegionCatalog;
+use App\Services\Ontology\WikidataRegionRepository;
+use Illuminate\Console\Attributes\Description;
+use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
 use InvalidArgumentException;
 use Throwable;
 
+#[Signature('ontology:doctor {id=ws-148 : ID destinasi yang diperiksa} {--file= : File Turtle v3 yang diperiksa} {--property=hargaMasuk : Properti yang dibandingkan antara Fuseki dan aplikasi} {--forget-cache : Invalidasi cache ontologi sebelum membandingkan} {--eksternal : Periksa konektivitas Wikidata secara langsung}')]
+#[Description('Memeriksa konfigurasi, koneksi Fuseki, ontologi v3, cache, dan snapshot Wikidata')]
 final class OntologyDoctor extends Command
 {
-    protected $signature = 'ontology:doctor
-        {id=ws-148 : ID destinasi yang diperiksa}
-        {--file= : File Turtle v3 yang diperiksa}
-        {--property=hargaMasuk : Properti yang dibandingkan antara Fuseki dan aplikasi}
-        {--forget-cache : Invalidasi cache ontologi sebelum membandingkan}';
-
-    protected $description = 'Memeriksa konfigurasi, koneksi Fuseki, data v3, dan cache aplikasi';
-
     public function handle(
         FusekiClient $client,
         OntologyInspector $inspector,
@@ -34,6 +34,10 @@ final class OntologyDoctor extends Command
         OntologyGraphMapper $graphMapper,
         TurtleParser $parser,
         OntologyValidator $validator,
+        WikidataRegionCatalog $regionCatalog,
+        WikidataRegionRepository $wikidataRegions,
+        WikidataClient $wikidataClient,
+        WikidataQueryBuilder $wikidataQueryBuilder,
     ): int {
         $file = (string) ($this->option('file') ?: config('ontology.ttl_path'));
         $path = $this->resolvePath($file);
@@ -52,7 +56,11 @@ final class OntologyDoctor extends Command
 
         try {
             $triples = $parser->parseTriplesFile($path);
-            $validation = $validator->validate($triples, (string) config('ontology.unknown_label'));
+            $validation = $validator->validate(
+                $triples,
+                (string) config('ontology.unknown_label'),
+                regionQidsByName: $regionCatalog->qidsByRegionName(),
+            );
         } catch (Throwable $exception) {
             $this->components->error('Validasi file ontologi gagal: '.$exception->getMessage());
 
@@ -71,6 +79,14 @@ final class OntologyDoctor extends Command
         } else {
             $this->line('  validasi file : OK');
         }
+
+        $wikidataSnapshotValid = $this->reportWikidata(
+            triples: $triples,
+            catalog: $regionCatalog,
+            regions: $wikidataRegions,
+            client: $wikidataClient,
+            queryBuilder: $wikidataQueryBuilder,
+        );
 
         if (! $client->isAvailable()) {
             $this->components->error('Fuseki tidak dapat diakses. Periksa FUSEKI_URL dan pastikan server berjalan.');
@@ -160,6 +176,7 @@ final class OntologyDoctor extends Command
             $this->reportRows('Kardinalitas properti fungsional dilanggar', ['ID', 'Properti', 'Jumlah', 'Nilai'], $violations, ['id', 'p', 'jumlah', 'nilai']);
 
             $hasIssues = $fileIssues > 0
+                || ! $wikidataSnapshotValid
                 || count($remoteRows) !== $validation['destination_count']
                 || $applicationRows->count() !== $validation['destination_count']
                 || $sourceDestination === null
@@ -190,6 +207,105 @@ final class OntologyDoctor extends Command
         $this->components->info('Konfigurasi, file, Fuseki, dan aplikasi konsisten.');
 
         return self::SUCCESS;
+    }
+
+    /**
+     * @param  list<array{subject: string, predicate: string, object: array{kind: string, value: string}}>  $triples
+     */
+    private function reportWikidata(
+        array $triples,
+        WikidataRegionCatalog $catalog,
+        WikidataRegionRepository $regions,
+        WikidataClient $client,
+        WikidataQueryBuilder $queryBuilder,
+    ): bool {
+        $contact = trim((string) config('ontology.wikidata.contact', ''));
+        $effectiveContact = $contact !== ''
+            ? $contact
+            : (string) config('ontology.wikidata.contact_fallback', '');
+        $this->line('  kontak Wikidata efektif : '.$effectiveContact);
+        if (config('app.env') === 'production' && $contact === '') {
+            $this->components->warn('D9: EXTERNAL_CONTACT belum diatur pada lingkungan production.');
+        }
+
+        try {
+            $expectedRegions = $catalog->load()['regions'];
+            $snapshot = $regions->loadSnapshot(allowStale: true);
+        } catch (InvalidArgumentException|RuntimeException $exception) {
+            $this->components->error('Snapshot detail Wikidata gagal dibaca atau tidak valid: '.$exception->getMessage());
+
+            return false;
+        }
+
+        if ($snapshot === null) {
+            $this->components->error('Snapshot detail Wikidata tidak tersedia.');
+
+            return false;
+        }
+
+        $namespaces = config('ontology.namespaces');
+        $rdfType = $namespaces['rdf'].'type';
+        $regionClass = $namespaces['ws'].'KabupatenKota';
+        $sameAs = $namespaces['owl'].'sameAs';
+        $regionSubjects = [];
+        $datasetQids = [];
+
+        foreach ($triples as $triple) {
+            if ($triple['predicate'] === $rdfType
+                && $triple['object']['kind'] === 'iri'
+                && $triple['object']['value'] === $regionClass) {
+                $regionSubjects[$triple['subject']] = true;
+            }
+        }
+
+        foreach ($triples as $triple) {
+            if (isset($regionSubjects[$triple['subject']]) && $triple['predicate'] === $sameAs
+                && preg_match('~^https://www\.wikidata\.org/entity/(Q[0-9]+)$~', $triple['object']['value'], $matches) === 1) {
+                $datasetQids[] = $matches[1];
+            }
+        }
+
+        $expectedQids = array_column($expectedRegions, 'qid');
+        $snapshotQids = array_column($snapshot['regions'], 'qid');
+        sort($expectedQids);
+        sort($snapshotQids);
+        sort($datasetQids);
+        $coverageMatches = count($regionSubjects) === count($expectedRegions)
+            && $expectedQids === $snapshotQids
+            && $expectedQids === $datasetQids;
+        $snapshotRegions = array_values($snapshot['regions']);
+        $this->table(['Cakupan snapshot wilayah', 'Jumlah'], [
+            ['Kabupaten/Kota dengan QID cocok', count($datasetQids).'/'.count($regionSubjects)],
+            ['Gambar', count(array_filter($snapshotRegions, static fn (array $region): bool => $region['image_url'] !== null))],
+            ['Populasi', count(array_filter($snapshotRegions, static fn (array $region): bool => $region['population'] !== null))],
+            ['Luas', count(array_filter($snapshotRegions, static fn (array $region): bool => $region['area'] !== null))],
+            ['Situs resmi', count(array_filter($snapshotRegions, static fn (array $region): bool => ($region['website_url'] ?? null) !== null))],
+        ]);
+        $this->line('  snapshot Wikidata : '.($snapshot['is_stale'] ? 'lama' : 'segar'));
+        if (! $coverageMatches) {
+            $this->components->error('Cakupan QID snapshot detail tidak cocok dengan seluruh Kabupaten/Kota pada ontologi.');
+        }
+
+        if (! $this->option('eksternal')) {
+            $this->line('  konektivitas Wikidata : tidak diuji (gunakan --eksternal untuk menghubungi layanan).');
+
+            return $coverageMatches;
+        }
+
+        try {
+            $firstQid = $expectedQids[0] ?? null;
+            if ($firstQid === null || $client->select($queryBuilder->details([$firstQid]), refresh: true) === []) {
+                throw new RuntimeException('Wikidata Query Service tidak mengembalikan hasil untuk QID uji.');
+            }
+        } catch (RuntimeException $exception) {
+            $this->components->error('Konektivitas Wikidata gagal: '.$exception->getMessage());
+
+            return false;
+        }
+
+        $this->line('  konektivitas Wikidata : berhasil.');
+
+        return $coverageMatches;
     }
 
     /**

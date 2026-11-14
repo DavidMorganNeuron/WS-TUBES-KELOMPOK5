@@ -6,6 +6,7 @@ namespace App\Console\Commands;
 
 use App\Services\Ontology\OntologyValidator;
 use App\Services\Ontology\TurtleParser;
+use App\Services\Ontology\WikidataRegionCatalog;
 use Illuminate\Console\Command;
 use InvalidArgumentException;
 
@@ -15,8 +16,11 @@ final class OntologyValidate extends Command
 
     protected $description = 'Validasi skema dan data ontologi v3';
 
-    public function handle(TurtleParser $parser, OntologyValidator $validator): int
-    {
+    public function handle(
+        TurtleParser $parser,
+        OntologyValidator $validator,
+        WikidataRegionCatalog $regionCatalog,
+    ): int {
         $path = (string) ($this->option('file') ?: config('ontology.ttl_path'));
         $resolvedPath = $this->resolvePath($path);
 
@@ -52,6 +56,7 @@ final class OntologyValidate extends Command
                 $parser->parseTriples($contents),
                 (string) config('ontology.unknown_label'),
                 $sourceIds,
+                $regionCatalog->qidsByRegionName(),
             );
         } catch (InvalidArgumentException $exception) {
             $this->error('Turtle tidak dapat divalidasi: '.$exception->getMessage());

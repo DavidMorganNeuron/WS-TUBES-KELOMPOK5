@@ -23,6 +23,39 @@ final class OntologyConfiguration
             }
         }
 
+        $wikidata = $configuration['wikidata'] ?? null;
+        if (! is_array($wikidata)) {
+            throw new InvalidArgumentException('Konfigurasi Wikidata tidak lengkap.');
+        }
+
+        foreach (['snapshot_path', 'stale_snapshot_path', 'candidate_report_path'] as $pathKey) {
+            if (! is_string($wikidata[$pathKey] ?? null) || trim($wikidata[$pathKey]) === '') {
+                throw new InvalidArgumentException("Konfigurasi Wikidata {$pathKey} wajib berupa path yang tidak kosong.");
+            }
+        }
+        if ($wikidata['snapshot_path'] === $wikidata['stale_snapshot_path']) {
+            throw new InvalidArgumentException('Path snapshot terbaru dan snapshot stale Wikidata harus berbeda.');
+        }
+
+        foreach (['request_timeout', 'refresh_timeout', 'max_retry_after', 'max_response_bytes', 'get_query_max_bytes', 'snapshot_ttl'] as $positiveKey) {
+            if (! is_int($wikidata[$positiveKey] ?? null) || $wikidata[$positiveKey] < 1) {
+                throw new InvalidArgumentException("Konfigurasi Wikidata {$positiveKey} harus berupa bilangan bulat lebih besar dari nol.");
+            }
+        }
+
+        foreach (['max_retries', 'query_cache_ttl', 'request_interval_seconds'] as $nonNegativeKey) {
+            if (! is_int($wikidata[$nonNegativeKey] ?? null) || $wikidata[$nonNegativeKey] < 0) {
+                throw new InvalidArgumentException("Konfigurasi Wikidata {$nonNegativeKey} harus berupa bilangan bulat nol atau lebih.");
+            }
+        }
+
+        if (! is_bool($wikidata['allow_stale'] ?? null)
+            || ! is_string($wikidata['contact'] ?? null)
+            || ! is_string($wikidata['contact_fallback'] ?? null)) {
+            throw new InvalidArgumentException('Kontak dan opsi snapshot stale Wikidata tidak valid.');
+        }
+        WikidataUserAgent::resolve($wikidata['contact'], $wikidata['contact_fallback']);
+
         $cacheTtl = $configuration['cache_ttl'] ?? null;
         if (! is_int($cacheTtl) || $cacheTtl < 0) {
             throw new InvalidArgumentException('ONTOLOGY_CACHE_TTL harus berupa bilangan bulat nol atau lebih.');

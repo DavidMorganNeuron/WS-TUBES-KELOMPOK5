@@ -126,6 +126,12 @@ final class OntologyMigrator
                 'KabupatenKota',
                 $slugOwners,
             );
+            $this->addIri(
+                $triples,
+                $regionIrisByQid[$region['qid']],
+                self::OWL_NS.'sameAs',
+                'https://www.wikidata.org/entity/'.$region['qid'],
+            );
             $this->addLiteral(
                 $triples,
                 $regionIrisByQid[$region['qid']],

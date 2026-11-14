@@ -14,9 +14,12 @@ use App\Services\Ontology\SparqlDestinationSource;
 use App\Services\Ontology\SparqlEscaper;
 use App\Services\Ontology\SparqlRowMapper;
 use App\Services\Ontology\TurtleParser;
+use App\Services\Ontology\WikidataClient;
+use App\Services\Ontology\WikidataQueryBuilder;
+use App\Services\Ontology\WikidataRegionCatalog;
+use App\Services\Ontology\WikidataRegionRepository;
+use App\Services\Ontology\WikidataUserAgent;
 use Illuminate\Support\ServiceProvider;
-use InvalidArgumentException;
-use JsonException;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -46,6 +49,50 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(OntologyGraphMapper::class);
         $this->app->singleton(SparqlEscaper::class);
         $this->app->singleton(SparqlRowMapper::class);
+        $this->app->singleton(WikidataQueryBuilder::class);
+
+        $this->app->singleton(WikidataRegionCatalog::class, function (): WikidataRegionCatalog {
+            $ontologyConfig = config('ontology');
+            OntologyConfiguration::validate($ontologyConfig);
+
+            return new WikidataRegionCatalog(base_path($ontologyConfig['wikidata_regions_path']));
+        });
+
+        $this->app->singleton(WikidataClient::class, function (): WikidataClient {
+            $ontologyConfig = config('ontology');
+            OntologyConfiguration::validate($ontologyConfig);
+            $config = $ontologyConfig['wikidata'];
+
+            return new WikidataClient(
+                userAgent: WikidataUserAgent::resolve(
+                    $config['contact'],
+                    $config['contact_fallback'],
+                ),
+                requestTimeout: $config['request_timeout'],
+                refreshTimeout: $config['refresh_timeout'],
+                maxRetries: $config['max_retries'],
+                maxRetryAfter: $config['max_retry_after'],
+                maxResponseBytes: $config['max_response_bytes'],
+                getQueryMaxBytes: $config['get_query_max_bytes'],
+                cacheTtl: $config['query_cache_ttl'],
+            );
+        });
+
+        $this->app->singleton(WikidataRegionRepository::class, function ($app): WikidataRegionRepository {
+            $ontologyConfig = config('ontology');
+            OntologyConfiguration::validate($ontologyConfig);
+            $config = $ontologyConfig['wikidata'];
+
+            return new WikidataRegionRepository(
+                client: $app->make(WikidataClient::class),
+                queryBuilder: $app->make(WikidataQueryBuilder::class),
+                catalog: $app->make(WikidataRegionCatalog::class),
+                snapshotPath: base_path($config['snapshot_path']),
+                staleSnapshotPath: base_path($config['stale_snapshot_path']),
+                snapshotTtl: $config['snapshot_ttl'],
+                requestIntervalSeconds: $config['request_interval_seconds'],
+            );
+        });
 
         $this->app->singleton(DestinationRdfQueryBuilder::class, function ($app): DestinationRdfQueryBuilder {
             OntologyConfiguration::validate(config('ontology'));
@@ -54,32 +101,9 @@ class AppServiceProvider extends ServiceProvider
         });
 
         $this->app->singleton(DestinationQueryBuilder::class, function ($app): DestinationQueryBuilder {
-            $ontologyConfig = config('ontology');
-            OntologyConfiguration::validate($ontologyConfig);
-            $path = base_path($ontologyConfig['wikidata_regions_path']);
-            $contents = file_get_contents($path);
-            if ($contents === false) {
-                throw new InvalidArgumentException("Snapshot wilayah ontologi tidak dapat dibaca: {$path}");
-            }
-
-            try {
-                $snapshot = json_decode($contents, true, 512, JSON_THROW_ON_ERROR);
-            } catch (JsonException $exception) {
-                throw new InvalidArgumentException('Snapshot wilayah ontologi bukan JSON yang valid.', previous: $exception);
-            }
-
-            if (! is_array($snapshot)) {
-                throw new InvalidArgumentException('Snapshot wilayah ontologi harus berupa objek JSON.');
-            }
-
-            $regions = $snapshot['regions'] ?? null;
-            if (! is_array($regions) || $regions === []) {
-                throw new InvalidArgumentException('Snapshot wilayah ontologi tidak memiliki daftar kabupaten/kota.');
-            }
-
             return new DestinationQueryBuilder(
                 $app->make(SparqlEscaper::class),
-                array_keys($regions),
+                array_keys($app->make(WikidataRegionCatalog::class)->load()['regions']),
             );
         });
 

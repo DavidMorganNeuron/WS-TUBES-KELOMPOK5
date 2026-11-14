@@ -2793,6 +2793,7 @@ data:tarif-ws-227 rdf:type ws:TarifMasuk .
 data:tarif-ws-227 ws:hargaMasuk "5000"^^xsd:decimal .
 data:tarif-ws-228 rdf:type ws:TarifMasuk .
 data:tarif-ws-228 ws:hargaMasuk "10000"^^xsd:decimal .
+data:wilayah-kabupaten-asahan owl:sameAs <https://www.wikidata.org/entity/Q1795> .
 data:wilayah-kabupaten-asahan rdf:type ws:KabupatenKota .
 data:wilayah-kabupaten-asahan rdfs:label "Kabupaten Asahan"@id .
 data:wilayah-kabupaten-asahan ws:berbatasanDengan data:wilayah-kabupaten-batu-bara .
@@ -2800,27 +2801,32 @@ data:wilayah-kabupaten-asahan ws:berbatasanDengan data:wilayah-kabupaten-labuhan
 data:wilayah-kabupaten-asahan ws:berbatasanDengan data:wilayah-kabupaten-simalungun .
 data:wilayah-kabupaten-asahan ws:berbatasanDengan data:wilayah-kabupaten-toba .
 data:wilayah-kabupaten-asahan ws:tipeWilayah "Kabupaten"^^xsd:string .
+data:wilayah-kabupaten-batu-bara owl:sameAs <https://www.wikidata.org/entity/Q5797> .
 data:wilayah-kabupaten-batu-bara rdf:type ws:KabupatenKota .
 data:wilayah-kabupaten-batu-bara rdfs:label "Kabupaten Batu Bara"@id .
 data:wilayah-kabupaten-batu-bara ws:berbatasanDengan data:wilayah-kabupaten-asahan .
 data:wilayah-kabupaten-batu-bara ws:berbatasanDengan data:wilayah-kabupaten-serdang-bedagai .
 data:wilayah-kabupaten-batu-bara ws:berbatasanDengan data:wilayah-kabupaten-simalungun .
 data:wilayah-kabupaten-batu-bara ws:tipeWilayah "Kabupaten"^^xsd:string .
+data:wilayah-kabupaten-dairi owl:sameAs <https://www.wikidata.org/entity/Q5801> .
 data:wilayah-kabupaten-dairi rdf:type ws:KabupatenKota .
 data:wilayah-kabupaten-dairi rdfs:label "Kabupaten Dairi"@id .
 data:wilayah-kabupaten-dairi ws:berbatasanDengan data:wilayah-kabupaten-karo .
 data:wilayah-kabupaten-dairi ws:berbatasanDengan data:wilayah-kabupaten-pakpak-bharat .
 data:wilayah-kabupaten-dairi ws:berbatasanDengan data:wilayah-kabupaten-samosir .
 data:wilayah-kabupaten-dairi ws:tipeWilayah "Kabupaten"^^xsd:string .
+data:wilayah-kabupaten-deli-serdang owl:sameAs <https://www.wikidata.org/entity/Q5804> .
 data:wilayah-kabupaten-deli-serdang rdf:type ws:KabupatenKota .
 data:wilayah-kabupaten-deli-serdang rdfs:label "Kabupaten Deli Serdang"@id .
 data:wilayah-kabupaten-deli-serdang ws:berbatasanDengan data:wilayah-kabupaten-karo .
 data:wilayah-kabupaten-deli-serdang ws:berbatasanDengan data:wilayah-kabupaten-langkat .
 data:wilayah-kabupaten-deli-serdang ws:berbatasanDengan data:wilayah-kabupaten-samosir .
 data:wilayah-kabupaten-deli-serdang ws:berbatasanDengan data:wilayah-kabupaten-serdang-bedagai .
+data:wilayah-kabupaten-deli-serdang ws:berbatasanDengan data:wilayah-kabupaten-simalungun .
 data:wilayah-kabupaten-deli-serdang ws:berbatasanDengan data:wilayah-kota-binjai .
 data:wilayah-kabupaten-deli-serdang ws:berbatasanDengan data:wilayah-kota-medan .
 data:wilayah-kabupaten-deli-serdang ws:tipeWilayah "Kabupaten"^^xsd:string .
+data:wilayah-kabupaten-humbang-hasundutan owl:sameAs <https://www.wikidata.org/entity/Q5808> .
 data:wilayah-kabupaten-humbang-hasundutan rdf:type ws:KabupatenKota .
 data:wilayah-kabupaten-humbang-hasundutan rdfs:label "Kabupaten Humbang Hasundutan"@id .
 data:wilayah-kabupaten-humbang-hasundutan ws:berbatasanDengan data:wilayah-kabupaten-pakpak-bharat .
@@ -2828,23 +2834,28 @@ data:wilayah-kabupaten-humbang-hasundutan ws:berbatasanDengan data:wilayah-kabup
 data:wilayah-kabupaten-humbang-hasundutan ws:berbatasanDengan data:wilayah-kabupaten-tapanuli-tengah .
 data:wilayah-kabupaten-humbang-hasundutan ws:berbatasanDengan data:wilayah-kabupaten-tapanuli-utara .
 data:wilayah-kabupaten-humbang-hasundutan ws:tipeWilayah "Kabupaten"^^xsd:string .
+data:wilayah-kabupaten-karo owl:sameAs <https://www.wikidata.org/entity/Q5810> .
 data:wilayah-kabupaten-karo rdf:type ws:KabupatenKota .
 data:wilayah-kabupaten-karo rdfs:label "Kabupaten Karo"@id .
 data:wilayah-kabupaten-karo ws:berbatasanDengan data:wilayah-kabupaten-dairi .
 data:wilayah-kabupaten-karo ws:berbatasanDengan data:wilayah-kabupaten-deli-serdang .
 data:wilayah-kabupaten-karo ws:berbatasanDengan data:wilayah-kabupaten-langkat .
+data:wilayah-kabupaten-karo ws:berbatasanDengan data:wilayah-kabupaten-simalungun .
 data:wilayah-kabupaten-karo ws:tipeWilayah "Kabupaten"^^xsd:string .
+data:wilayah-kabupaten-labuhanbatu owl:sameAs <https://www.wikidata.org/entity/Q5814> .
 data:wilayah-kabupaten-labuhanbatu rdf:type ws:KabupatenKota .
 data:wilayah-kabupaten-labuhanbatu rdfs:label "Kabupaten Labuhanbatu"@id .
 data:wilayah-kabupaten-labuhanbatu ws:berbatasanDengan data:wilayah-kabupaten-labuhanbatu-selatan .
 data:wilayah-kabupaten-labuhanbatu ws:berbatasanDengan data:wilayah-kabupaten-labuhanbatu-utara .
 data:wilayah-kabupaten-labuhanbatu ws:berbatasanDengan data:wilayah-kabupaten-padang-lawas-utara .
 data:wilayah-kabupaten-labuhanbatu ws:tipeWilayah "Kabupaten"^^xsd:string .
+data:wilayah-kabupaten-labuhanbatu-selatan owl:sameAs <https://www.wikidata.org/entity/Q5905> .
 data:wilayah-kabupaten-labuhanbatu-selatan rdf:type ws:KabupatenKota .
 data:wilayah-kabupaten-labuhanbatu-selatan rdfs:label "Kabupaten Labuhanbatu Selatan"@id .
 data:wilayah-kabupaten-labuhanbatu-selatan ws:berbatasanDengan data:wilayah-kabupaten-labuhanbatu .
 data:wilayah-kabupaten-labuhanbatu-selatan ws:berbatasanDengan data:wilayah-kabupaten-padang-lawas-utara .
 data:wilayah-kabupaten-labuhanbatu-selatan ws:tipeWilayah "Kabupaten"^^xsd:string .
+data:wilayah-kabupaten-labuhanbatu-utara owl:sameAs <https://www.wikidata.org/entity/Q5842> .
 data:wilayah-kabupaten-labuhanbatu-utara rdf:type ws:KabupatenKota .
 data:wilayah-kabupaten-labuhanbatu-utara rdfs:label "Kabupaten Labuhanbatu Utara"@id .
 data:wilayah-kabupaten-labuhanbatu-utara ws:berbatasanDengan data:wilayah-kabupaten-asahan .
@@ -2854,38 +2865,45 @@ data:wilayah-kabupaten-labuhanbatu-utara ws:berbatasanDengan data:wilayah-kabupa
 data:wilayah-kabupaten-labuhanbatu-utara ws:berbatasanDengan data:wilayah-kabupaten-tapanuli-utara .
 data:wilayah-kabupaten-labuhanbatu-utara ws:berbatasanDengan data:wilayah-kabupaten-toba .
 data:wilayah-kabupaten-labuhanbatu-utara ws:tipeWilayah "Kabupaten"^^xsd:string .
+data:wilayah-kabupaten-langkat owl:sameAs <https://www.wikidata.org/entity/Q5833> .
 data:wilayah-kabupaten-langkat rdf:type ws:KabupatenKota .
 data:wilayah-kabupaten-langkat rdfs:label "Kabupaten Langkat"@id .
 data:wilayah-kabupaten-langkat ws:berbatasanDengan data:wilayah-kabupaten-deli-serdang .
 data:wilayah-kabupaten-langkat ws:berbatasanDengan data:wilayah-kabupaten-karo .
 data:wilayah-kabupaten-langkat ws:berbatasanDengan data:wilayah-kota-binjai .
 data:wilayah-kabupaten-langkat ws:tipeWilayah "Kabupaten"^^xsd:string .
+data:wilayah-kabupaten-mandailing-natal owl:sameAs <https://www.wikidata.org/entity/Q5837> .
 data:wilayah-kabupaten-mandailing-natal rdf:type ws:KabupatenKota .
 data:wilayah-kabupaten-mandailing-natal rdfs:label "Kabupaten Mandailing Natal"@id .
 data:wilayah-kabupaten-mandailing-natal ws:berbatasanDengan data:wilayah-kabupaten-padang-lawas .
 data:wilayah-kabupaten-mandailing-natal ws:berbatasanDengan data:wilayah-kabupaten-tapanuli-selatan .
 data:wilayah-kabupaten-mandailing-natal ws:tipeWilayah "Kabupaten"^^xsd:string .
+data:wilayah-kabupaten-nias-barat owl:sameAs <https://www.wikidata.org/entity/Q5909> .
 data:wilayah-kabupaten-nias-barat rdf:type ws:KabupatenKota .
 data:wilayah-kabupaten-nias-barat rdfs:label "Kabupaten Nias Barat"@id .
 data:wilayah-kabupaten-nias-barat ws:berbatasanDengan data:wilayah-kabupaten-nias-selatan .
 data:wilayah-kabupaten-nias-barat ws:berbatasanDengan data:wilayah-kabupaten-nias-utara .
 data:wilayah-kabupaten-nias-barat ws:berbatasanDengan data:wilayah-kota-gunungsitoli .
 data:wilayah-kabupaten-nias-barat ws:tipeWilayah "Kabupaten"^^xsd:string .
+data:wilayah-kabupaten-nias-selatan owl:sameAs <https://www.wikidata.org/entity/Q5918> .
 data:wilayah-kabupaten-nias-selatan rdf:type ws:KabupatenKota .
 data:wilayah-kabupaten-nias-selatan rdfs:label "Kabupaten Nias Selatan"@id .
 data:wilayah-kabupaten-nias-selatan ws:berbatasanDengan data:wilayah-kabupaten-nias-barat .
 data:wilayah-kabupaten-nias-selatan ws:tipeWilayah "Kabupaten"^^xsd:string .
+data:wilayah-kabupaten-nias-utara owl:sameAs <https://www.wikidata.org/entity/Q5853> .
 data:wilayah-kabupaten-nias-utara rdf:type ws:KabupatenKota .
 data:wilayah-kabupaten-nias-utara rdfs:label "Kabupaten Nias Utara"@id .
 data:wilayah-kabupaten-nias-utara ws:berbatasanDengan data:wilayah-kabupaten-nias-barat .
 data:wilayah-kabupaten-nias-utara ws:berbatasanDengan data:wilayah-kota-gunungsitoli .
 data:wilayah-kabupaten-nias-utara ws:tipeWilayah "Kabupaten"^^xsd:string .
+data:wilayah-kabupaten-padang-lawas owl:sameAs <https://www.wikidata.org/entity/Q5866> .
 data:wilayah-kabupaten-padang-lawas rdf:type ws:KabupatenKota .
 data:wilayah-kabupaten-padang-lawas rdfs:label "Kabupaten Padang Lawas"@id .
 data:wilayah-kabupaten-padang-lawas ws:berbatasanDengan data:wilayah-kabupaten-mandailing-natal .
 data:wilayah-kabupaten-padang-lawas ws:berbatasanDengan data:wilayah-kabupaten-padang-lawas-utara .
 data:wilayah-kabupaten-padang-lawas ws:berbatasanDengan data:wilayah-kabupaten-tapanuli-selatan .
 data:wilayah-kabupaten-padang-lawas ws:tipeWilayah "Kabupaten"^^xsd:string .
+data:wilayah-kabupaten-padang-lawas-utara owl:sameAs <https://www.wikidata.org/entity/Q5857> .
 data:wilayah-kabupaten-padang-lawas-utara rdf:type ws:KabupatenKota .
 data:wilayah-kabupaten-padang-lawas-utara rdfs:label "Kabupaten Padang Lawas Utara"@id .
 data:wilayah-kabupaten-padang-lawas-utara ws:berbatasanDengan data:wilayah-kabupaten-labuhanbatu .
@@ -2894,6 +2912,7 @@ data:wilayah-kabupaten-padang-lawas-utara ws:berbatasanDengan data:wilayah-kabup
 data:wilayah-kabupaten-padang-lawas-utara ws:berbatasanDengan data:wilayah-kabupaten-padang-lawas .
 data:wilayah-kabupaten-padang-lawas-utara ws:berbatasanDengan data:wilayah-kabupaten-tapanuli-selatan .
 data:wilayah-kabupaten-padang-lawas-utara ws:tipeWilayah "Kabupaten"^^xsd:string .
+data:wilayah-kabupaten-pakpak-bharat owl:sameAs <https://www.wikidata.org/entity/Q5872> .
 data:wilayah-kabupaten-pakpak-bharat rdf:type ws:KabupatenKota .
 data:wilayah-kabupaten-pakpak-bharat rdfs:label "Kabupaten Pakpak Bharat"@id .
 data:wilayah-kabupaten-pakpak-bharat ws:berbatasanDengan data:wilayah-kabupaten-dairi .
@@ -2901,6 +2920,7 @@ data:wilayah-kabupaten-pakpak-bharat ws:berbatasanDengan data:wilayah-kabupaten-
 data:wilayah-kabupaten-pakpak-bharat ws:berbatasanDengan data:wilayah-kabupaten-samosir .
 data:wilayah-kabupaten-pakpak-bharat ws:berbatasanDengan data:wilayah-kabupaten-tapanuli-tengah .
 data:wilayah-kabupaten-pakpak-bharat ws:tipeWilayah "Kabupaten"^^xsd:string .
+data:wilayah-kabupaten-samosir owl:sameAs <https://www.wikidata.org/entity/Q5888> .
 data:wilayah-kabupaten-samosir rdf:type ws:KabupatenKota .
 data:wilayah-kabupaten-samosir rdfs:label "Kabupaten Samosir"@id .
 data:wilayah-kabupaten-samosir ws:berbatasanDengan data:wilayah-kabupaten-dairi .
@@ -2908,6 +2928,7 @@ data:wilayah-kabupaten-samosir ws:berbatasanDengan data:wilayah-kabupaten-deli-s
 data:wilayah-kabupaten-samosir ws:berbatasanDengan data:wilayah-kabupaten-humbang-hasundutan .
 data:wilayah-kabupaten-samosir ws:berbatasanDengan data:wilayah-kabupaten-pakpak-bharat .
 data:wilayah-kabupaten-samosir ws:tipeWilayah "Kabupaten"^^xsd:string .
+data:wilayah-kabupaten-serdang-bedagai owl:sameAs <https://www.wikidata.org/entity/Q5899> .
 data:wilayah-kabupaten-serdang-bedagai rdf:type ws:KabupatenKota .
 data:wilayah-kabupaten-serdang-bedagai rdfs:label "Kabupaten Serdang Bedagai"@id .
 data:wilayah-kabupaten-serdang-bedagai ws:berbatasanDengan data:wilayah-kabupaten-batu-bara .
@@ -2915,14 +2936,18 @@ data:wilayah-kabupaten-serdang-bedagai ws:berbatasanDengan data:wilayah-kabupate
 data:wilayah-kabupaten-serdang-bedagai ws:berbatasanDengan data:wilayah-kabupaten-simalungun .
 data:wilayah-kabupaten-serdang-bedagai ws:berbatasanDengan data:wilayah-kota-tebing-tinggi .
 data:wilayah-kabupaten-serdang-bedagai ws:tipeWilayah "Kabupaten"^^xsd:string .
+data:wilayah-kabupaten-simalungun owl:sameAs <https://www.wikidata.org/entity/Q5903> .
 data:wilayah-kabupaten-simalungun rdf:type ws:KabupatenKota .
 data:wilayah-kabupaten-simalungun rdfs:label "Kabupaten Simalungun"@id .
 data:wilayah-kabupaten-simalungun ws:berbatasanDengan data:wilayah-kabupaten-asahan .
 data:wilayah-kabupaten-simalungun ws:berbatasanDengan data:wilayah-kabupaten-batu-bara .
+data:wilayah-kabupaten-simalungun ws:berbatasanDengan data:wilayah-kabupaten-deli-serdang .
+data:wilayah-kabupaten-simalungun ws:berbatasanDengan data:wilayah-kabupaten-karo .
 data:wilayah-kabupaten-simalungun ws:berbatasanDengan data:wilayah-kabupaten-serdang-bedagai .
 data:wilayah-kabupaten-simalungun ws:berbatasanDengan data:wilayah-kabupaten-toba .
 data:wilayah-kabupaten-simalungun ws:berbatasanDengan data:wilayah-kota-pematang-siantar .
 data:wilayah-kabupaten-simalungun ws:tipeWilayah "Kabupaten"^^xsd:string .
+data:wilayah-kabupaten-tapanuli-selatan owl:sameAs <https://www.wikidata.org/entity/Q5914> .
 data:wilayah-kabupaten-tapanuli-selatan rdf:type ws:KabupatenKota .
 data:wilayah-kabupaten-tapanuli-selatan rdfs:label "Kabupaten Tapanuli Selatan"@id .
 data:wilayah-kabupaten-tapanuli-selatan ws:berbatasanDengan data:wilayah-kabupaten-labuhanbatu-utara .
@@ -2932,6 +2957,7 @@ data:wilayah-kabupaten-tapanuli-selatan ws:berbatasanDengan data:wilayah-kabupat
 data:wilayah-kabupaten-tapanuli-selatan ws:berbatasanDengan data:wilayah-kabupaten-tapanuli-tengah .
 data:wilayah-kabupaten-tapanuli-selatan ws:berbatasanDengan data:wilayah-kabupaten-tapanuli-utara .
 data:wilayah-kabupaten-tapanuli-selatan ws:tipeWilayah "Kabupaten"^^xsd:string .
+data:wilayah-kabupaten-tapanuli-tengah owl:sameAs <https://www.wikidata.org/entity/Q5800> .
 data:wilayah-kabupaten-tapanuli-tengah rdf:type ws:KabupatenKota .
 data:wilayah-kabupaten-tapanuli-tengah rdfs:label "Kabupaten Tapanuli Tengah"@id .
 data:wilayah-kabupaten-tapanuli-tengah ws:berbatasanDengan data:wilayah-kabupaten-humbang-hasundutan .
@@ -2940,6 +2966,7 @@ data:wilayah-kabupaten-tapanuli-tengah ws:berbatasanDengan data:wilayah-kabupate
 data:wilayah-kabupaten-tapanuli-tengah ws:berbatasanDengan data:wilayah-kabupaten-tapanuli-utara .
 data:wilayah-kabupaten-tapanuli-tengah ws:berbatasanDengan data:wilayah-kota-sibolga .
 data:wilayah-kabupaten-tapanuli-tengah ws:tipeWilayah "Kabupaten"^^xsd:string .
+data:wilayah-kabupaten-tapanuli-utara owl:sameAs <https://www.wikidata.org/entity/Q5863> .
 data:wilayah-kabupaten-tapanuli-utara rdf:type ws:KabupatenKota .
 data:wilayah-kabupaten-tapanuli-utara rdfs:label "Kabupaten Tapanuli Utara"@id .
 data:wilayah-kabupaten-tapanuli-utara ws:berbatasanDengan data:wilayah-kabupaten-humbang-hasundutan .
@@ -2948,6 +2975,7 @@ data:wilayah-kabupaten-tapanuli-utara ws:berbatasanDengan data:wilayah-kabupaten
 data:wilayah-kabupaten-tapanuli-utara ws:berbatasanDengan data:wilayah-kabupaten-tapanuli-tengah .
 data:wilayah-kabupaten-tapanuli-utara ws:berbatasanDengan data:wilayah-kabupaten-toba .
 data:wilayah-kabupaten-tapanuli-utara ws:tipeWilayah "Kabupaten"^^xsd:string .
+data:wilayah-kabupaten-toba owl:sameAs <https://www.wikidata.org/entity/Q5911> .
 data:wilayah-kabupaten-toba rdf:type ws:KabupatenKota .
 data:wilayah-kabupaten-toba rdfs:label "Kabupaten Toba"@id .
 data:wilayah-kabupaten-toba ws:berbatasanDengan data:wilayah-kabupaten-asahan .
@@ -2955,28 +2983,34 @@ data:wilayah-kabupaten-toba ws:berbatasanDengan data:wilayah-kabupaten-labuhanba
 data:wilayah-kabupaten-toba ws:berbatasanDengan data:wilayah-kabupaten-simalungun .
 data:wilayah-kabupaten-toba ws:berbatasanDengan data:wilayah-kabupaten-tapanuli-utara .
 data:wilayah-kabupaten-toba ws:tipeWilayah "Kabupaten"^^xsd:string .
+data:wilayah-kota-binjai owl:sameAs <https://www.wikidata.org/entity/Q5954> .
 data:wilayah-kota-binjai rdf:type ws:KabupatenKota .
 data:wilayah-kota-binjai rdfs:label "Kota Binjai"@id .
 data:wilayah-kota-binjai ws:berbatasanDengan data:wilayah-kabupaten-deli-serdang .
 data:wilayah-kota-binjai ws:berbatasanDengan data:wilayah-kabupaten-langkat .
 data:wilayah-kota-binjai ws:tipeWilayah "Kota"^^xsd:string .
+data:wilayah-kota-gunungsitoli owl:sameAs <https://www.wikidata.org/entity/Q5967> .
 data:wilayah-kota-gunungsitoli rdf:type ws:KabupatenKota .
 data:wilayah-kota-gunungsitoli rdfs:label "Kota Gunungsitoli"@id .
 data:wilayah-kota-gunungsitoli ws:berbatasanDengan data:wilayah-kabupaten-nias-barat .
 data:wilayah-kota-gunungsitoli ws:berbatasanDengan data:wilayah-kabupaten-nias-utara .
 data:wilayah-kota-gunungsitoli ws:tipeWilayah "Kota"^^xsd:string .
+data:wilayah-kota-medan owl:sameAs <https://www.wikidata.org/entity/Q5972> .
 data:wilayah-kota-medan rdf:type ws:KabupatenKota .
 data:wilayah-kota-medan rdfs:label "Kota Medan"@id .
 data:wilayah-kota-medan ws:berbatasanDengan data:wilayah-kabupaten-deli-serdang .
 data:wilayah-kota-medan ws:tipeWilayah "Kota"^^xsd:string .
+data:wilayah-kota-pematang-siantar owl:sameAs <https://www.wikidata.org/entity/Q5979> .
 data:wilayah-kota-pematang-siantar rdf:type ws:KabupatenKota .
 data:wilayah-kota-pematang-siantar rdfs:label "Kota Pematang Siantar"@id .
 data:wilayah-kota-pematang-siantar ws:berbatasanDengan data:wilayah-kabupaten-simalungun .
 data:wilayah-kota-pematang-siantar ws:tipeWilayah "Kota"^^xsd:string .
+data:wilayah-kota-sibolga owl:sameAs <https://www.wikidata.org/entity/Q5984> .
 data:wilayah-kota-sibolga rdf:type ws:KabupatenKota .
 data:wilayah-kota-sibolga rdfs:label "Kota Sibolga"@id .
 data:wilayah-kota-sibolga ws:berbatasanDengan data:wilayah-kabupaten-tapanuli-tengah .
 data:wilayah-kota-sibolga ws:tipeWilayah "Kota"^^xsd:string .
+data:wilayah-kota-tebing-tinggi owl:sameAs <https://www.wikidata.org/entity/Q5989> .
 data:wilayah-kota-tebing-tinggi rdf:type ws:KabupatenKota .
 data:wilayah-kota-tebing-tinggi rdfs:label "Kota Tebing Tinggi"@id .
 data:wilayah-kota-tebing-tinggi ws:berbatasanDengan data:wilayah-kabupaten-serdang-bedagai .

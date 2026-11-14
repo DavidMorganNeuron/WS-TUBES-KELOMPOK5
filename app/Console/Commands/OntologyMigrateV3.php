@@ -8,6 +8,7 @@ use App\Services\Ontology\OntologyMigrator;
 use App\Services\Ontology\OntologyValidator;
 use App\Services\Ontology\TurtleParser;
 use App\Services\Ontology\TurtleWriter;
+use App\Services\Ontology\WikidataRegionCatalog;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
@@ -23,6 +24,7 @@ final class OntologyMigrateV3 extends Command
         OntologyMigrator $migrator,
         TurtleWriter $writer,
         OntologyValidator $validator,
+        WikidataRegionCatalog $regionCatalog,
     ): int {
         $source = (string) ($this->option('source') ?: config('ontology.v2_source_path'));
         $output = (string) ($this->option('output') ?: config('ontology.ttl_path'));
@@ -76,6 +78,7 @@ final class OntologyMigrateV3 extends Command
             $validation = $validator->validate(
                 $parser->parseTriples($turtle),
                 (string) config('ontology.unknown_label'),
+                regionQidsByName: $regionCatalog->qidsByRegionName(),
             );
         } catch (InvalidArgumentException $exception) {
             $this->error('Migrasi dibatalkan: '.$exception->getMessage());

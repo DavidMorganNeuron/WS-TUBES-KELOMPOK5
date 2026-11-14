@@ -57,6 +57,24 @@ return [
 
     'wikidata_regions_path' => 'database/ontology/external/wikidata-wilayah.json',
 
+    'wikidata' => [
+        'contact' => env('EXTERNAL_CONTACT', ''),
+        'contact_fallback' => 'https://github.com/DavidMorganNeuron/WS-TUBES-KELOMPOK5',
+        'request_timeout' => (int) env('WIKIDATA_TIMEOUT', 10),
+        'refresh_timeout' => (int) env('WIKIDATA_REFRESH_TIMEOUT', 30),
+        'max_retries' => (int) env('WIKIDATA_MAX_RETRIES', 1),
+        'max_retry_after' => (int) env('WIKIDATA_MAX_RETRY_AFTER', 30),
+        'max_response_bytes' => (int) env('WIKIDATA_MAX_RESPONSE_BYTES', 2000000),
+        'get_query_max_bytes' => (int) env('WIKIDATA_GET_QUERY_MAX_BYTES', 1800),
+        'query_cache_ttl' => (int) env('WIKIDATA_QUERY_CACHE_TTL', 86400),
+        'snapshot_ttl' => (int) env('WIKIDATA_SNAPSHOT_TTL', 2592000),
+        'request_interval_seconds' => (int) env('WIKIDATA_REQUEST_INTERVAL', 1),
+        'snapshot_path' => 'database/ontology/external/wikidata-wilayah-detail.json',
+        'stale_snapshot_path' => 'storage/app/wikidata/wikidata-wilayah-detail-stale.json',
+        'candidate_report_path' => 'docs/kandidat-tautan-wikidata.md',
+        'allow_stale' => (bool) env('WIKIDATA_ALLOW_STALE', false),
+    ],
+
     'cache_ttl' => (int) env('ONTOLOGY_CACHE_TTL', 600),
 
     'fuseki' => [
