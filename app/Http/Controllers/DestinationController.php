@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\Ontology\DestinationLinkedDataProvider;
 use App\Services\Ontology\DestinationRepository;
+use App\Services\Ontology\WikidataRegionRepository;
 use App\Services\Seo\SeoDataFactory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -81,6 +82,7 @@ class DestinationController extends Controller
         DestinationRepository $repository,
         DestinationLinkedDataProvider $linkedDataProvider,
         SeoDataFactory $seoDataFactory,
+        WikidataRegionRepository $wikidataRegionRepository,
     ): View {
         $destination = $repository->find($id);
 
@@ -90,6 +92,10 @@ class DestinationController extends Controller
             'destination' => $destination,
             'linkedData' => $linkedDataProvider->forDestination($id),
             'seo' => $seoDataFactory->destination($destination),
+            'wikidataRegion' => $wikidataRegionRepository->findForRegion(
+                $destination->location,
+                (bool) config('ontology.wikidata.allow_stale'),
+            ),
             'related' => $repository->related($destination, 4),
             'otherTypes' => $repository->otherTypes($destination),
             'crossCategory' => $repository->crossCategory($destination, 4),

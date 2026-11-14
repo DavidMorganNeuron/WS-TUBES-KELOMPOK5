@@ -3,7 +3,9 @@
 namespace Tests\Feature;
 
 use App\Data\Destination;
+use App\Services\Ontology\DestinationLinkedDataProvider;
 use App\Services\Ontology\DestinationRepository;
+use App\Services\Ontology\WikidataRegionRepository;
 use Tests\TestCase;
 
 class DestinationPagesTest extends TestCase
@@ -160,6 +162,16 @@ class DestinationPagesTest extends TestCase
             $xpath->evaluate('string(//*[@typeof="schema:TouristAttraction ws:DestinasiWisata"]/@typeof)'),
         );
         $this->assertSame(1, $xpath->query('//link[@rel="alternate" and @type="text/turtle"]')->length);
+        $linkedRegion = app(DestinationLinkedDataProvider::class)->forDestination('ws-148')->region;
+        $this->assertNotNull($linkedRegion);
+        $wikidataRegion = app(WikidataRegionRepository::class)->findForRegion($destination->location);
+        $this->assertNotNull($wikidataRegion);
+        $sameAsLink = $xpath->query('//a[@rel="owl:sameAs"]')->item(0);
+        $this->assertInstanceOf(\DOMElement::class, $sameAsLink);
+        $this->assertSame($linkedRegion->iri, $sameAsLink->getAttribute('about'));
+        $this->assertSame($wikidataRegion['wikidata_url'], $sameAsLink->getAttribute('href'));
+        $this->assertNotSame('', $sameAsLink->getAttribute('about'));
+        $this->assertNotSame('-', $sameAsLink->getAttribute('href'));
     }
 
     public function test_detail_page_handles_sparse_destination_data(): void

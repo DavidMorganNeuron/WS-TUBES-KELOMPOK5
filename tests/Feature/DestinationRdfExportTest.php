@@ -103,7 +103,8 @@ class DestinationRdfExportTest extends TestCase
         $this->get('/destinations/ws-001/rdf.ttl')
             ->assertOk()
             ->assertHeader('Content-Type', 'text/turtle; charset=utf-8')
-            ->assertSee('ws-001');
+            ->assertSee('ws-001')
+            ->assertSee('owl:sameAs');
 
         $this->get('/destinations/ws-001/rdf.rdf')
             ->assertStatus(501)

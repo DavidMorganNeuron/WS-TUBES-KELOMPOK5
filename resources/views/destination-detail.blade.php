@@ -257,6 +257,67 @@
                 </div>
             </div>
 
+            <section class="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm" aria-labelledby="wikidata-region-heading">
+                <p class="text-xs font-bold text-brand-accent uppercase tracking-widest mb-2">External regional reference</p>
+                <h2 id="wikidata-region-heading" class="text-2xl font-serif font-bold text-gray-900 mb-3">Wikidata: {{ $destination->location !== '' ? $destination->location : $destination->province() }}</h2>
+                @if ($wikidataRegion)
+                    @if ($wikidataRegion['is_stale'])
+                        <p class="mb-4 rounded-lg bg-amber-50 px-4 py-3 text-xs text-amber-900">Showing a saved snapshot that may be outdated.</p>
+                    @endif
+                    <p class="text-sm text-gray-600 mb-5">Administrative reference only. This external information does not replace destination facts; only the region resource is linked to Wikidata.</p>
+                    @if ($linkedData->region !== null && ! empty($wikidataRegion['wikidata_url']) && $wikidataRegion['wikidata_url'] !== '-')
+                        <a about="{{ $linkedData->region->iri }}" rel="owl:sameAs" href="{{ $wikidataRegion['wikidata_url'] }}">
+                            Wikidata identity: {{ $wikidataRegion['qid'] }}
+                        </a>
+                    @endif
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                        @if ($wikidataRegion['image_url'])
+                            <a href="{{ $wikidataRegion['wikidata_url'] }}" target="_blank" rel="noopener noreferrer" class="block overflow-hidden rounded-xl bg-gray-100">
+                                <img src="{{ $wikidataRegion['image_url'] }}" alt="Wikimedia image for {{ $wikidataRegion['wikidata_label'] }}" loading="lazy" referrerpolicy="no-referrer" class="h-48 w-full object-cover">
+                            </a>
+                        @endif
+                        <div class="space-y-3 text-sm text-gray-600">
+                            <p>Wikidata place:
+                                <a href="{{ $wikidataRegion['wikidata_url'] }}" target="_blank" rel="noopener noreferrer" class="font-semibold text-brand-primary underline">
+                                    {{ $wikidataRegion['wikidata_label'] }} ({{ $wikidataRegion['qid'] }})
+                                </a>
+                            </p>
+                            @if ($wikidataRegion['latitude'] !== null && $wikidataRegion['longitude'] !== null)
+                                <p>Regional coordinates: {{ number_format($wikidataRegion['latitude'], 5) }}, {{ number_format($wikidataRegion['longitude'], 5) }}</p>
+                            @endif
+                            @if ($wikidataRegion['population'])
+                                <p>Population: {{ number_format((float) $wikidataRegion['population']['amount']) }}@if ($wikidataRegion['population']['as_of']) <span class="text-xs text-gray-500">(as of {{ $wikidataRegion['population']['as_of'] }})</span>@endif</p>
+                            @endif
+                            @if ($wikidataRegion['area'])
+                                @php
+                                    $areaValue = $wikidataRegion['area'];
+                                    $areaUnitQid = $areaValue['unit_qid'] ?? null;
+                                @endphp
+                                <p>
+                                    Area: {{ number_format((float) $areaValue['amount'], 2) }}
+                                    @if ($areaUnitQid)
+                                        <a href="https://www.wikidata.org/entity/{{ $areaUnitQid }}" target="_blank" rel="noopener noreferrer" class="underline">unit {{ $areaUnitQid }}</a>
+                                    @endif
+                                </p>
+                            @endif
+                            @if ($wikidataRegion['website_url'] ?? null)
+                                <p>
+                                    Official website:
+                                    <a href="{{ $wikidataRegion['website_url'] }}" target="_blank" rel="noopener noreferrer nofollow" class="underline">
+                                        {{ $wikidataRegion['website_url'] }}
+                                    </a>
+                                </p>
+                            @endif
+                            <p class="border-t border-gray-100 pt-3 text-xs text-gray-500">
+                                Source: Wikidata. Snapshot retrieved {{ date('Y-m-d', strtotime($wikidataRegion['snapshot_retrieved_at'])) }}.
+                            </p>
+                        </div>
+                    </div>
+                @else
+                    <p class="text-sm text-gray-600">No current Wikidata region snapshot is available. The destination data remains unchanged.</p>
+                @endif
+            </section>
+
             <!-- Visitor Information -->
             <div class="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm">
                 <div class="mb-6">
