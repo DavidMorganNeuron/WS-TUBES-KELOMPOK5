@@ -139,7 +139,6 @@ php artisan test
 - `database/ontology/external/wikidata-wilayah-detail.json` — snapshot detail wilayah terakhir yang diverifikasi dari Wikidata.
 - `database/ontology/external/wikidata-destinasi-tautan.json` — daftar tautan destinasi yang disetujui/ditolak serta hasil kandidat.
 - `database/ontology/external/wikidata-destinasi-detail.json` — snapshot detail hanya untuk QID destinasi yang disetujui.
-- `wisata_sumut_v2.json` — berkas data destinasi JSON.
 - `config/ontology.php` — konfigurasi driver, file Turtle, cache, dan koneksi Fuseki.
 
 ## Lisensi
