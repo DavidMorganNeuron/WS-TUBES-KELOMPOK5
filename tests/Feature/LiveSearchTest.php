@@ -29,11 +29,11 @@ class LiveSearchTest extends TestCase
 
     public function test_live_search_corrects_a_transposed_typo_and_exact_mode_disables_it(): void
     {
-        $corrected = $this->getJson('/destinations/live?q=dnau');
+        $corrected = $this->getJson('/destinations/live?q=dnau+toba');
 
         $corrected->assertOk()
-            ->assertJsonPath('correction.original', 'dnau')
-            ->assertJsonPath('correction.corrected', 'danau');
+            ->assertJsonPath('correction.original', 'dnau toba')
+            ->assertJsonPath('correction.corrected', 'danau toba');
         $this->assertGreaterThan(0, $corrected->json('total'));
 
         $exact = $this->getJson('/destinations/live?q=dnau&exact=1');
@@ -94,6 +94,8 @@ class LiveSearchTest extends TestCase
 
     public function test_search_routes_reject_array_valued_query_parameters_without_server_errors(): void
     {
+        config()->set('app.locale', 'id');
+
         foreach ([
             '/destinations?q%5B%5D=Danau',
             '/destinations/live?q%5B%5D=Danau',
@@ -101,7 +103,9 @@ class LiveSearchTest extends TestCase
             '/map?q%5B%5D=Danau',
             '/map/live?q%5B%5D=Danau',
         ] as $url) {
-            $this->getJson($url)->assertUnprocessable();
+            $this->getJson($url)
+                ->assertUnprocessable()
+                ->assertJsonPath('errors.q.0', 'kata pencarian harus berupa teks.');
         }
     }
 }

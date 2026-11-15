@@ -20,8 +20,10 @@ Jelajahi destinasi wisata Sumatera melalui pencarian, peta interaktif, dan pandu
 
 ## Fitur
 
-- Jelajahi dan cari destinasi, dengan saran pencarian langsung.
+- Jelajahi dan cari destinasi di nama, alamat, wilayah, deskripsi, petunjuk, kata kunci, fasilitas, dan aktivitas; pencarian memakai relevansi berbobot, saran langsung, serta koreksi typo.
+- Gunakan `exact=1` pada URL pencarian untuk menonaktifkan koreksi ejaan.
 - Lihat detail destinasi, kategori, informasi, dan atribusi gambar.
+- Lihat tautan Wikipedia/Wikivoyage, foto Commons, status warisan, ketinggian, atau tahun berdiri bila data tersedia.
 - Bagikan halaman detail dengan metadata Open Graph, RDFa, dan ekspor RDF dalam Turtle, RDF/XML, atau JSON-LD.
 - Temukan destinasi melalui peta interaktif berbasis Leaflet.
 - Tanyakan informasi destinasi melalui WayFinder AI.
@@ -90,11 +92,19 @@ php artisan ontology:doctor
 # Uji konektivitas Wikidata secara eksplisit; tanpa opsi ini doctor tidak menghubungi layanan eksternal
 php artisan ontology:doctor --eksternal
 
-# Memperbarui data wilayah dari Wikidata dan menyusun kandidat tautan destinasi untuk tinjauan
+# Memperbarui snapshot detail wilayah dan destinasi yang telah disetujui
+php artisan wikidata:refresh
+
+# Menyusun kandidat tautan destinasi untuk tinjauan pemilik
 php artisan wikidata:refresh --candidates
+
+# Hanya mencari kandidat tanpa memperbarui snapshot detail
+php artisan wikidata:refresh --candidates-only
 ```
 
-`ontology:warm` hanya memanaskan cache aplikasi/Fuseki; sesuai desain snapshot-first, perintah itu tidak memanggil Wikidata. Perintah `wikidata:refresh` saja yang menyegarkan snapshot wilayah, termasuk situs resmi bila tersedia. Kueri hanya mengirim QID wilayah yang sudah diverifikasi. Detail wilayah tersimpan terpisah dari sumber v2; kandidat tautan destinasi tidak menambahkan `owl:sameAs`. `EXTERNAL_CONTACT` dipakai untuk identitas User-Agent bila diisi, selain itu aplikasi memakai URL repositori publik. Snapshot yang kedaluwarsa hanya digunakan bila `WIKIDATA_ALLOW_STALE=true`.
+`ontology:warm` hanya memanaskan cache aplikasi/Fuseki; perintah itu tidak memanggil Wikidata. `wikidata:refresh` menyegarkan snapshot wilayah dan detail destinasi yang QID-nya tercantum di daftar `setuju`. `--candidates` menambahkan penemuan kandidat live; kandidat tidak otomatis masuk graph kecuali memenuhi aturan persetujuan otomatis yang terdokumentasi dan tetap dapat ditolak pemilik pada `tolak`. `EXTERNAL_CONTACT` dipakai untuk identitas User-Agent bila diisi, selain itu aplikasi memakai URL repositori publik. Snapshot basi hanya digunakan pada konfigurasi yang mengizinkannya.
+
+Panduan algoritma, bidang, koreksi typo, dan parameter `exact=1` ada di [docs/fitur-pencarian.md](docs/fitur-pencarian.md). Lisensi, pemetaan properti, arsitektur, dan cakupan snapshot Wikidata ada di [docs/sumber-eksternal.md](docs/sumber-eksternal.md). Tinjauan kandidat dan kolom keputusan pemilik ada di [docs/kandidat-tautan-wikidata.md](docs/kandidat-tautan-wikidata.md).
 
 Jika Fuseki sudah berjalan dan dikonfigurasi, unggah file Turtle dengan:
 
@@ -127,6 +137,8 @@ php artisan test
 - `database/ontology/wisata_sumut_v3.ttl` — graph v3 untuk runtime lokal dan Fuseki, ditentukan oleh `ONTOLOGY_V3_TTL_PATH`.
 - `database/ontology/external/wikidata-wilayah.json` — snapshot QID dan pasangan batas wilayah yang disetujui.
 - `database/ontology/external/wikidata-wilayah-detail.json` — snapshot detail wilayah terakhir yang diverifikasi dari Wikidata.
+- `database/ontology/external/wikidata-destinasi-tautan.json` — daftar tautan destinasi yang disetujui/ditolak serta hasil kandidat.
+- `database/ontology/external/wikidata-destinasi-detail.json` — snapshot detail hanya untuk QID destinasi yang disetujui.
 - `wisata_sumut_v2.json` — berkas data destinasi JSON.
 - `config/ontology.php` — konfigurasi driver, file Turtle, cache, dan koneksi Fuseki.
 

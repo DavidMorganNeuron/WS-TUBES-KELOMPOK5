@@ -326,7 +326,9 @@ SPARQL;
 
         $query = trim((string) ($filters['q'] ?? ''));
         $tokens = $this->tokenizer->tokenize($query);
-        if ($query !== '' && $tokens !== []) {
+        if ($query !== '' && $tokens === []) {
+            $where .= "\nFILTER(false)\nBIND(0 AS ?searchScore)";
+        } elseif ($query !== '') {
             $scoreParts = [];
             foreach ($tokens as $token) {
                 $where .= "\nFILTER(".$this->tokenMatchExpression($token).')';
@@ -413,7 +415,7 @@ SPARQL;
             .', IF('.$aliasAndKeyword.', '.(int) ($weights['alias_keyword'] ?? 800)
             .', IF('.$locality.', '.(int) ($weights['locality'] ?? 600)
             .', IF('.$address.', '.(int) ($weights['address'] ?? 400)
-            .', IF('.$description.', '.(int) ($weights['description'] ?? 200).', 0))))))';
+            .', IF('.$description.', '.(int) ($weights['description'] ?? 200).', 0)))))))';
     }
 
     private function orderBy(string $sort): string

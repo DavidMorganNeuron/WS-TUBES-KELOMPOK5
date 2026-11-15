@@ -55,6 +55,14 @@ class SparqlQueryBuilderTest extends TestCase
         );
     }
 
+    public function test_search_rejects_nonempty_queries_that_exceed_token_limits(): void
+    {
+        $builder = new DestinationQueryBuilder(new SparqlEscaper, ['Kabupaten Toba']);
+        $query = $builder->ids(['q' => str_repeat('a', 201)]);
+
+        $this->assertStringContainsString('FILTER(false)', $query);
+    }
+
     public function test_destination_iris_reject_unsafe_identifiers(): void
     {
         $this->expectException(InvalidArgumentException::class);
