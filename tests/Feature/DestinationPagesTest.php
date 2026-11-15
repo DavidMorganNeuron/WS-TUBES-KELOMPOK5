@@ -165,8 +165,8 @@ class DestinationPagesTest extends TestCase
             'schema:TouristAttraction ws:DestinasiWisata',
             $xpath->evaluate('string(//*[@typeof="schema:TouristAttraction ws:DestinasiWisata"]/@typeof)'),
         );
-        $response->assertSee('Referensi wilayah eksternal');
-        $response->assertSee('Snapshot diambil');
+        $response->assertSee('Informasi wilayah terkait');
+        $response->assertSee('Detail pendukung untuk konteks administratif wilayah.');
         $this->assertSame(1, $xpath->query('//link[@rel="alternate" and @type="text/turtle"]')->length);
         $linkedRegion = app(DestinationLinkedDataProvider::class)->forDestination('ws-148')->region;
         $this->assertNotNull($linkedRegion);

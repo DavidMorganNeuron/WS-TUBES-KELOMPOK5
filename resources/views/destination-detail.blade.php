@@ -161,7 +161,7 @@
     <!-- Content Grid -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
 
-        <!-- Sidebar (Visitor Snapshot paling atas) -->
+        <!-- Sidebar (ringkasan pengunjung paling atas) -->
         <aside class="space-y-6 lg:order-2 lg:sticky lg:top-24 min-w-0">
             <div class="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm">
                 <div class="flex justify-between items-start mb-4 gap-4">
@@ -260,7 +260,7 @@
             <x-wikidata-region
                 :region="$wikidataRegion"
                 :region-resource="$linkedData->region?->iri"
-                :title="'Wikidata: '.($destination->location !== '' ? $destination->location : $destination->province())"
+                :title="'Informasi wilayah: '.($destination->location !== '' ? $destination->location : $destination->province())"
             />
 
             <!-- Visitor Information -->

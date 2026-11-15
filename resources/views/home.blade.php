@@ -193,7 +193,7 @@
         <div class="mt-8">
             <x-wikidata-region
                 :region="$wikidataRegion"
-                :title="'Referensi Wikidata: '.$topRegion['label']"
+                :title="'Informasi wilayah: '.$topRegion['label']"
                 heading-id="wikidata-dashboard-region-heading"
             />
         </div>
