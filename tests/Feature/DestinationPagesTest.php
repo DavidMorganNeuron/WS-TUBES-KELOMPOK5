@@ -16,7 +16,7 @@ class DestinationPagesTest extends TestCase
         $response = $this->get('/');
 
         $response->assertOk();
-        $response->assertSee('Live Ontology Dashboard');
+        $response->assertSee('Dasbor ontologi langsung');
         $response->assertSee(number_format($this->repository()->facets()['total']));
         $response->assertDontSee('Acehnese');
         $response->assertDontSee('Serambi');
