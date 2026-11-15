@@ -28,7 +28,14 @@ final class OntologyConfiguration
             throw new InvalidArgumentException('Konfigurasi Wikidata tidak lengkap.');
         }
 
-        foreach (['snapshot_path', 'stale_snapshot_path', 'candidate_report_path'] as $pathKey) {
+        foreach ([
+            'snapshot_path',
+            'stale_snapshot_path',
+            'candidate_report_path',
+            'destination_links_path',
+            'destination_snapshot_path',
+            'stale_destination_snapshot_path',
+        ] as $pathKey) {
             if (! is_string($wikidata[$pathKey] ?? null) || trim($wikidata[$pathKey]) === '') {
                 throw new InvalidArgumentException("Konfigurasi Wikidata {$pathKey} wajib berupa path yang tidak kosong.");
             }
@@ -36,8 +43,13 @@ final class OntologyConfiguration
         if ($wikidata['snapshot_path'] === $wikidata['stale_snapshot_path']) {
             throw new InvalidArgumentException('Path snapshot terbaru dan snapshot stale Wikidata harus berbeda.');
         }
+        if ($wikidata['destination_snapshot_path'] === $wikidata['stale_destination_snapshot_path']
+            || ! is_string($wikidata['tourism_class_qid'] ?? null)
+            || preg_match('/^Q[0-9]+$/', $wikidata['tourism_class_qid']) !== 1) {
+            throw new InvalidArgumentException('Konfigurasi snapshot destinasi atau kelas wisata Wikidata tidak valid.');
+        }
 
-        foreach (['request_timeout', 'refresh_timeout', 'max_retry_after', 'max_response_bytes', 'get_query_max_bytes', 'snapshot_ttl'] as $positiveKey) {
+        foreach (['request_timeout', 'live_timeout', 'refresh_timeout', 'max_retry_after', 'max_response_bytes', 'get_query_max_bytes', 'live_cache_ttl', 'stale_cache_ttl', 'live_lock_seconds', 'failure_cooldown', 'snapshot_ttl'] as $positiveKey) {
             if (! is_int($wikidata[$positiveKey] ?? null) || $wikidata[$positiveKey] < 1) {
                 throw new InvalidArgumentException("Konfigurasi Wikidata {$positiveKey} harus berupa bilangan bulat lebih besar dari nol.");
             }

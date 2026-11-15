@@ -10,12 +10,15 @@ final class WikidataQueryBuilder
 {
     private const PREFIXES = <<<'SPARQL'
 PREFIX bd: <http://www.bigdata.com/rdf#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX p: <http://www.wikidata.org/prop/>
 PREFIX pq: <http://www.wikidata.org/prop/qualifier/>
 PREFIX ps: <http://www.wikidata.org/prop/statement/>
 PREFIX psv: <http://www.wikidata.org/prop/statement/value/>
 PREFIX psn: <http://www.wikidata.org/prop/statement/value-normalized/>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema: <http://schema.org/>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 PREFIX wdt: <http://www.wikidata.org/prop/direct/>
 PREFIX wd: <http://www.wikidata.org/entity/>
 PREFIX wikibase: <http://wikiba.se/ontology#>
@@ -90,14 +93,13 @@ SPARQL;
         $validatedQids = $this->validatedQids($qids);
         $query = self::PREFIXES.<<<'SPARQL'
 
-SELECT DISTINCT ?item ?coordinate ?image ?website
+SELECT DISTINCT ?item ?coordinate ?website
        ?population ?populationRank ?populationTime
        ?areaAmount ?areaUnit ?areaRank ?areaTime
        ?normalizedAreaAmount ?normalizedAreaUnit
 WHERE {
     VALUES ?item { __ITEMS__ }
     OPTIONAL { ?item wdt:P625 ?coordinate . }
-    OPTIONAL { ?item wdt:P18 ?image . }
     OPTIONAL { ?item wdt:P856 ?website . }
     OPTIONAL {
         ?item p:P1082 ?populationStatement .
@@ -130,6 +132,201 @@ SPARQL;
     /**
      * @param  list<string>  $qids
      */
+    public function labelsAndAliases(array $qids): WikidataQuery
+    {
+        $validatedQids = $this->validatedQids($qids);
+        $query = self::PREFIXES.<<<'SPARQL'
+
+SELECT DISTINCT ?item ?kind ?language ?value
+WHERE {
+    VALUES ?item { __ITEMS__ }
+    {
+        ?item rdfs:label ?value .
+        FILTER(LANG(?value) IN ("id", "en"))
+        BIND("label" AS ?kind)
+    }
+    UNION
+    {
+        ?item skos:altLabel ?value .
+        FILTER(LANG(?value) IN ("id", "en"))
+        BIND("alias" AS ?kind)
+    }
+    BIND(LANG(?value) AS ?language)
+}
+ORDER BY ?item ?kind ?language ?value
+SPARQL;
+
+        return new WikidataQuery(str_replace('__ITEMS__', $this->values($validatedQids), $query), $validatedQids);
+    }
+
+    /**
+     * @param  list<string>  $qids
+     */
+    public function images(array $qids): WikidataQuery
+    {
+        $validatedQids = $this->validatedQids($qids);
+        $query = self::PREFIXES.<<<'SPARQL'
+
+SELECT DISTINCT ?item ?image
+WHERE {
+    VALUES ?item { __ITEMS__ }
+    ?item wdt:P18 ?image .
+}
+ORDER BY ?item ?image
+SPARQL;
+
+        return new WikidataQuery(str_replace('__ITEMS__', $this->values($validatedQids), $query), $validatedQids);
+    }
+
+    /**
+     * @param  list<string>  $qids
+     */
+    public function sitelinks(array $qids): WikidataQuery
+    {
+        $validatedQids = $this->validatedQids($qids);
+        $query = self::PREFIXES.<<<'SPARQL'
+
+SELECT DISTINCT ?item ?kind ?language ?url
+WHERE {
+    VALUES ?item { __ITEMS__ }
+    {
+        ?page schema:about ?item ;
+              schema:isPartOf <https://id.wikipedia.org/> .
+        BIND("wikipedia" AS ?kind)
+        BIND("id" AS ?language)
+        BIND(STR(?page) AS ?url)
+    }
+    UNION
+    {
+        ?page schema:about ?item ;
+              schema:isPartOf <https://id.wikivoyage.org/> .
+        BIND("wikivoyage" AS ?kind)
+        BIND("id" AS ?language)
+        BIND(STR(?page) AS ?url)
+    }
+    UNION
+    {
+        ?page schema:about ?item ;
+              schema:isPartOf <https://en.wikivoyage.org/> .
+        BIND("wikivoyage" AS ?kind)
+        BIND("en" AS ?language)
+        BIND(STR(?page) AS ?url)
+    }
+}
+ORDER BY ?item ?kind ?language ?url
+SPARQL;
+
+        return new WikidataQuery(str_replace('__ITEMS__', $this->values($validatedQids), $query), $validatedQids);
+    }
+
+    /**
+     * Fetches all page-level enrichments as category rows, avoiding joins between multi-valued properties.
+     *
+     * @param  list<string>  $qids
+     */
+    public function liveEnrichment(array $qids): WikidataQuery
+    {
+        $validatedQids = $this->validatedQids($qids);
+        $query = self::PREFIXES.<<<'SPARQL'
+
+SELECT DISTINCT ?item ?kind ?language ?value ?status ?rank
+       ?amount ?unit ?normalizedAmount ?normalizedUnit ?date ?precision
+WHERE {
+    VALUES ?item { __ITEMS__ }
+    {
+        ?item rdfs:label ?value .
+        FILTER(LANG(?value) IN ("id", "en"))
+        BIND("label" AS ?kind)
+        BIND(LANG(?value) AS ?language)
+    }
+    UNION
+    {
+        ?item skos:altLabel ?value .
+        FILTER(LANG(?value) IN ("id", "en"))
+        BIND("alias" AS ?kind)
+        BIND(LANG(?value) AS ?language)
+    }
+    UNION
+    {
+        ?item wdt:P18 ?image .
+        BIND("image" AS ?kind)
+        BIND("" AS ?language)
+        BIND(STR(?image) AS ?value)
+    }
+    UNION
+    {
+        ?page schema:about ?item ;
+              schema:isPartOf <https://id.wikipedia.org/> .
+        BIND("wikipedia" AS ?kind)
+        BIND("id" AS ?language)
+        BIND(STR(?page) AS ?value)
+    }
+    UNION
+    {
+        ?page schema:about ?item ;
+              schema:isPartOf <https://id.wikivoyage.org/> .
+        BIND("wikivoyage" AS ?kind)
+        BIND("id" AS ?language)
+        BIND(STR(?page) AS ?value)
+    }
+    UNION
+    {
+        ?page schema:about ?item ;
+              schema:isPartOf <https://en.wikivoyage.org/> .
+        BIND("wikivoyage" AS ?kind)
+        BIND("en" AS ?language)
+        BIND(STR(?page) AS ?value)
+    }
+    UNION
+    {
+        ?item p:P1435 ?statement .
+        ?statement ps:P1435 ?status ;
+                   wikibase:rank ?rank .
+        FILTER(?rank != wikibase:DeprecatedRank)
+        ?status rdfs:label ?value .
+        FILTER(LANG(?value) IN ("id", "en"))
+        BIND("heritage" AS ?kind)
+        BIND(LANG(?value) AS ?language)
+    }
+    UNION
+    {
+        ?item p:P2044 ?statement .
+        ?statement ps:P2044 ?amount ;
+                   wikibase:rank ?rank .
+        FILTER(?rank != wikibase:DeprecatedRank)
+        OPTIONAL {
+            ?statement psv:P2044 ?quantity .
+            ?quantity wikibase:quantityUnit ?unit .
+        }
+        OPTIONAL {
+            ?statement psn:P2044 ?normalizedQuantity .
+            ?normalizedQuantity wikibase:quantityAmount ?normalizedAmount ;
+                                wikibase:quantityUnit ?normalizedUnit .
+        }
+        BIND("elevation" AS ?kind)
+        BIND("" AS ?language)
+    }
+    UNION
+    {
+        ?item p:P571 ?statement .
+        ?statement ps:P571 ?date ;
+                   wikibase:rank ?rank .
+        FILTER(?rank != wikibase:DeprecatedRank)
+        ?statement psv:P571 ?timeValue .
+        ?timeValue wikibase:timePrecision ?precision .
+        BIND("establishment" AS ?kind)
+        BIND("" AS ?language)
+    }
+}
+ORDER BY ?item ?kind ?language ?value ?rank ?amount ?date
+SPARQL;
+
+        return new WikidataQuery(str_replace('__ITEMS__', $this->values($validatedQids), $query), $validatedQids);
+    }
+
+    /**
+     * @param  list<string>  $qids
+     */
     public function nearbyEntities(array $qids): WikidataQuery
     {
         $validatedQids = $this->validatedQids($qids);
@@ -152,6 +349,135 @@ WHERE {
 }
 ORDER BY ?region ?distance ?candidate
 LIMIT 2000
+SPARQL;
+
+        return new WikidataQuery(str_replace('__ITEMS__', $this->values($validatedQids), $query), $validatedQids);
+    }
+
+    /**
+     * @param  list<string>  $qids
+     */
+    public function tourismClass(array $qids): WikidataQuery
+    {
+        $validatedQids = $this->validatedQids($qids);
+        $query = self::PREFIXES.<<<'SPARQL'
+
+SELECT DISTINCT ?item ?label
+WHERE {
+    VALUES ?item { __ITEMS__ }
+    ?item rdfs:label ?label .
+    FILTER(LANG(?label) = "en")
+}
+ORDER BY ?item ?label
+SPARQL;
+
+        return new WikidataQuery(str_replace('__ITEMS__', $this->values($validatedQids), $query), $validatedQids);
+    }
+
+    public function tourismCandidates(string $tourismClassQid): WikidataQuery
+    {
+        $validatedQids = $this->validatedQids([$tourismClassQid]);
+        $query = self::PREFIXES.<<<'SPARQL'
+
+SELECT DISTINCT ?candidate ?class ?classLabel ?location ?tourismClassLabel
+WHERE {
+    VALUES ?tourismClass { __TOURISM_CLASS__ }
+    SERVICE wikibase:box {
+        ?candidate wdt:P625 ?location .
+        bd:serviceParam wikibase:cornerSouthWest "Point(97 0.5)"^^geo:wktLiteral ;
+                        wikibase:cornerNorthEast "Point(100.5 4.5)"^^geo:wktLiteral .
+    }
+    ?candidate wdt:P31 ?class .
+    ?class wdt:P279* ?tourismClass .
+    ?class rdfs:label ?classLabel .
+    FILTER(LANG(?classLabel) IN ("id", "en"))
+    ?tourismClass rdfs:label ?tourismClassLabel .
+    FILTER(LANG(?tourismClassLabel) = "en")
+}
+ORDER BY ?candidate ?class ?classLabel
+LIMIT 5000
+SPARQL;
+
+        return new WikidataQuery(
+            str_replace('__TOURISM_CLASS__', $this->values($validatedQids), $query),
+            $validatedQids,
+        );
+    }
+
+    /**
+     * @param  list<string>  $qids
+     */
+    public function heritageStatuses(array $qids): WikidataQuery
+    {
+        $validatedQids = $this->validatedQids($qids);
+        $query = self::PREFIXES.<<<'SPARQL'
+
+SELECT DISTINCT ?item ?status ?label ?rank
+WHERE {
+    VALUES ?item { __ITEMS__ }
+    ?item p:P1435 ?statement .
+    ?statement ps:P1435 ?status ;
+               wikibase:rank ?rank .
+    FILTER(?rank != wikibase:DeprecatedRank)
+    ?status rdfs:label ?label .
+    FILTER(LANG(?label) IN ("id", "en"))
+}
+ORDER BY ?item ?rank ?status ?label
+SPARQL;
+
+        return new WikidataQuery(str_replace('__ITEMS__', $this->values($validatedQids), $query), $validatedQids);
+    }
+
+    /**
+     * @param  list<string>  $qids
+     */
+    public function elevations(array $qids): WikidataQuery
+    {
+        $validatedQids = $this->validatedQids($qids);
+        $query = self::PREFIXES.<<<'SPARQL'
+
+SELECT DISTINCT ?item ?amount ?unit ?rank ?normalizedAmount ?normalizedUnit
+WHERE {
+    VALUES ?item { __ITEMS__ }
+    ?item p:P2044 ?statement .
+    ?statement ps:P2044 ?amount ;
+               wikibase:rank ?rank .
+    FILTER(?rank != wikibase:DeprecatedRank)
+    OPTIONAL {
+        ?statement psv:P2044 ?quantity .
+        ?quantity wikibase:quantityUnit ?unit .
+    }
+    OPTIONAL {
+        ?statement psn:P2044 ?normalizedQuantity .
+        ?normalizedQuantity wikibase:quantityAmount ?normalizedAmount ;
+                            wikibase:quantityUnit ?normalizedUnit .
+    }
+}
+ORDER BY ?item ?rank ?amount
+SPARQL;
+
+        return new WikidataQuery(str_replace('__ITEMS__', $this->values($validatedQids), $query), $validatedQids);
+    }
+
+    /**
+     * @param  list<string>  $qids
+     */
+    public function establishmentYears(array $qids): WikidataQuery
+    {
+        $validatedQids = $this->validatedQids($qids);
+        $query = self::PREFIXES.<<<'SPARQL'
+
+SELECT DISTINCT ?item ?date ?precision ?rank
+WHERE {
+    VALUES ?item { __ITEMS__ }
+    ?item p:P571 ?statement .
+    ?statement ps:P571 ?date ;
+               wikibase:rank ?rank .
+    FILTER(?rank != wikibase:DeprecatedRank)
+    ?statement psv:P571 ?timeValue .
+    ?timeValue wikibase:timePrecision ?precision .
+}
+ORDER BY ?item ?rank ?date
 SPARQL;
 
         return new WikidataQuery(str_replace('__ITEMS__', $this->values($validatedQids), $query), $validatedQids);

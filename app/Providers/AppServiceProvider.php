@@ -19,6 +19,7 @@ use App\Services\Ontology\SparqlRowMapper;
 use App\Services\Ontology\TurtleParser;
 use App\Services\Ontology\TypoCorrector;
 use App\Services\Ontology\WikidataClient;
+use App\Services\Ontology\WikidataDestinationLinkCatalog;
 use App\Services\Ontology\WikidataQueryBuilder;
 use App\Services\Ontology\WikidataRegionCatalog;
 use App\Services\Ontology\WikidataRegionRepository;
@@ -58,6 +59,13 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(TypoCorrector::class);
         $this->app->singleton(SearchPlanner::class);
         $this->app->singleton(WikidataQueryBuilder::class);
+
+        $this->app->singleton(WikidataDestinationLinkCatalog::class, function (): WikidataDestinationLinkCatalog {
+            $ontologyConfig = config('ontology');
+            OntologyConfiguration::validate($ontologyConfig);
+
+            return new WikidataDestinationLinkCatalog(base_path($ontologyConfig['wikidata']['destination_links_path']));
+        });
 
         $this->app->singleton(WikidataRegionCatalog::class, function (): WikidataRegionCatalog {
             $ontologyConfig = config('ontology');
@@ -99,6 +107,14 @@ class AppServiceProvider extends ServiceProvider
                 staleSnapshotPath: base_path($config['stale_snapshot_path']),
                 snapshotTtl: $config['snapshot_ttl'],
                 requestIntervalSeconds: $config['request_interval_seconds'],
+                liveTimeout: $config['live_timeout'],
+                liveCacheTtl: $config['live_cache_ttl'],
+                staleCacheTtl: $config['stale_cache_ttl'],
+                liveLockSeconds: $config['live_lock_seconds'],
+                failureCooldown: $config['failure_cooldown'],
+                destinationLinks: $app->make(WikidataDestinationLinkCatalog::class),
+                destinationSnapshotPath: base_path($config['destination_snapshot_path']),
+                staleDestinationSnapshotPath: base_path($config['stale_destination_snapshot_path']),
             );
         });
 

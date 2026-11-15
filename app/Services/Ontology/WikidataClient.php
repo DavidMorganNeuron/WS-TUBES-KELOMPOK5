@@ -9,8 +9,10 @@ use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use JsonException;
 use RuntimeException;
+use Throwable;
 
 final class WikidataClient
 {
@@ -32,15 +34,44 @@ final class WikidataClient
      */
     public function select(WikidataQuery $query, bool $refresh = false): array
     {
+        return $this->selectRows($query, $refresh, null, null, true);
+    }
+
+    /**
+     * Performs one uncached request for page rendering, with no retry.
+     *
+     * @return list<array<string, array{type: string, value: string, datatype?: string, 'xml:lang'?: string}>>
+     */
+    public function selectLive(WikidataQuery $query, int $timeout): array
+    {
+        return $this->selectRows($query, false, $timeout, 0, false);
+    }
+
+    /**
+     * @return list<array<string, array{type: string, value: string, datatype?: string, 'xml:lang'?: string}>>
+     */
+    private function selectRows(
+        WikidataQuery $query,
+        bool $refresh,
+        ?int $timeout,
+        ?int $maxRetries,
+        bool $useCache,
+    ): array {
         $cacheKey = 'wikidata:sparql:'.hash('sha256', $query->query);
-        if (! $refresh) {
-            $cachedRows = Cache::get($cacheKey);
-            if (is_array($cachedRows)) {
-                return $cachedRows;
+        if ($useCache && ! $refresh) {
+            try {
+                $cachedRows = Cache::get($cacheKey);
+                if (is_array($cachedRows)) {
+                    return $cachedRows;
+                }
+            } catch (Throwable $exception) {
+                Log::warning('Cache query Wikidata tidak tersedia.', [
+                    'exception' => $exception::class,
+                ]);
             }
         }
 
-        $response = $this->request($query->query, $refresh);
+        $response = $this->request($query->query, $refresh, $timeout, $maxRetries);
         if (! $response->successful()) {
             throw new RuntimeException("Wikidata Query Service merespons HTTP {$response->status()}.");
         }
@@ -88,16 +119,23 @@ final class WikidataClient
             $rows[] = $binding;
         }
 
-        if ($this->cacheTtl > 0) {
-            Cache::put($cacheKey, $rows, now()->addSeconds($this->cacheTtl));
+        if ($useCache && $this->cacheTtl > 0) {
+            try {
+                Cache::put($cacheKey, $rows, now()->addSeconds($this->cacheTtl));
+            } catch (Throwable $exception) {
+                Log::warning('Hasil kueri Wikidata tidak dapat disimpan ke cache.', [
+                    'exception' => $exception::class,
+                ]);
+            }
         }
 
         return $rows;
     }
 
-    private function request(string $query, bool $refresh): Response
+    private function request(string $query, bool $refresh, ?int $timeout = null, ?int $maxRetries = null): Response
     {
-        $timeout = $refresh ? $this->refreshTimeout : $this->requestTimeout;
+        $timeout ??= $refresh ? $this->refreshTimeout : $this->requestTimeout;
+        $maxRetries ??= $this->maxRetries;
         $attempt = 0;
 
         while (true) {
@@ -111,7 +149,7 @@ final class WikidataClient
                     ? $request->get(self::ENDPOINT, ['query' => $query])
                     : $request->asForm()->post(self::ENDPOINT, ['query' => $query]);
             } catch (ConnectionException $exception) {
-                if ($attempt >= $this->maxRetries) {
+                if ($attempt >= $maxRetries) {
                     throw new RuntimeException('Tidak dapat terhubung ke Wikidata Query Service.', previous: $exception);
                 }
 
@@ -122,7 +160,7 @@ final class WikidataClient
             }
 
             if (! in_array($response->status(), [429, 500, 502, 503, 504], true)
-                || $attempt >= $this->maxRetries) {
+                || $attempt >= $maxRetries) {
                 return $response;
             }
 
