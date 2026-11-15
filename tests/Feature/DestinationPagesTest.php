@@ -6,13 +6,28 @@ use App\Data\Destination;
 use App\Data\LinkedResource;
 use App\Services\Ontology\DestinationLinkedDataProvider;
 use App\Services\Ontology\DestinationRepository;
+use App\Services\Ontology\WikidataClient;
 use App\Services\Ontology\WikidataRegionRepository;
 use App\Support\IndonesianFormat;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
 class DestinationPagesTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+        Http::preventStrayRequests();
+        Http::fake([
+            WikidataClient::ENDPOINT.'*' => Http::response('', 503),
+        ]);
+        Cache::forget(WikidataRegionRepository::LIVE_CACHE_KEY);
+        Cache::forget(WikidataRegionRepository::STALE_CACHE_KEY);
+        Cache::forget(WikidataRegionRepository::FAILURE_COOLDOWN_KEY);
+    }
+
     public function test_home_page_shows_ontology_statistics_and_featured_destinations(): void
     {
         $response = $this->get('/');
@@ -249,9 +264,12 @@ class DestinationPagesTest extends TestCase
         $complete = Blade::render('<x-info-wilayah :region="$region" :region-name="$regionName" :region-resource="$regionResource" :region-neighbors="$regionNeighbors" :wikipedia-url="$wikipediaUrl" :wikivoyage-url="$wikivoyageUrl" />', [
             'region' => [
                 'wikidata_label' => 'Kabupaten Contoh',
-                'wikidata_url' => 'https://www.wikidata.org/entity/Q12345',
+                'wikidata_url' => 'http://www.wikidata.org/entity/Q12345',
                 'image_url' => 'https://upload.wikimedia.org/example.jpg',
                 'image_page_url' => 'https://commons.wikimedia.org/wiki/File:Contoh.jpg',
+                'wikipedia_url' => 'https://id.wikipedia.org/wiki/Kabupaten_Contoh',
+                'wikivoyage_url' => 'https://id.wikivoyage.org/wiki/Kabupaten_Contoh',
+                'wikivoyage_language' => 'id',
                 'website_url' => 'https://contoh.go.id/',
                 'population' => ['amount' => '123456'],
                 'area' => [
@@ -269,8 +287,8 @@ class DestinationPagesTest extends TestCase
                     type: 'ws:KabupatenKota',
                 ),
             ],
-            'wikipediaUrl' => 'https://id.wikipedia.org/wiki/Kabupaten_Contoh',
-            'wikivoyageUrl' => 'https://id.wikivoyage.org/wiki/Kabupaten_Contoh',
+            'wikipediaUrl' => null,
+            'wikivoyageUrl' => null,
         ]);
         $this->assertStringContainsString('123.456', $complete);
         $this->assertStringContainsString('5,00 km²', $complete);
@@ -280,6 +298,9 @@ class DestinationPagesTest extends TestCase
         $this->assertStringContainsString('rel="owl:sameAs"', $complete);
         $this->assertStringContainsString('rel="ws:berbatasanDengan"', $complete);
         $this->assertStringContainsString('href="'.route('destinations', ['kabupaten' => 'Kabupaten Lain']).'"', $complete);
+        $this->assertStringContainsString('href="https://commons.wikimedia.org/wiki/File:Contoh.jpg"', $complete);
+        $this->assertStringContainsString('href="https://id.wikipedia.org/wiki/Kabupaten_Contoh"', $complete);
+        $this->assertStringContainsString('href="https://id.wikivoyage.org/wiki/Kabupaten_Contoh"', $complete);
         $this->assertStringContainsString('loading="lazy"', $complete);
         $this->assertStringContainsString('referrerpolicy="no-referrer"', $complete);
 
@@ -304,6 +325,71 @@ class DestinationPagesTest extends TestCase
 
         $empty = Blade::render('<x-info-wilayah :region="$region" />', ['region' => null]);
         $this->assertSame('', trim($empty));
+    }
+
+    public function test_destination_info_component_renders_complete_safe_enrichment_and_hidden_same_as(): void
+    {
+        $html = Blade::render('<x-info-destinasi :destination="$destination" :destination-name="$name" :destination-resource="$resource" />', [
+            'destination' => [
+                'wikidata_url' => 'http://www.wikidata.org/entity/Q12345',
+                'labels' => ['id' => 'Nama lokal', 'en' => 'English name'],
+                'aliases' => ['id' => ['Nama lain'], 'en' => ['Other name']],
+                'image_url' => 'https://commons.wikimedia.org/wiki/Special:FilePath/Foto%20%281%29.jpg',
+                'image_page_url' => 'https://commons.wikimedia.org/wiki/File:Foto%20%281%29.jpg',
+                'wikipedia_url' => 'https://id.wikipedia.org/wiki/Nama_lokal',
+                'wikivoyage_url' => 'https://en.wikivoyage.org/wiki/Nama_lokal',
+                'heritage_statuses' => [['qid' => 'Q5678', 'label' => 'Cagar budaya']],
+                'elevation_m' => 2157,
+                'establishment_year' => 1887,
+            ],
+            'name' => 'Nama lokal',
+            'resource' => config('ontology.namespaces.data').'ws-049',
+        ]);
+
+        $this->assertStringContainsString('rel="owl:sameAs"', $html);
+        $this->assertStringContainsString('resource="http://www.wikidata.org/entity/Q12345"', $html);
+        $this->assertStringContainsString('2.157 mdpl', $html);
+        $this->assertStringContainsString('Tahun berdiri: 1887', $html);
+        $this->assertStringContainsString('Dikenal juga sebagai: Nama lain, Other name, English name', $html);
+        $this->assertStringContainsString('href="https://commons.wikimedia.org/wiki/File:Foto%20%281%29.jpg"', $html);
+        $this->assertStringContainsString('href="https://id.wikipedia.org/wiki/Nama_lokal"', $html);
+        $this->assertStringContainsString('href="https://en.wikivoyage.org/wiki/Nama_lokal"', $html);
+        $this->assertStringNotContainsString('wikidata', mb_strtolower(strip_tags($html)));
+    }
+
+    public function test_destination_info_component_renders_partial_data_and_hides_empty_or_unsafe_values(): void
+    {
+        $partial = Blade::render('<x-info-destinasi :destination="$destination" :destination-name="$name" />', [
+            'destination' => ['elevation_m' => 12.5],
+            'name' => 'Contoh',
+        ]);
+        $this->assertStringContainsString('Ketinggian: 12,5 mdpl', $partial);
+        $this->assertStringNotContainsString('Panduan perjalanan', $partial);
+
+        $empty = Blade::render('<x-info-destinasi :destination="$destination" />', ['destination' => null]);
+        $this->assertSame('', trim($empty));
+
+        $unsafe = Blade::render('<x-info-destinasi :destination="$destination" :destination-name="$name" :destination-resource="$resource" />', [
+            'destination' => [
+                'wikidata_url' => 'javascript:alert(1)',
+                'image_url' => 'https://evil.example/image.svg',
+                'image_page_url' => 'javascript:alert(1)',
+                'wikipedia_url' => 'javascript:alert(1)',
+                'wikivoyage_url' => 'https://evil.example/wiki/Travel',
+                'labels' => ['en' => '<script>alert(1)</script>'],
+                'aliases' => ['id' => ['<img src=x onerror=alert(1)>']],
+                'heritage_statuses' => [['label' => '<script>alert(1)</script>']],
+                'elevation_m' => '<script>alert(1)</script>',
+                'establishment_year' => '1887',
+            ],
+            'name' => 'Contoh',
+            'resource' => 'javascript:alert(1)',
+        ]);
+        $this->assertStringNotContainsString('javascript:', $unsafe);
+        $this->assertStringNotContainsString('evil.example', $unsafe);
+        $this->assertStringNotContainsString('<script', $unsafe);
+        $this->assertStringNotContainsString('<img', $unsafe);
+        $this->assertStringNotContainsString('rel="owl:sameAs"', $unsafe);
     }
 
     public function test_detail_page_handles_sparse_destination_data(): void

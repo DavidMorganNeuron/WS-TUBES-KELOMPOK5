@@ -38,8 +38,18 @@
             strtolower((string) parse_url((string) ($region['website_url'] ?? ''), PHP_URL_HOST)),
         ]));
         $websiteDomain = is_string($websiteUrl) ? parse_url($websiteUrl, PHP_URL_HOST) : null;
-        $wikipediaUrl = $allowedUrl($wikipediaUrl, ['id.wikipedia.org', 'en.wikipedia.org']);
+        $wikipediaUrl = $region['wikipedia_url'] ?? $wikipediaUrl;
+        $wikipediaUrl = $allowedUrl($wikipediaUrl, ['id.wikipedia.org']);
+        $wikipediaUrl = is_string($wikipediaUrl)
+            && str_starts_with((string) parse_url($wikipediaUrl, PHP_URL_PATH), '/wiki/')
+                ? $wikipediaUrl
+                : null;
+        $wikivoyageUrl = $region['wikivoyage_url'] ?? $wikivoyageUrl;
         $wikivoyageUrl = $allowedUrl($wikivoyageUrl, ['id.wikivoyage.org', 'en.wikivoyage.org']);
+        $wikivoyageUrl = is_string($wikivoyageUrl)
+            && str_starts_with((string) parse_url($wikivoyageUrl, PHP_URL_PATH), '/wiki/')
+                ? $wikivoyageUrl
+                : null;
         $areaValue = null;
         $areaAmount = $region['area']['amount'] ?? null;
         $areaUnit = $region['area']['unit_qid'] ?? null;
@@ -66,7 +76,7 @@
         $validRegionResource = preg_match('/^[A-Za-z0-9._~-]+$/', $regionResourceSuffix) === 1;
         $sameAsUrl = $allowedUrl($region['wikidata_url'] ?? null, ['www.wikidata.org']);
         $sameAsUrl = is_string($sameAsUrl)
-            && preg_match('~^https://www\.wikidata\.org/entity/Q[1-9]\d*$~D', $sameAsUrl) === 1
+            && preg_match('~^http://www\.wikidata\.org/entity/Q[1-9]\d*$~D', $sameAsUrl) === 1
                 ? $sameAsUrl
                 : null;
         $displayName = is_string($regionName) && trim($regionName) !== ''

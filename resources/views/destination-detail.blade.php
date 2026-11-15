@@ -257,6 +257,12 @@
                 </div>
             </div>
 
+            <x-info-destinasi
+                :destination="$wikidataDestination"
+                :destination-name="$destination->name"
+                :destination-resource="$linkedData->iri"
+            />
+
             <x-info-wilayah
                 :region="$wikidataRegion"
                 :region-resource="$linkedData->region?->iri"

@@ -116,16 +116,19 @@ class DestinationController extends Controller
 
         abort_if($destination === null, 404);
         $linkedData = $linkedDataProvider->forDestination($id);
+        $wikidataDetails = $wikidataRegionRepository->findForDestinationPage(
+            $destination->id,
+            $destination->location,
+            (bool) config('ontology.wikidata.allow_stale'),
+        );
 
         return view('destination-detail', [
             'destination' => $destination,
             'linkedData' => $linkedData,
+            'wikidataDestination' => $wikidataDetails['destination'],
             'nearbyDestinations' => $repository->nearby($destination),
             'seo' => $seoDataFactory->destination($destination),
-            'wikidataRegion' => $wikidataRegionRepository->findForRegion(
-                $destination->location,
-                (bool) config('ontology.wikidata.allow_stale'),
-            ),
+            'wikidataRegion' => $wikidataDetails['region'],
             'related' => $repository->related($destination, 4),
             'otherTypes' => $repository->otherTypes($destination),
             'crossCategory' => $repository->crossCategory($destination, 4),
