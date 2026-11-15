@@ -8,6 +8,7 @@ use App\Services\Ontology\OntologyMigrator;
 use App\Services\Ontology\OntologyValidator;
 use App\Services\Ontology\TurtleParser;
 use App\Services\Ontology\TurtleWriter;
+use App\Services\Ontology\WikidataDestinationLinkCatalog;
 use App\Services\Ontology\WikidataRegionCatalog;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
@@ -24,6 +25,7 @@ final class OntologyMigrateV3 extends Command
         OntologyMigrator $migrator,
         TurtleWriter $writer,
         OntologyValidator $validator,
+        WikidataDestinationLinkCatalog $destinationLinks,
         WikidataRegionCatalog $regionCatalog,
     ): int {
         $source = (string) ($this->option('source') ?: config('ontology.v2_source_path'));
@@ -67,18 +69,21 @@ final class OntologyMigrateV3 extends Command
 
         try {
             $rows = $parser->parseFile($sourcePath);
+            $approvedDestinationQids = $destinationLinks->load()['destinations_by_id'];
             $result = $migrator->migrate(
                 rows: $rows,
                 boundarySource: $boundarySource,
                 unknownLabel: (string) config('ontology.unknown_label'),
                 nearbyRadiusKm: (float) config('ontology.nearby.radius_km'),
                 maxNeighbors: (int) config('ontology.nearby.max_neighbors'),
+                destinationQidsById: $approvedDestinationQids,
             );
             $turtle = $writer->write($result['triples']);
             $validation = $validator->validate(
                 $parser->parseTriples($turtle),
                 (string) config('ontology.unknown_label'),
                 regionQidsByName: $regionCatalog->qidsByRegionName(),
+                destinationQidsById: $approvedDestinationQids,
             );
         } catch (InvalidArgumentException $exception) {
             $this->error('Migrasi dibatalkan: '.$exception->getMessage());
@@ -89,6 +94,8 @@ final class OntologyMigrateV3 extends Command
         $this->table(['Ringkasan migrasi', 'Jumlah'], [
             ['Destinasi sumber', $result['stats']['destinations']],
             ['Wilayah terverifikasi', $result['stats']['districts']],
+            ['sameAs wilayah', $result['stats']['region_same_as']],
+            ['sameAs destinasi', $result['stats']['destination_same_as']],
             ['Triple keluaran', count($result['triples'])],
             ['Class berinstance', count(array_filter($validation['class_counts']))],
             ['Object property terpakai', count(array_filter($validation['object_property_counts']))],

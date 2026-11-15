@@ -14,6 +14,7 @@ final class OntologyValidator
      *     object_property_counts: array<string, int>,
      *     data_property_counts: array<string, int>,
      *     destination_count: int,
+     *     same_as_counts: array{regions: int, destinations: int},
      *     sentinel_counts: array<string, int>,
      *     rating_stats: array{rated: int, unrated: int, average: float|null},
      *     source_comparison: array{destination_count: int, missing_ids: list<string>, extra_ids: list<string>}|null
@@ -24,6 +25,7 @@ final class OntologyValidator
         string $unknownLabel,
         ?array $sourceIds = null,
         ?array $regionQidsByName = null,
+        ?array $destinationQidsById = null,
     ): array {
         if ($unknownLabel === '') {
             throw new \InvalidArgumentException('Sentinel ontologi tidak boleh kosong.');
@@ -309,7 +311,14 @@ final class OntologyValidator
             }
         }
 
-        $this->validateRegionSameAs($errors, $triples, $types, $properties, $regionQidsByName);
+        $sameAsCounts = $this->validateSameAs(
+            $errors,
+            $triples,
+            $types,
+            $properties,
+            $regionQidsByName,
+            $destinationQidsById,
+        );
 
         return [
             'errors' => array_values(array_unique($errors)),
@@ -317,6 +326,7 @@ final class OntologyValidator
             'object_property_counts' => $objectPropertyCounts,
             'data_property_counts' => $dataPropertyCounts,
             'destination_count' => count($destinationSubjects),
+            'same_as_counts' => $sameAsCounts,
             'sentinel_counts' => $sentinelCounts,
             'rating_stats' => [
                 'rated' => $ratedCount,
@@ -333,102 +343,178 @@ final class OntologyValidator
      * @param  array<string, array<string, bool>>  $types
      * @param  array<string, array<string, list<array{kind: string, value: string, datatype: ?string, language: ?string}>>>  $properties
      * @param  array<string, string>|null  $regionQidsByName
+     * @param  array<string, string>|null  $destinationQidsById
+     * @return array{regions: int, destinations: int}
      */
-    private function validateRegionSameAs(
+    private function validateSameAs(
         array &$errors,
         array $triples,
         array $types,
         array $properties,
         ?array $regionQidsByName,
-    ): void {
+        ?array $destinationQidsById,
+    ): array {
         $sameAsPredicate = OntologyMigrator::OWL_NS.'sameAs';
         $destinationType = OntologyMigrator::WS_NS.'DestinasiWisata';
         $regionType = OntologyMigrator::WS_NS.'KabupatenKota';
         $regionSubjects = [];
+        $destinationSubjects = [];
+        $sameAsBySubject = [];
 
         foreach ($types as $subject => $subjectTypes) {
             if (isset($subjectTypes[$regionType])) {
                 $regionSubjects[$subject] = true;
             }
-
-            if (isset($subjectTypes[$destinationType])
-                && isset($properties[$subject][$sameAsPredicate])) {
-                $errors[] = "{$subject}: owl:sameAs destinasi tidak diizinkan.";
+            if (isset($subjectTypes[$destinationType])) {
+                $destinationSubjects[$subject] = true;
             }
         }
 
-        $sameAsSubjects = [];
         foreach ($triples as $triple) {
-            if ($triple['predicate'] === $sameAsPredicate) {
-                $sameAsSubjects[$triple['subject']] = true;
-                if (! isset($regionSubjects[$triple['subject']])) {
-                    $errors[] = "{$triple['subject']}: owl:sameAs hanya diizinkan pada wilayah Kabupaten/Kota.";
-                }
+            if ($triple['predicate'] !== $sameAsPredicate) {
+                continue;
+            }
+
+            $sameAsBySubject[$triple['subject']][] = $triple['object'];
+            if (! isset($regionSubjects[$triple['subject']])
+                && ! isset($destinationSubjects[$triple['subject']])) {
+                $errors[] = "{$triple['subject']}: owl:sameAs hanya diizinkan pada wilayah atau destinasi.";
             }
         }
 
-        if ($regionQidsByName === null) {
-            return;
-        }
-
-        if (count($regionSubjects) !== count($regionQidsByName)) {
-            $errors[] = 'Jumlah resource Kabupaten/Kota tidak sama dengan snapshot Wikidata.';
-        }
-
-        $expectedQids = [];
-        $expectedSubjects = [];
-        foreach ($regionQidsByName as $name => $qid) {
-            if (! is_string($name) || trim($name) === ''
+        $approvedById = [];
+        $approvedByQid = [];
+        foreach ($destinationQidsById ?? [] as $id => $qid) {
+            if (! is_string($id) || preg_match('/^[A-Za-z0-9_-]+$/', $id) !== 1
                 || ! is_string($qid) || preg_match('/^Q[0-9]+$/', $qid) !== 1
-                || isset($expectedQids[$qid])) {
-                $errors[] = 'Pemetaan nama wilayah dan QID pada snapshot Wikidata tidak valid atau tidak satu-ke-satu.';
+                || isset($approvedById[$id]) || isset($approvedByQid[$qid])) {
+                $errors[] = 'Pemetaan persetujuan sameAs destinasi tidak valid atau mengandung ID/QID duplikat.';
 
-                return;
+                continue;
             }
-            $expectedQids[$qid] = true;
+            $approvedById[$id] = $qid;
+            $approvedByQid[$qid] = $id;
+        }
 
-            $subjects = [];
-            foreach (array_keys($regionSubjects) as $subject) {
-                $labels = $properties[$subject][OntologyMigrator::RDFS_NS.'label'] ?? [];
-                foreach ($labels as $label) {
-                    if ($label['kind'] === 'literal' && $label['value'] === $name) {
-                        $subjects[$subject] = true;
-                        break;
+        $qidOwners = [];
+        if ($regionQidsByName !== null) {
+            if (count($regionSubjects) !== count($regionQidsByName)) {
+                $errors[] = 'Jumlah resource Kabupaten/Kota tidak sama dengan snapshot Wikidata.';
+            }
+
+            $expectedSubjects = [];
+            foreach ($regionQidsByName as $name => $qid) {
+                if (! is_string($name) || trim($name) === ''
+                    || ! is_string($qid) || preg_match('/^Q[0-9]+$/', $qid) !== 1
+                    || isset($qidOwners[$qid])) {
+                    $errors[] = 'Pemetaan nama wilayah dan QID pada snapshot Wikidata tidak valid atau tidak satu-ke-satu.';
+
+                    continue;
+                }
+                $qidOwners[$qid] = OntologyMigrator::DATA_NS.'wilayah-'.$name;
+
+                $subjects = [];
+                foreach (array_keys($regionSubjects) as $subject) {
+                    $labels = $properties[$subject][OntologyMigrator::RDFS_NS.'label'] ?? [];
+                    foreach ($labels as $label) {
+                        if ($label['kind'] === 'literal' && $label['value'] === $name) {
+                            $subjects[$subject] = true;
+                            break;
+                        }
                     }
                 }
+
+                if (count($subjects) !== 1) {
+                    $errors[] = "Wilayah {$name}: harus memiliki tepat satu resource Kabupaten/Kota.";
+
+                    continue;
+                }
+
+                $subject = array_key_first($subjects);
+                $expectedSubjects[$subject] = true;
+                $sameAs = $sameAsBySubject[$subject] ?? [];
+                $expectedIri = OntologyMigrator::WIKIDATA_ENTITY_NS.$qid;
+                if (count($sameAs) !== 1
+                    || ($sameAs[0]['kind'] ?? null) !== 'iri'
+                    || ($sameAs[0]['value'] ?? null) !== $expectedIri) {
+                    $errors[] = "Wilayah {$name}: owl:sameAs harus menunjuk tepat ke {$expectedIri}.";
+                }
             }
 
-            if (count($subjects) !== 1) {
-                $errors[] = "Wilayah {$name}: harus memiliki tepat satu resource Kabupaten/Kota.";
+            foreach (array_keys($regionSubjects) as $subject) {
+                if (! isset($expectedSubjects[$subject])) {
+                    $errors[] = "{$subject}: owl:sameAs wilayah tidak sesuai dengan nama pada snapshot.";
+                }
+                if (count($sameAsBySubject[$subject] ?? []) !== 1) {
+                    $errors[] = "{$subject}: wilayah harus memiliki tepat satu owl:sameAs.";
+                }
+            }
+        }
+
+        foreach (array_keys($destinationSubjects) as $subject) {
+            $sameAs = $sameAsBySubject[$subject] ?? [];
+            if (count($sameAs) > 1) {
+                $errors[] = "{$subject}: destinasi hanya boleh memiliki paling banyak satu owl:sameAs.";
+            }
+
+            $idObjects = $properties[$subject][OntologyMigrator::WS_NS.'idDestinasi'] ?? [];
+            $id = count($idObjects) === 1 && ($idObjects[0]['kind'] ?? null) === 'literal'
+                ? $idObjects[0]['value']
+                : null;
+            $expectedQid = is_string($id) ? ($approvedById[$id] ?? null) : null;
+            if ($expectedQid === null && $sameAs !== []) {
+                $errors[] = "{$subject}: owl:sameAs destinasi tidak diizinkan tanpa QID pada berkas persetujuan.";
+            }
+            if ($expectedQid !== null && count($sameAs) !== 1) {
+                $errors[] = "{$subject}: QID yang disetujui harus memiliki tepat satu owl:sameAs.";
+            }
+
+            foreach ($sameAs as $object) {
+                if (($object['kind'] ?? null) !== 'iri'
+                    || preg_match('~^'.preg_quote(OntologyMigrator::WIKIDATA_ENTITY_NS, '~').'(Q[0-9]+)$~D', (string) ($object['value'] ?? ''), $matches) !== 1) {
+                    $errors[] = "{$subject}: owl:sameAs destinasi harus berupa IRI Wikidata kanonik.";
+
+                    continue;
+                }
+
+                $qid = $matches[1];
+                if (isset($qidOwners[$qid]) || (isset($approvedByQid[$qid]) && $approvedByQid[$qid] !== $id)) {
+                    $errors[] = "{$subject}: QID Wikidata {$qid} dipakai lebih dari satu resource.";
+                }
+                $qidOwners[$qid] = $subject;
+                if ($expectedQid !== $qid) {
+                    $errors[] = "{$subject}: QID owl:sameAs tidak cocok dengan persetujuan untuk ID {$id}.";
+                }
+            }
+        }
+
+        foreach ($approvedById as $id => $qid) {
+            $subject = OntologyMigrator::DATA_NS.$id;
+            if (! isset($destinationSubjects[$subject])) {
+                $errors[] = "Persetujuan sameAs untuk {$id} tidak memiliki resource destinasi.";
 
                 continue;
             }
 
-            $subject = array_key_first($subjects);
-            $expectedSubjects[$subject] = true;
-            $sameAs = $properties[$subject][$sameAsPredicate] ?? [];
-            $expectedIri = 'https://www.wikidata.org/entity/'.$qid;
+            $sameAs = $sameAsBySubject[$subject] ?? [];
+            $expectedIri = OntologyMigrator::WIKIDATA_ENTITY_NS.$qid;
             if (count($sameAs) !== 1
-                || $sameAs[0]['kind'] !== 'iri'
-                || $sameAs[0]['value'] !== $expectedIri) {
-                $errors[] = "Wilayah {$name}: owl:sameAs harus menunjuk tepat ke {$expectedIri}.";
+                || ($sameAs[0]['kind'] ?? null) !== 'iri'
+                || ($sameAs[0]['value'] ?? null) !== $expectedIri) {
+                $errors[] = "Destinasi {$id}: owl:sameAs harus menunjuk tepat ke {$expectedIri}.";
             }
         }
 
-        foreach (array_keys($sameAsSubjects) as $subject) {
-            if (! isset($regionSubjects[$subject])) {
-                continue;
-            }
-
-            if (! isset($expectedSubjects[$subject])) {
-                $errors[] = "{$subject}: owl:sameAs tidak sesuai dengan nama wilayah pada snapshot.";
-            }
-
-            $sameAs = $properties[$subject][$sameAsPredicate] ?? [];
-            if (count($sameAs) !== 1) {
-                $errors[] = "{$subject}: wilayah harus memiliki tepat satu owl:sameAs.";
-            }
-        }
+        return [
+            'regions' => array_sum(array_map(
+                static fn (string $subject): int => count($sameAsBySubject[$subject] ?? []),
+                array_keys($regionSubjects),
+            )),
+            'destinations' => array_sum(array_map(
+                static fn (string $subject): int => count($sameAsBySubject[$subject] ?? []),
+                array_keys($destinationSubjects),
+            )),
+        ];
     }
 
     /**

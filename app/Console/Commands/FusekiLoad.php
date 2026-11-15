@@ -10,6 +10,7 @@ use App\Services\Ontology\FusekiClient;
 use App\Services\Ontology\OntologyDataVersion;
 use App\Services\Ontology\OntologyValidator;
 use App\Services\Ontology\TurtleParser;
+use App\Services\Ontology\WikidataDestinationLinkCatalog;
 use App\Services\Ontology\WikidataRegionCatalog;
 use Illuminate\Console\Command;
 use Throwable;
@@ -31,6 +32,7 @@ final class FusekiLoad extends Command
         OntologyDataVersion $dataVersion,
         TurtleParser $parser,
         OntologyValidator $validator,
+        WikidataDestinationLinkCatalog $destinationLinks,
         WikidataRegionCatalog $regionCatalog,
     ): int {
         $file = (string) ($this->option('file') ?: config('ontology.ttl_path'));
@@ -54,6 +56,7 @@ final class FusekiLoad extends Command
                 $triples,
                 (string) config('ontology.unknown_label'),
                 regionQidsByName: $regionCatalog->qidsByRegionName(),
+                destinationQidsById: $destinationLinks->load()['destinations_by_id'],
             );
         } catch (Throwable $exception) {
             $this->error('Validasi ontologi gagal: '.$exception->getMessage());

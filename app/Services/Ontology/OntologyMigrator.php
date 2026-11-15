@@ -21,6 +21,8 @@ final class OntologyMigrator
 
     public const DATA_NS = 'http://pariwisatasumut.org/resource/';
 
+    public const WIKIDATA_ENTITY_NS = 'http://www.wikidata.org/entity/';
+
     /**
      * @var list<string>
      */
@@ -89,6 +91,7 @@ final class OntologyMigrator
      *     regions: array<string, array{qid: string, type: string}>,
      *     boundaries: list<array{0: string, 1: string}>
      * }  $boundarySource
+     * @param  array<string, string>  $destinationQidsById
      * @return array{
      *     triples: list<array{subject: string, predicate: string, object: array{kind: string, value: string, datatype: ?string, language: ?string}}>,
      *     anomalies: array<string, mixed>,
@@ -101,6 +104,7 @@ final class OntologyMigrator
         string $unknownLabel,
         float $nearbyRadiusKm,
         int $maxNeighbors,
+        array $destinationQidsById = [],
     ): array {
         if ($rows === []) {
             throw new InvalidArgumentException('Dataset sumber tidak memiliki destinasi.');
@@ -110,7 +114,29 @@ final class OntologyMigrator
             throw new InvalidArgumentException('Konfigurasi migrasi ontologi tidak valid.');
         }
 
+        $sourceIds = [];
+        foreach ($rows as $row) {
+            $id = trim($row['idDestinasi'] ?? '');
+            if ($id !== '') {
+                $sourceIds[$id] = true;
+            }
+        }
+        $approvedQids = [];
+        foreach ($destinationQidsById as $id => $qid) {
+            if (! is_string($id) || ! isset($sourceIds[$id])
+                || ! is_string($qid) || preg_match('/^Q[0-9]+$/', $qid) !== 1
+                || isset($approvedQids[$qid])) {
+                throw new InvalidArgumentException('Pemetaan sameAs destinasi harus valid, terdaftar pada sumber, dan satu-ke-satu.');
+            }
+            $approvedQids[$qid] = true;
+        }
+
         $regions = $this->validatedRegions($boundarySource);
+        foreach ($regions as $region) {
+            if (isset($approvedQids[$region['qid']])) {
+                throw new InvalidArgumentException('QID sameAs destinasi tidak boleh dipakai kembali oleh wilayah.');
+            }
+        }
         $triples = [];
         $this->addSchema($triples, $unknownLabel);
 
@@ -130,7 +156,7 @@ final class OntologyMigrator
                 $triples,
                 $regionIrisByQid[$region['qid']],
                 self::OWL_NS.'sameAs',
-                'https://www.wikidata.org/entity/'.$region['qid'],
+                self::WIKIDATA_ENTITY_NS.$region['qid'],
             );
             $this->addLiteral(
                 $triples,
@@ -161,6 +187,14 @@ final class OntologyMigrator
             $destinationIri = self::DATA_NS.$id;
             $destinations[$id] = ['iri' => $destinationIri, 'row' => $row];
             $this->addType($triples, $destinationIri, 'DestinasiWisata');
+            if (isset($destinationQidsById[$id])) {
+                $this->addIri(
+                    $triples,
+                    $destinationIri,
+                    self::OWL_NS.'sameAs',
+                    self::WIKIDATA_ENTITY_NS.$destinationQidsById[$id],
+                );
+            }
             $this->addLiteral($triples, $destinationIri, 'idDestinasi', $id, self::XSD_NS.'string');
             $this->addText($triples, $destinationIri, 'namaDestinasi', $name, $unknownLabel);
             $this->addText($triples, $destinationIri, 'deskripsiSingkat', $row['deskripsiSingkat'] ?? '', $unknownLabel);
@@ -259,6 +293,8 @@ final class OntologyMigrator
             'stats' => [
                 'destinations' => count($destinations),
                 'districts' => count($regions),
+                'region_same_as' => count($regions),
+                'destination_same_as' => count($destinationQidsById),
                 'nearby_radius_meters' => (int) round($nearbyRadiusKm * 1000),
                 'max_nearby_neighbors' => $maxNeighbors,
             ],

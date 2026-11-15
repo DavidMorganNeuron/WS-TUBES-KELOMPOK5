@@ -26,9 +26,9 @@ class OntologyMigratorTest extends TestCase
         $this->assertSame(1, $result['stats']['destinations']);
         $this->assertSame(
             [
-                'https://www.wikidata.org/entity/Q1',
-                'https://www.wikidata.org/entity/Q2',
-                'https://www.wikidata.org/entity/Q3',
+                'http://www.wikidata.org/entity/Q1',
+                'http://www.wikidata.org/entity/Q2',
+                'http://www.wikidata.org/entity/Q3',
             ],
             array_map(static fn (array $triple): string => $triple['object']['value'], array_values(array_filter(
                 $result['triples'],
@@ -42,6 +42,121 @@ class OntologyMigratorTest extends TestCase
                 OntologyMigrator::DATA_NS.'ws-001',
                 'idDestinasi',
             ),
+        );
+    }
+
+    public function test_destination_same_as_generation_is_idempotent_and_adds_only_approved_triple(): void
+    {
+        $rows = (new TurtleParser)->parse(str_replace('"-"', '"-"', $this->fixtureTurtle()));
+        $migrator = new OntologyMigrator;
+        $base = $migrator->migrate($rows, $this->boundarySource(), '-', 15.0, 3);
+        $approved = $migrator->migrate(
+            $rows,
+            $this->boundarySource(),
+            '-',
+            15.0,
+            3,
+            ['ws-005' => 'Q12345'],
+        );
+        $repeated = $migrator->migrate(
+            $rows,
+            $this->boundarySource(),
+            '-',
+            15.0,
+            3,
+            ['ws-005' => 'Q12345'],
+        );
+        $baseTriples = array_map(serialize(...), $base['triples']);
+        $newTriples = array_values(array_filter(
+            $approved['triples'],
+            static fn (array $triple): bool => ! in_array(serialize($triple), $baseTriples, true),
+        ));
+        $validator = new OntologyValidator;
+        $validation = $validator->validate(
+            $approved['triples'],
+            '-',
+            regionQidsByName: [
+                'Kabupaten Samosir' => 'Q1',
+                'Kabupaten Toba' => 'Q2',
+            ],
+            destinationQidsById: ['ws-005' => 'Q12345'],
+        );
+
+        $this->assertCount(1, $newTriples);
+        $this->assertSame(OntologyMigrator::DATA_NS.'ws-005', $newTriples[0]['subject']);
+        $this->assertSame(OntologyMigrator::OWL_NS.'sameAs', $newTriples[0]['predicate']);
+        $this->assertSame('http://www.wikidata.org/entity/Q12345', $newTriples[0]['object']['value']);
+        $this->assertSame((new TurtleWriter)->write($approved['triples']), (new TurtleWriter)->write($repeated['triples']));
+        $this->assertSame([], $validation['errors']);
+        $this->assertSame(['regions' => 2, 'destinations' => 1], $validation['same_as_counts']);
+    }
+
+    public function test_migrator_rejects_duplicate_destination_qids_and_unknown_destination_ids(): void
+    {
+        $rows = (new TurtleParser)->parse(str_replace('"-"', '"-"', $this->fixtureTurtle()));
+        $migrator = new OntologyMigrator;
+
+        try {
+            $migrator->migrate($rows, $this->boundarySource(), '-', 15.0, 3, [
+                'ws-005' => 'Q12345',
+                'ws-006' => 'Q12345',
+            ]);
+            $this->fail('A duplicate destination QID must be rejected.');
+        } catch (\InvalidArgumentException $exception) {
+            $this->assertStringContainsString('satu-ke-satu', $exception->getMessage());
+        }
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('sumber');
+        $migrator->migrate($rows, $this->boundarySource(), '-', 15.0, 3, ['ws-999' => 'Q12345']);
+    }
+
+    public function test_validator_rejects_multiple_destination_same_as_values_and_duplicate_approvals(): void
+    {
+        $rows = (new TurtleParser)->parse(str_replace('"-"', '"-"', $this->fixtureTurtle()));
+        $migrator = new OntologyMigrator;
+        $result = $migrator->migrate($rows, $this->boundarySource(), '-', 15.0, 3, ['ws-005' => 'Q12345']);
+        $triples = $result['triples'];
+        $triples[] = [
+            'subject' => OntologyMigrator::DATA_NS.'ws-005',
+            'predicate' => OntologyMigrator::OWL_NS.'sameAs',
+            'object' => [
+                'kind' => 'iri',
+                'value' => 'http://www.wikidata.org/entity/Q12346',
+                'datatype' => null,
+                'language' => null,
+            ],
+        ];
+        $validator = new OntologyValidator;
+        $multipleSameAs = $validator->validate(
+            $triples,
+            '-',
+            regionQidsByName: [
+                'Kabupaten Samosir' => 'Q1',
+                'Kabupaten Toba' => 'Q2',
+            ],
+            destinationQidsById: ['ws-005' => 'Q12345'],
+        );
+        $duplicateApproval = $validator->validate(
+            $result['triples'],
+            '-',
+            regionQidsByName: [
+                'Kabupaten Samosir' => 'Q1',
+                'Kabupaten Toba' => 'Q2',
+            ],
+            destinationQidsById: [
+                'ws-005' => 'Q12345',
+                'ws-006' => 'Q12345',
+            ],
+        );
+
+        $this->assertContains(
+            OntologyMigrator::DATA_NS.'ws-005: destinasi hanya boleh memiliki paling banyak satu owl:sameAs.',
+            $multipleSameAs['errors'],
+        );
+        $this->assertContains(
+            'Pemetaan persetujuan sameAs destinasi tidak valid atau mengandung ID/QID duplikat.',
+            $duplicateApproval['errors'],
         );
     }
 
@@ -141,7 +256,7 @@ class OntologyMigratorTest extends TestCase
             'predicate' => OntologyMigrator::OWL_NS.'sameAs',
             'object' => [
                 'kind' => 'iri',
-                'value' => 'https://www.wikidata.org/entity/Q999',
+                'value' => 'http://www.wikidata.org/entity/Q999',
                 'datatype' => null,
                 'language' => null,
             ],
@@ -153,7 +268,10 @@ class OntologyMigratorTest extends TestCase
             regionQidsByName: $expectedRegions,
         );
 
-        $this->assertContains("{$destinationIri}: owl:sameAs destinasi tidak diizinkan.", $invalid['errors']);
+        $this->assertContains(
+            "{$destinationIri}: owl:sameAs destinasi tidak diizinkan tanpa QID pada berkas persetujuan.",
+            $invalid['errors'],
+        );
 
         $wrongRegion = array_values(array_filter(
             $result['triples'],
@@ -167,7 +285,7 @@ class OntologyMigratorTest extends TestCase
             'predicate' => OntologyMigrator::OWL_NS.'sameAs',
             'object' => [
                 'kind' => 'iri',
-                'value' => 'https://www.wikidata.org/entity/Q999',
+                'value' => 'http://www.wikidata.org/entity/Q999',
                 'datatype' => null,
                 'language' => null,
             ],
@@ -179,7 +297,7 @@ class OntologyMigratorTest extends TestCase
         );
 
         $this->assertContains(
-            'Wilayah Kabupaten Toba: owl:sameAs harus menunjuk tepat ke https://www.wikidata.org/entity/Q2.',
+            'Wilayah Kabupaten Toba: owl:sameAs harus menunjuk tepat ke http://www.wikidata.org/entity/Q2.',
             $invalidMapping['errors'],
         );
     }

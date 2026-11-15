@@ -13,6 +13,7 @@ use App\Services\Ontology\OntologyInspector;
 use App\Services\Ontology\OntologyValidator;
 use App\Services\Ontology\TurtleParser;
 use App\Services\Ontology\WikidataClient;
+use App\Services\Ontology\WikidataDestinationLinkCatalog;
 use App\Services\Ontology\WikidataQueryBuilder;
 use App\Services\Ontology\WikidataRegionCatalog;
 use App\Services\Ontology\WikidataRegionRepository;
@@ -34,6 +35,7 @@ final class OntologyDoctor extends Command
         OntologyGraphMapper $graphMapper,
         TurtleParser $parser,
         OntologyValidator $validator,
+        WikidataDestinationLinkCatalog $destinationLinks,
         WikidataRegionCatalog $regionCatalog,
         WikidataRegionRepository $wikidataRegions,
         WikidataClient $wikidataClient,
@@ -60,6 +62,7 @@ final class OntologyDoctor extends Command
                 $triples,
                 (string) config('ontology.unknown_label'),
                 regionQidsByName: $regionCatalog->qidsByRegionName(),
+                destinationQidsById: $destinationLinks->load()['destinations_by_id'],
             );
         } catch (Throwable $exception) {
             $this->components->error('Validasi file ontologi gagal: '.$exception->getMessage());
@@ -70,6 +73,8 @@ final class OntologyDoctor extends Command
         $fileIssues = count($validation['errors']);
         $this->line('  file SHA256   : '.hash_file('sha256', $path));
         $this->line('  destinasi v3  : '.$validation['destination_count']);
+        $this->line('  sameAs wilayah : '.$validation['same_as_counts']['regions']);
+        $this->line('  sameAs destinasi : '.$validation['same_as_counts']['destinations']);
         $this->line('  triple v3     : '.count($triples));
         if ($fileIssues > 0) {
             $this->components->error('File ontologi tidak lolos validasi:');
@@ -83,6 +88,7 @@ final class OntologyDoctor extends Command
         $wikidataSnapshotValid = $this->reportWikidata(
             triples: $triples,
             catalog: $regionCatalog,
+            destinationLinks: $destinationLinks,
             regions: $wikidataRegions,
             client: $wikidataClient,
             queryBuilder: $wikidataQueryBuilder,
@@ -215,6 +221,7 @@ final class OntologyDoctor extends Command
     private function reportWikidata(
         array $triples,
         WikidataRegionCatalog $catalog,
+        WikidataDestinationLinkCatalog $destinationLinks,
         WikidataRegionRepository $regions,
         WikidataClient $client,
         WikidataQueryBuilder $queryBuilder,
@@ -247,35 +254,62 @@ final class OntologyDoctor extends Command
         $rdfType = $namespaces['rdf'].'type';
         $regionClass = $namespaces['ws'].'KabupatenKota';
         $sameAs = $namespaces['owl'].'sameAs';
+        $destinationClass = $namespaces['ws'].'DestinasiWisata';
         $regionSubjects = [];
+        $destinationSubjects = [];
         $datasetQids = [];
+        $destinationIds = [];
+        $destinationSameAsById = [];
 
         foreach ($triples as $triple) {
             if ($triple['predicate'] === $rdfType
                 && $triple['object']['kind'] === 'iri'
                 && $triple['object']['value'] === $regionClass) {
                 $regionSubjects[$triple['subject']] = true;
+            } elseif ($triple['predicate'] === $rdfType
+                && $triple['object']['kind'] === 'iri'
+                && $triple['object']['value'] === $destinationClass) {
+                $destinationSubjects[$triple['subject']] = true;
+            } elseif ($triple['predicate'] === $namespaces['ws'].'idDestinasi'
+                && $triple['object']['kind'] === 'literal') {
+                $destinationIds[$triple['subject']] = $triple['object']['value'];
             }
         }
 
         foreach ($triples as $triple) {
             if (isset($regionSubjects[$triple['subject']]) && $triple['predicate'] === $sameAs
-                && preg_match('~^https://www\.wikidata\.org/entity/(Q[0-9]+)$~', $triple['object']['value'], $matches) === 1) {
+                && preg_match('~^http://www\.wikidata\.org/entity/(Q[0-9]+)$~', $triple['object']['value'], $matches) === 1) {
                 $datasetQids[] = $matches[1];
             }
         }
 
+        foreach ($triples as $triple) {
+            if (isset($destinationSubjects[$triple['subject']])
+                && $triple['predicate'] === $sameAs
+                && $triple['object']['kind'] === 'iri'
+                && preg_match('~^http://www\.wikidata\.org/entity/(Q[0-9]+)$~', $triple['object']['value'], $matches) === 1
+                && isset($destinationIds[$triple['subject']])) {
+                $destinationSameAsById[$destinationIds[$triple['subject']]] = $matches[1];
+            }
+        }
+
+        $approvedDestinations = $destinationLinks->load()['destinations_by_id'];
         $expectedQids = array_column($expectedRegions, 'qid');
         $snapshotQids = array_column($snapshot['regions'], 'qid');
         sort($expectedQids);
         sort($snapshotQids);
         sort($datasetQids);
+        ksort($approvedDestinations, SORT_STRING);
+        ksort($destinationSameAsById, SORT_STRING);
         $coverageMatches = count($regionSubjects) === count($expectedRegions)
             && $expectedQids === $snapshotQids
-            && $expectedQids === $datasetQids;
+            && $expectedQids === $datasetQids
+            && $approvedDestinations === $destinationSameAsById;
         $snapshotRegions = array_values($snapshot['regions']);
         $this->table(['Cakupan snapshot wilayah', 'Jumlah'], [
             ['Kabupaten/Kota dengan QID cocok', count($datasetQids).'/'.count($regionSubjects)],
+            ['sameAs wilayah', count($datasetQids)],
+            ['sameAs destinasi', count($destinationSameAsById).'/'.count($destinationSubjects)],
             ['Gambar', count(array_filter($snapshotRegions, static fn (array $region): bool => $region['image_url'] !== null))],
             ['Populasi', count(array_filter($snapshotRegions, static fn (array $region): bool => $region['population'] !== null))],
             ['Luas', count(array_filter($snapshotRegions, static fn (array $region): bool => $region['area'] !== null))],

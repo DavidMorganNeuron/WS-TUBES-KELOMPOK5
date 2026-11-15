@@ -6,6 +6,7 @@ namespace App\Console\Commands;
 
 use App\Services\Ontology\OntologyValidator;
 use App\Services\Ontology\TurtleParser;
+use App\Services\Ontology\WikidataDestinationLinkCatalog;
 use App\Services\Ontology\WikidataRegionCatalog;
 use Illuminate\Console\Command;
 use InvalidArgumentException;
@@ -19,6 +20,7 @@ final class OntologyValidate extends Command
     public function handle(
         TurtleParser $parser,
         OntologyValidator $validator,
+        WikidataDestinationLinkCatalog $destinationLinks,
         WikidataRegionCatalog $regionCatalog,
     ): int {
         $path = (string) ($this->option('file') ?: config('ontology.ttl_path'));
@@ -57,6 +59,7 @@ final class OntologyValidate extends Command
                 (string) config('ontology.unknown_label'),
                 $sourceIds,
                 $regionCatalog->qidsByRegionName(),
+                $destinationLinks->load()['destinations_by_id'],
             );
         } catch (InvalidArgumentException $exception) {
             $this->error('Turtle tidak dapat divalidasi: '.$exception->getMessage());
@@ -77,6 +80,8 @@ final class OntologyValidate extends Command
 
         $this->table(['Jenis', 'Nama', 'Jumlah instance/pemakaian'], $rows);
         $this->line("Total destinasi: {$result['destination_count']}");
+        $this->line("sameAs wilayah: {$result['same_as_counts']['regions']}");
+        $this->line("sameAs destinasi: {$result['same_as_counts']['destinations']}");
         if ($result['source_comparison'] !== null) {
             $this->line("Total destinasi sumber v2: {$result['source_comparison']['destination_count']}");
         }
