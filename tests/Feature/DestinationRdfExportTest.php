@@ -56,7 +56,11 @@ class DestinationRdfExportTest extends TestCase
             $response->assertOk()
                 ->assertHeader('Content-Type', $document['mediaType'].'; charset=utf-8')
                 ->assertHeader('Content-Disposition', 'attachment; filename="'.$id.'.'.$document['format'].'"')
-                ->assertSee('Example', false);
+                ->assertSee('Example', false)
+                ->assertHeader('X-Content-Type-Options', 'nosniff')
+                ->assertHeader('X-Frame-Options', 'SAMEORIGIN')
+                ->assertHeader('Referrer-Policy', 'strict-origin-when-cross-origin')
+                ->assertHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=(self)');
 
             if ($document['format'] === 'ttl') {
                 $etag = $response->headers->get('ETag');
@@ -91,7 +95,11 @@ class DestinationRdfExportTest extends TestCase
         $this->get('/destinations/ws-001/rdf.ttl')
             ->assertStatus(503)
             ->assertSee('Layanan data destinasi sedang tidak tersedia.')
-            ->assertDontSee('private-server-detail');
+            ->assertDontSee('private-server-detail')
+            ->assertHeader('X-Content-Type-Options', 'nosniff')
+            ->assertHeader('X-Frame-Options', 'SAMEORIGIN')
+            ->assertHeader('Referrer-Policy', 'strict-origin-when-cross-origin')
+            ->assertHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=(self)');
     }
 
     public function test_local_turtle_driver_exports_turtle_and_reports_other_formats_as_unavailable(): void
@@ -108,7 +116,11 @@ class DestinationRdfExportTest extends TestCase
 
         $this->get('/destinations/ws-001/rdf.rdf')
             ->assertStatus(501)
-            ->assertSee('Driver TTL lokal hanya mendukung ekspor Turtle.');
+            ->assertSee('Driver TTL lokal hanya mendukung ekspor Turtle.')
+            ->assertHeader('X-Content-Type-Options', 'nosniff')
+            ->assertHeader('X-Frame-Options', 'SAMEORIGIN')
+            ->assertHeader('Referrer-Policy', 'strict-origin-when-cross-origin')
+            ->assertHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=(self)');
 
         Http::assertNothingSent();
     }

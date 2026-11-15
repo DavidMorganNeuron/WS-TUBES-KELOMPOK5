@@ -31,12 +31,14 @@ return Application::configure(basePath: dirname(__DIR__))
             return false;
         });
         $exceptions->render(function (OntologyUnavailableException $exception, Request $request) {
+            $message = 'Layanan data destinasi sedang tidak tersedia. Silakan coba lagi nanti.';
+
             if ($request->expectsJson()) {
-                return response()->json(['message' => $exception->getMessage()], 503);
+                return response()->json(['message' => $message], 503);
             }
 
             return response()->view('errors.503', [
-                'message' => $exception->getMessage(),
+                'message' => $message,
             ], 503);
         });
         $exceptions->render(function (RdfFormatUnavailableException $exception, Request $request) {

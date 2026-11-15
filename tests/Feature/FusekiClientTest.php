@@ -77,14 +77,21 @@ class FusekiClientTest extends TestCase
 
     public function test_json_requests_receive_a_safe_503_response(): void
     {
+        config()->set('ontology.fuseki.dataset', 'internal-dataset');
+
         Http::fake([
-            'http://localhost:3030/WayFinder/sparql' => Http::response(['error' => 'private-server-detail'], 503),
+            'http://localhost:3030/internal-dataset/sparql' => Http::response(['error' => 'private-server-detail'], 404),
         ]);
 
         $this->getJson('/destinations')
             ->assertStatus(503)
-            ->assertJsonPath('message', 'Layanan data destinasi sedang tidak tersedia. Periksa koneksi Fuseki.')
-            ->assertDontSee('private-server-detail');
+            ->assertJsonPath('message', 'Layanan data destinasi sedang tidak tersedia. Silakan coba lagi nanti.')
+            ->assertDontSee('private-server-detail')
+            ->assertDontSee('internal-dataset')
+            ->assertHeader('X-Content-Type-Options', 'nosniff')
+            ->assertHeader('X-Frame-Options', 'SAMEORIGIN')
+            ->assertHeader('Referrer-Policy', 'strict-origin-when-cross-origin')
+            ->assertHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=(self)');
     }
 
     public function test_write_credentials_are_separate_from_read_credentials(): void

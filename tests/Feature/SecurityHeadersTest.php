@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use Illuminate\Testing\TestResponse;
 use Tests\TestCase;
 
 class SecurityHeadersTest extends TestCase
@@ -10,7 +11,23 @@ class SecurityHeadersTest extends TestCase
     {
         $response = $this->get('/up');
 
-        $response->assertOk()
+        $response->assertOk();
+
+        $this->assertSecurityHeadersPresent($response);
+    }
+
+    public function test_security_headers_are_added_to_not_found_responses(): void
+    {
+        $response = $this->get('/route-yang-tidak-ada');
+
+        $response->assertNotFound();
+
+        $this->assertSecurityHeadersPresent($response);
+    }
+
+    private function assertSecurityHeadersPresent(TestResponse $response): void
+    {
+        $response
             ->assertHeader('X-Content-Type-Options', 'nosniff')
             ->assertHeader('X-Frame-Options', 'SAMEORIGIN')
             ->assertHeader('Referrer-Policy', 'strict-origin-when-cross-origin')

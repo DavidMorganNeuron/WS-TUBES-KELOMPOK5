@@ -7,9 +7,13 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MapController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/', [HomeController::class, 'index'])
+    ->middleware('throttle:60,1')
+    ->name('home');
 
-Route::get('/destinations', [DestinationController::class, 'index'])->name('destinations');
+Route::get('/destinations', [DestinationController::class, 'index'])
+    ->middleware('throttle:60,1')
+    ->name('destinations');
 
 Route::get('/destinations/live', [DestinationController::class, 'live'])
     ->middleware('throttle:60,1')
@@ -26,9 +30,12 @@ Route::get('/destinations/{id}/rdf.{format}', DestinationRdfController::class)
 
 Route::get('/destinations/{id}', [DestinationController::class, 'show'])
     ->where('id', 'ws-\d{3}')
+    ->middleware('throttle:60,1')
     ->name('destination.detail');
 
-Route::get('/map', [MapController::class, 'index'])->name('map');
+Route::get('/map', [MapController::class, 'index'])
+    ->middleware('throttle:60,1')
+    ->name('map');
 
 Route::get('/map/live', [MapController::class, 'live'])
     ->middleware('throttle:60,1')
