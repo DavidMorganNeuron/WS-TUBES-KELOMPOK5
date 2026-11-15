@@ -18,9 +18,22 @@ Checklist ini membedakan hasil yang sudah diperiksa dari hasil yang harus dikump
 - [x] `php artisan ontology:validate`: 228 destinasi, 13 sentinel rating, 30 sameAs wilayah, 1 sameAs destinasi, 102 relasi berbatasan, dan 532 relasi dekat; validasi lulus.
 - [x] `composer audit` dijalankan sebagai laporan saja.
 - [x] `npm audit --omit=dev`: 0 kerentanan.
-- [ ] Jalankan kembali tes PHPUnit lengkap, Pint, build frontend, serta validasi ontologi setelah seluruh dokumen/perubahan selesai.
-- [ ] Uji arsip bersih `git archive` tanpa `.git`, `.env`, vendor, atau node_modules.
+- [x] Tes PHPUnit lengkap, Pint, build frontend, dan validasi ontologi dijalankan setelah perubahan kode/dokumen.
+- [x] Uji arsip bersih `git archive` tanpa `.git`, vendor, atau node_modules; `.env` hanya dibuat dari `.env.example` di direktori temporer.
 - [ ] Bila Fuseki tersedia, jalankan `fuseki:load`, `ontology:doctor`, dan uji pencarian pada driver Fuseki.
+
+## Bukti arsip bersih
+
+Arsip `HEAD` diekstrak ke direktori temporer di luar repository, lalu Composer dan npm dipasang dari lockfile. Hasil nyata:
+
+- `composer install`: 115 paket terpasang, 0 update.
+- `npm ci`: 80 paket terpasang.
+- `php artisan test --compact`: 125 tes, 1.480 assertion lulus.
+- `npm run build`: Vite 8.3.4 selesai.
+- `php artisan ontology:validate`: 228 destinasi, 30 sameAs wilayah, 1 sameAs destinasi, 102 `berbatasanDengan`, 532 `dekatDengan`; lulus.
+- HTTP pada `APP_ENV=production`, `APP_DEBUG=false`, driver TTL: `/`, `/destinations`, `/destinations/ws-001`, `/map`, ekspor Turtle, dan pencarian live semuanya HTTP 200. HTML detail berisi metadata RDFa; ekspor memakai `text/turtle`.
+- Marker `public/hot` usang (dibuat hanya di arsip temporer) tidak menyuntikkan HMR; HTML memakai aset `/build/assets`.
+- `/destinations/live?q=dnau+toba`: HTTP 200, 9 hasil pada halaman, `correction` bernilai `dnau toba` → `danau toba`.
 
 ## Temuan yang harus tetap terlihat
 
