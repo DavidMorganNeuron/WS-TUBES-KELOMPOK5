@@ -46,6 +46,10 @@
                 @endif
                 <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" aria-hidden="true">🔍</span>
                 <input type="text" name="q" value="{{ $activeQuery }}" placeholder="Cari destinasi yang ditampilkan..." class="w-full pl-10 pr-20 py-2.5 bg-white border border-gray-200 rounded-xl text-sm font-medium outline-none focus:border-brand-primary" autocomplete="off" aria-label="Cari destinasi yang ditampilkan di peta">
+                <label class="mt-2 inline-flex items-center gap-2 text-xs font-medium text-gray-600">
+                    <input type="checkbox" name="exact" value="1" @checked(($filters['exact'] ?? false)) class="rounded border-gray-300 text-brand-primary focus:ring-brand-primary">
+                    Tanpa koreksi otomatis
+                </label>
                 <button type="submit" class="absolute right-1.5 top-1/2 -translate-y-1/2 bg-brand-dark hover:bg-gray-800 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg">Cari</button>
             </form>
             <p id="map-live-status" class="sr-only" role="status" aria-live="polite"></p>
@@ -64,7 +68,7 @@
         </div>
 
         <div id="map-results" class="flex-grow overflow-y-auto p-4 space-y-4 bg-[#f8faf9]" role="region" aria-label="Hasil destinasi di peta" aria-busy="false">
-            @include('partials.map-results', ['results' => $results, 'matchCount' => $matchCount])
+            @include('partials.map-results', ['results' => $results, 'matchCount' => $matchCount, 'searchPlan' => $searchPlan, 'routeName' => 'map'])
         </div>
 
         <div class="p-3 bg-white border-t border-gray-200 flex justify-between items-center text-xs font-bold">

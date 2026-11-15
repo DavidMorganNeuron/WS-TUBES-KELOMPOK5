@@ -190,6 +190,38 @@ class SparqlDestinationSourceTest extends TestCase
         Http::assertSentCount(2);
     }
 
+    public function test_exact_search_uses_a_separate_result_cache_and_reuses_the_cached_vocabulary(): void
+    {
+        $queries = [];
+        Http::fake(function (Request $request) use (&$queries) {
+            $query = (string) ($request->data()['query'] ?? '');
+            $queries[] = $query;
+
+            if (str_contains($query, 'SELECT ?text')) {
+                return Http::response($this->response([
+                    ['text' => ['type' => 'literal', 'value' => 'Danau']],
+                ]));
+            }
+
+            return Http::response($this->response([]));
+        });
+
+        $repository = app(DestinationRepository::class);
+        $repository->search(['q' => 'Danau', 'exact' => true]);
+        $repository->search(['q' => 'Danau']);
+        $repository->search(['q' => 'Danau']);
+
+        $this->assertSame(2, count(array_filter(
+            $queries,
+            static fn (string $query): bool => str_contains($query, 'SELECT ?destination ?idDestinasi'),
+        )));
+        $this->assertSame(1, count(array_filter(
+            $queries,
+            static fn (string $query): bool => str_contains($query, 'SELECT ?text'),
+        )));
+        Http::assertSentCount(3);
+    }
+
     /**
      * @param  list<array<string, array{type: string, value: string}>>  $bindings
      * @return array{head: array{vars: list<string>}, results: array{bindings: list<array<string, array{type: string, value: string}>>}}

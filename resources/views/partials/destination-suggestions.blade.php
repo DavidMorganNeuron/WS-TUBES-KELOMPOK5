@@ -1,3 +1,5 @@
+@include('partials.search-notice')
+
 @if ($destinations->isNotEmpty())
     <ul class="divide-y divide-gray-100" role="listbox" aria-label="Saran destinasi">
         @foreach ($destinations as $destination)

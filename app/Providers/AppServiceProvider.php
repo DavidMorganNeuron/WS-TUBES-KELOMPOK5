@@ -10,10 +10,14 @@ use App\Services\Ontology\FusekiClient;
 use App\Services\Ontology\InMemoryDestinationSource;
 use App\Services\Ontology\OntologyConfiguration;
 use App\Services\Ontology\OntologyGraphMapper;
+use App\Services\Ontology\SearchPlanner;
+use App\Services\Ontology\SearchTokenizer;
+use App\Services\Ontology\SearchVocabulary;
 use App\Services\Ontology\SparqlDestinationSource;
 use App\Services\Ontology\SparqlEscaper;
 use App\Services\Ontology\SparqlRowMapper;
 use App\Services\Ontology\TurtleParser;
+use App\Services\Ontology\TypoCorrector;
 use App\Services\Ontology\WikidataClient;
 use App\Services\Ontology\WikidataQueryBuilder;
 use App\Services\Ontology\WikidataRegionCatalog;
@@ -49,6 +53,10 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(OntologyGraphMapper::class);
         $this->app->singleton(SparqlEscaper::class);
         $this->app->singleton(SparqlRowMapper::class);
+        $this->app->singleton(SearchTokenizer::class);
+        $this->app->singleton(SearchVocabulary::class);
+        $this->app->singleton(TypoCorrector::class);
+        $this->app->singleton(SearchPlanner::class);
         $this->app->singleton(WikidataQueryBuilder::class);
 
         $this->app->singleton(WikidataRegionCatalog::class, function (): WikidataRegionCatalog {
@@ -104,6 +112,7 @@ class AppServiceProvider extends ServiceProvider
             return new DestinationQueryBuilder(
                 $app->make(SparqlEscaper::class),
                 array_keys($app->make(WikidataRegionCatalog::class)->load()['regions']),
+                $app->make(SearchTokenizer::class),
             );
         });
 
@@ -116,6 +125,7 @@ class AppServiceProvider extends ServiceProvider
                     parser: $app->make(TurtleParser::class),
                     graphMapper: $app->make(OntologyGraphMapper::class),
                     ttlPath: $ontologyConfig['ttl_path'],
+                    searchPlanner: $app->make(SearchPlanner::class),
                     cacheTtl: $ontologyConfig['cache_ttl'],
                 );
             }
@@ -124,6 +134,7 @@ class AppServiceProvider extends ServiceProvider
                 client: $app->make(FusekiClient::class),
                 queryBuilder: $app->make(DestinationQueryBuilder::class),
                 rowMapper: $app->make(SparqlRowMapper::class),
+                searchPlanner: $app->make(SearchPlanner::class),
                 cacheTtl: $ontologyConfig['cache_ttl'],
             );
         });

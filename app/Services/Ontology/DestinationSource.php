@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services\Ontology;
 
 use App\Data\Destination;
+use App\Data\SearchPlan;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
@@ -16,13 +17,20 @@ interface DestinationSource
     public function all(): Collection;
 
     /**
-     * @param  array{q?: string|null, jenis?: string|null, kabupaten?: string|null, provinsi?: string|null, sort?: string|null}  $filters
+     * @param  array{q?: string|null, jenis?: string|null, kabupaten?: string|null, provinsi?: string|null, sort?: string|null, exact?: bool|int|string|null}  $filters
      * @return Collection<int, Destination>
      */
     public function search(array $filters = []): Collection;
 
+    public function planSearch(string $query, bool $exact = false): SearchPlan;
+
     /**
-     * @param  array{q?: string|null, jenis?: string|null, kabupaten?: string|null, provinsi?: string|null, sort?: string|null}  $filters
+     * @return list<string>
+     */
+    public function searchableTexts(): array;
+
+    /**
+     * @param  array{q?: string|null, jenis?: string|null, kabupaten?: string|null, provinsi?: string|null, sort?: string|null, exact?: bool|int|string|null}  $filters
      */
     public function paginate(array $filters = [], int $perPage = 9): LengthAwarePaginator;
 

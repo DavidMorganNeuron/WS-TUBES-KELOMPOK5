@@ -14,6 +14,10 @@ class MapController extends Controller
     {
         $this->validateFilterInputs($request);
         $filters = $this->filters($request);
+        $searchPlan = $repository->planSearch(
+            $filters['q'] ?? '',
+            (bool) ($filters['exact'] ?? false),
+        );
         $matches = $repository->search($filters);
         $results = $matches->take(60);
         $markers = $repository->markers($filters);
@@ -24,6 +28,7 @@ class MapController extends Controller
             'results' => $results,
             'matchCount' => $matches->count(),
             'markers' => $markers,
+            'searchPlan' => $searchPlan,
             'types' => DestinationRepository::TYPES,
             'provinces' => DestinationRepository::PROVINCES,
             'seo' => $seoDataFactory->map(),
@@ -34,6 +39,10 @@ class MapController extends Controller
     {
         $this->validateFilterInputs($request);
         $filters = $this->filters($request);
+        $searchPlan = $repository->planSearch(
+            $filters['q'] ?? '',
+            (bool) ($filters['exact'] ?? false),
+        );
         $matches = $repository->search($filters);
         $results = $matches->take(60);
         $markers = $repository->markers($filters);
@@ -42,11 +51,15 @@ class MapController extends Controller
             'html' => view('partials.map-results', [
                 'results' => $results,
                 'matchCount' => $matches->count(),
+                'searchPlan' => $searchPlan,
+                'routeName' => 'map',
             ])->render(),
             'matchCount' => $matches->count(),
             'resultCount' => $results->count(),
             'markerCount' => count($markers),
             'markers' => $markers,
+            'correction' => $searchPlan->correction,
+            'suggestions' => $searchPlan->suggestions,
         ]);
     }
 
@@ -61,7 +74,7 @@ class MapController extends Controller
     }
 
     /**
-     * @return array{q?: string, jenis?: string, provinsi?: string}
+     * @return array{q?: string, jenis?: string, provinsi?: string, exact?: bool}
      */
     private function filters(Request $request): array
     {

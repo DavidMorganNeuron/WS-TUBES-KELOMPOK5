@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Services\Ontology;
 
 use App\Data\Destination;
+use App\Data\SearchPlan;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Str;
 
 final class SparqlDestinationSource implements DestinationSource
 {
@@ -16,6 +16,7 @@ final class SparqlDestinationSource implements DestinationSource
         private readonly FusekiClient $client,
         private readonly DestinationQueryBuilder $queryBuilder,
         private readonly SparqlRowMapper $rowMapper,
+        private readonly SearchPlanner $searchPlanner,
         private readonly int $cacheTtl = 600,
     ) {}
 
@@ -33,37 +34,72 @@ final class SparqlDestinationSource implements DestinationSource
     }
 
     /**
-     * @param  array{q?: string|null, jenis?: string|null, kabupaten?: string|null, provinsi?: string|null, sort?: string|null}  $filters
+     * @param  array{q?: string|null, jenis?: string|null, kabupaten?: string|null, provinsi?: string|null, sort?: string|null, exact?: bool|int|string|null}  $filters
      * @return Collection<int, Destination>
      */
     public function search(array $filters = []): Collection
     {
-        if ($this->hasUnmatchableQuery($filters)) {
+        $plan = $this->planSearch(
+            (string) ($filters['q'] ?? ''),
+            filter_var($filters['exact'] ?? false, FILTER_VALIDATE_BOOLEAN),
+        );
+        if ($this->hasUnmatchableQuery($filters, $plan)) {
             return collect();
         }
 
-        $rows = $this->selectCached($this->queryBuilder->ids($filters));
-        $destinations = $this->destinationsForRows($rows);
+        $queryFilters = $this->filtersForPlan($filters, $plan);
+        $rows = $this->selectCached(
+            $this->queryBuilder->ids($queryFilters),
+            $this->searchCacheContext($filters),
+        );
 
-        return $this->orderForSearch($destinations, $filters);
+        return $this->destinationsForRows($rows);
+    }
+
+    public function planSearch(string $query, bool $exact = false): SearchPlan
+    {
+        return $this->searchPlanner->plan($query, fn (): array => $this->searchableTexts(), $exact);
     }
 
     /**
-     * @param  array{q?: string|null, jenis?: string|null, kabupaten?: string|null, provinsi?: string|null, sort?: string|null}  $filters
+     * @return list<string>
+     */
+    public function searchableTexts(): array
+    {
+        $rows = $this->client->select($this->queryBuilder->searchableTexts());
+        $texts = [];
+        foreach ($rows as $row) {
+            $text = $row['text'] ?? null;
+            if (is_string($text) && trim($text) !== '' && trim($text) !== '-') {
+                $texts[] = $text;
+            }
+        }
+
+        return $texts;
+    }
+
+    /**
+     * @param  array{q?: string|null, jenis?: string|null, kabupaten?: string|null, provinsi?: string|null, sort?: string|null, exact?: bool|int|string|null}  $filters
      */
     public function paginate(array $filters = [], int $perPage = 9): LengthAwarePaginator
     {
         $perPage = max(1, $perPage);
-        if ($this->hasUnmatchableQuery($filters)) {
+        $plan = $this->planSearch(
+            (string) ($filters['q'] ?? ''),
+            filter_var($filters['exact'] ?? false, FILTER_VALIDATE_BOOLEAN),
+        );
+        if ($this->hasUnmatchableQuery($filters, $plan)) {
             return new LengthAwarePaginator(collect(), 0, $perPage, 1, [
                 'path' => LengthAwarePaginator::resolveCurrentPath(),
                 'query' => array_filter($filters, static fn (mixed $value): bool => $value !== null && $value !== ''),
             ]);
         }
 
+        $queryFilters = $this->filtersForPlan($filters, $plan);
+        $cacheContext = $this->searchCacheContext($filters);
         $requestedPage = max(1, LengthAwarePaginator::resolveCurrentPage('page'));
         $offset = ($requestedPage - 1) * $perPage;
-        $pageRows = $this->selectCached($this->queryBuilder->page($filters, $perPage, $offset));
+        $pageRows = $this->selectCached($this->queryBuilder->page($queryFilters, $perPage, $offset), $cacheContext);
         $count = filter_var($pageRows[0]['total'] ?? null, FILTER_VALIDATE_INT);
         if ($count === false || $count < 0) {
             throw OntologyUnavailableException::badResponse();
@@ -73,17 +109,14 @@ final class SparqlDestinationSource implements DestinationSource
         $page = min($requestedPage, $lastPage);
         if ($page !== $requestedPage) {
             $offset = ($page - 1) * $perPage;
-            $pageRows = $this->selectCached($this->queryBuilder->page($filters, $perPage, $offset));
+            $pageRows = $this->selectCached($this->queryBuilder->page($queryFilters, $perPage, $offset), $cacheContext);
         }
 
         $destinationRows = array_values(array_filter(
             $pageRows,
             static fn (array $row): bool => isset($row['idDestinasi']),
         ));
-        $destinations = $this->orderForSearch(
-            $this->destinationsForRows($destinationRows),
-            $filters,
-        );
+        $destinations = $this->destinationsForRows($destinationRows);
 
         return new LengthAwarePaginator(
             $destinations,
@@ -195,8 +228,19 @@ final class SparqlDestinationSource implements DestinationSource
      */
     public function markers(array $filters = []): array
     {
+        $plan = $this->planSearch(
+            (string) ($filters['q'] ?? ''),
+            filter_var($filters['exact'] ?? false, FILTER_VALIDATE_BOOLEAN),
+        );
+        if ($this->hasUnmatchableQuery($filters, $plan)) {
+            return [];
+        }
+
+        $queryFilters = $this->filtersForPlan($filters, $plan);
+
         return $this->destinationsForRows($this->selectCached(
-            $this->queryBuilder->ids($filters, coordinatesOnly: true),
+            $this->queryBuilder->ids($queryFilters, coordinatesOnly: true),
+            $this->searchCacheContext($filters),
         ))
             ->map(static fn (Destination $destination): array => $destination->toMapMarker())
             ->values()
@@ -469,75 +513,36 @@ SPARQL;
     /**
      * @return list<array<string, string|null>>
      */
-    private function selectCached(string $query): array
+    private function selectCached(string $query, string $cacheContext = ''): array
     {
         $version = app(OntologyDataVersion::class)->current() ?? 'initial';
-        $key = 'ontology.sparql.'.hash('sha256', $version.'|'.$query);
+        $key = 'ontology.sparql.'.hash('sha256', $version.'|'.$cacheContext.'|'.$query);
 
         return Cache::remember($key, $this->cacheTtl, fn (): array => $this->client->select($query));
     }
 
-    private function orderForSearch(Collection $destinations, array $filters): Collection
+    /**
+     * @param  array<string, mixed>  $filters
+     * @return array<string, mixed>
+     */
+    private function filtersForPlan(array $filters, SearchPlan $plan): array
     {
-        $query = trim((string) ($filters['q'] ?? ''));
-        if ($query === '') {
-            return $destinations;
-        }
+        unset($filters['exact']);
+        $filters['q'] = implode(' ', $plan->tokens);
 
-        $tokens = preg_split('/[^\p{L}\p{N}]+/u', Str::lower($query), -1, PREG_SPLIT_NO_EMPTY) ?: [];
-        $stopWords = ['di', 'yang', 'ke', 'dari', 'untuk', 'dengan', 'pada', 'dalam', 'serta', 'atau'];
-        $tokens = array_values(array_filter(
-            array_map(static fn (string $token): string => Str::lower($token), $tokens),
-            static fn (string $token): bool => $token !== ''
-                && ! in_array($token, $stopWords, true)
-                && strlen($token) > 1,
-        ));
-
-        if ($tokens === []) {
-            return $destinations;
-        }
-
-        return $destinations
-            ->sortBy(fn (Destination $destination): array => [
-                -(float) $this->relevanceScore($destination, $tokens),
-                -(float) ($destination->rating ?? -1.0),
-                Str::lower($destination->name),
-                $destination->id,
-            ])
-            ->values();
+        return $filters;
     }
 
-    private function relevanceScore(Destination $destination, array $tokens): float
+    private function searchCacheContext(array $filters): string
     {
-        $score = 0.0;
-
-        foreach ($tokens as $token) {
-            $name = Str::lower($destination->name);
-            $alt = Str::lower($destination->alternativeName);
-            $location = Str::lower($destination->location);
-
-            if ($name === $token || str_starts_with($name, $token) || $alt === $token || str_starts_with($alt, $token)) {
-                $score += 200.0;
-            } elseif (str_contains($name, $token)) {
-                $score += 120.0;
-            } elseif (str_contains($alt, $token)) {
-                $score += 100.0;
-            } elseif ($location === $token || str_starts_with($location, $token)) {
-                $score += 50.0;
-            } elseif (str_contains($location, $token)) {
-                $score += 30.0;
-            }
-        }
-
-        return $score + ($destination->rating ?? 0.0);
+        return filter_var($filters['exact'] ?? false, FILTER_VALIDATE_BOOLEAN) ? 'exact' : 'auto';
     }
 
-    private function hasUnmatchableQuery(array $filters): bool
+    private function hasUnmatchableQuery(array $filters, SearchPlan $plan): bool
     {
         $query = trim((string) ($filters['q'] ?? ''));
 
-        return $query !== ''
-            && (preg_split('/[^\p{L}\p{N}]+/u', Str::lower($query), -1, PREG_SPLIT_NO_EMPTY) ?: []) === [];
+        return $query !== '' && $plan->tokens === [];
     }
 
     private function integer(mixed $value): int

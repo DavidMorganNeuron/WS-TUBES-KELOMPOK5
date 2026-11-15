@@ -3,6 +3,7 @@
 namespace App\Services\Ontology;
 
 use App\Data\Destination;
+use App\Data\SearchPlan;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
@@ -25,7 +26,7 @@ final class DestinationRepository
     }
 
     /**
-     * @param  array{q?: string|null, jenis?: string|null, kabupaten?: string|null, provinsi?: string|null, sort?: string|null}  $filters
+     * @param  array{q?: string|null, jenis?: string|null, kabupaten?: string|null, provinsi?: string|null, sort?: string|null, exact?: bool|int|string|null}  $filters
      * @return Collection<int, Destination>
      */
     public function search(array $filters = []): Collection
@@ -33,8 +34,13 @@ final class DestinationRepository
         return $this->source->search($filters);
     }
 
+    public function planSearch(string $query, bool $exact = false): SearchPlan
+    {
+        return $this->source->planSearch($query, $exact);
+    }
+
     /**
-     * @param  array{q?: string|null, jenis?: string|null, kabupaten?: string|null, provinsi?: string|null, sort?: string|null}  $filters
+     * @param  array{q?: string|null, jenis?: string|null, kabupaten?: string|null, provinsi?: string|null, sort?: string|null, exact?: bool|int|string|null}  $filters
      */
     public function paginate(array $filters = [], int $perPage = 9): LengthAwarePaginator
     {

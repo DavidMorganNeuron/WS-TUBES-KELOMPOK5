@@ -55,6 +55,19 @@ return [
         'max_neighbors' => 3,
     ],
 
+    'search' => [
+        'stop_words' => ['di', 'yang', 'ke', 'dari', 'untuk', 'dengan', 'pada', 'dalam', 'serta', 'atau'],
+        'relevance_weights' => [
+            'name_exact' => 1100,
+            'name_prefix' => 1000,
+            'name_word' => 900,
+            'alias_keyword' => 800,
+            'locality' => 600,
+            'address' => 400,
+            'description' => 200,
+        ],
+    ],
+
     'wikidata_regions_path' => 'database/ontology/external/wikidata-wilayah.json',
 
     'wikidata' => [

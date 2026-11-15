@@ -3,6 +3,8 @@
     $lastItem = $destinations->lastItem() ?? 0;
 @endphp
 
+@include('partials.search-notice')
+
 @if ($destinations->isEmpty())
     <div class="bg-white rounded-3xl border border-gray-100 shadow-sm p-12 text-center mb-10">
         <p class="text-4xl mb-4">🔎</p>

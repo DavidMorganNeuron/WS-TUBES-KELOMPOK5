@@ -11,7 +11,7 @@ class LiveSearchTest extends TestCase
         $response = $this->getJson('/destinations/live?q=Toba');
 
         $response->assertOk();
-        $response->assertJsonStructure(['html', 'total', 'first_item', 'last_item', 'count', 'has_filters']);
+        $response->assertJsonStructure(['html', 'total', 'first_item', 'last_item', 'count', 'has_filters', 'correction', 'suggestions']);
 
         $this->assertTrue($response->json('has_filters'));
         $this->assertGreaterThan(0, $response->json('total'));
@@ -25,6 +25,31 @@ class LiveSearchTest extends TestCase
         $response->assertOk();
         $this->assertSame(0, $response->json('total'));
         $this->assertStringContainsString('Tidak ada destinasi yang sesuai dengan saringan', $response->json('html'));
+    }
+
+    public function test_live_search_corrects_a_transposed_typo_and_exact_mode_disables_it(): void
+    {
+        $corrected = $this->getJson('/destinations/live?q=dnau');
+
+        $corrected->assertOk()
+            ->assertJsonPath('correction.original', 'dnau')
+            ->assertJsonPath('correction.corrected', 'danau');
+        $this->assertGreaterThan(0, $corrected->json('total'));
+
+        $exact = $this->getJson('/destinations/live?q=dnau&exact=1');
+
+        $exact->assertOk()
+            ->assertJsonPath('correction', null)
+            ->assertJsonPath('total', 0);
+    }
+
+    public function test_live_search_matches_all_tokens_across_destination_fields(): void
+    {
+        $response = $this->getJson('/destinations/live?q=Holbung+Bolon&exact=1');
+
+        $response->assertOk();
+        $this->assertGreaterThan(0, $response->json('total'));
+        $this->assertStringContainsString('Air Terjun Bolon', $response->json('html'));
     }
 
     public function test_destinations_live_endpoint_applies_sort_and_kabupaten_filters(): void
@@ -47,6 +72,8 @@ class LiveSearchTest extends TestCase
             'matchCount',
             'resultCount',
             'markerCount',
+            'correction',
+            'suggestions',
             'markers' => ['*' => ['id', 'name', 'latitude', 'longitude', 'url']],
         ]);
 
@@ -59,7 +86,7 @@ class LiveSearchTest extends TestCase
         $response = $this->getJson('/destinations/suggest?q=Dan');
 
         $response->assertOk();
-        $response->assertJsonStructure(['html', 'count']);
+        $response->assertJsonStructure(['html', 'count', 'correction', 'suggestions']);
 
         $this->assertGreaterThan(0, $response->json('count'));
         $this->assertStringContainsString('Danau', $response->json('html'));

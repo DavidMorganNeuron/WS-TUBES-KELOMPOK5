@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Services\Ontology;
 
 use App\Data\Destination;
-use Illuminate\Support\Str;
 
 final class DestinationQueryBuilder
 {
@@ -19,10 +18,15 @@ SPARQL;
     /**
      * @param  list<string>  $districts
      */
+    private readonly SearchTokenizer $tokenizer;
+
     public function __construct(
         private readonly SparqlEscaper $escaper,
         private readonly array $districts,
-    ) {}
+        ?SearchTokenizer $tokenizer = null,
+    ) {
+        $this->tokenizer = $tokenizer ?? new SearchTokenizer;
+    }
 
     /**
      * @param  array{q?: string|null, jenis?: string|null, kabupaten?: string|null, provinsi?: string|null, sort?: string|null}  $filters
@@ -45,7 +49,7 @@ SPARQL;
         bool $ratedOnly = false,
         bool $coordinatesOnly = false,
     ): string {
-        $sort = $this->sort($filters['sort'] ?? null);
+        $sort = $this->sort($filters['sort'] ?? null, trim((string) ($filters['q'] ?? '')) !== '');
         $where = $this->where($filters);
         if ($ratedOnly) {
             $where .= "\nFILTER(BOUND(?ratingValue))";
@@ -55,19 +59,12 @@ SPARQL;
         }
         $query = self::PREFIXES."\n"
             .'SELECT ?destination ?idDestinasi (SAMPLE(?nameValue) AS ?nameSort) '
-            .'(MAX(?ratingValue) AS ?ratingSort) (MIN(?priceValue) AS ?priceSort) WHERE { '
+            .'(MAX(?ratingValue) AS ?ratingSort) (MIN(?priceValue) AS ?priceSort) '
+            .'(MAX(?searchScore) AS ?relevanceSort) WHERE { '
             .$where
             .' } GROUP BY ?destination ?idDestinasi ';
 
-        $query .= match ($sort) {
-            'relevansi' => 'ORDER BY DESC(BOUND(?ratingSort)) DESC(?ratingSort) LCASE(STR(?nameSort)) STR(?idDestinasi) ',
-            'name' => 'ORDER BY LCASE(STR(?nameSort)) STR(?idDestinasi) ',
-            'id' => 'ORDER BY STR(?idDestinasi) ',
-            'rating_asc' => 'ORDER BY DESC(BOUND(?ratingSort)) ASC(?ratingSort) LCASE(STR(?nameSort)) STR(?idDestinasi) ',
-            'price_asc' => 'ORDER BY DESC(BOUND(?priceSort)) ASC(?priceSort) LCASE(STR(?nameSort)) STR(?idDestinasi) ',
-            'price_desc' => 'ORDER BY DESC(BOUND(?priceSort)) DESC(?priceSort) LCASE(STR(?nameSort)) STR(?idDestinasi) ',
-            default => 'ORDER BY DESC(BOUND(?ratingSort)) DESC(?ratingSort) LCASE(STR(?nameSort)) STR(?idDestinasi) ',
-        };
+        $query .= $this->orderBy($sort);
 
         if ($limit !== null) {
             $query .= 'LIMIT '.$this->escaper->number(max(1, $limit))
@@ -86,12 +83,13 @@ SPARQL;
         $countWhere = str_replace('?destination', '?countedDestination', $this->where($filters));
 
         return self::PREFIXES."\n".<<<SPARQL
-SELECT ?destination ?idDestinasi ?nameSort ?ratingSort ?priceSort ?total WHERE {
+SELECT ?destination ?idDestinasi ?nameSort ?ratingSort ?priceSort ?relevanceSort ?total WHERE {
     { SELECT (COUNT(DISTINCT ?countedDestination) AS ?total) WHERE { {$countWhere} } }
     OPTIONAL {
         { {$selection} }
     }
 }
+{$this->orderBy($this->sort($filters['sort'] ?? null, trim((string) ($filters['q'] ?? '')) !== ''))}
 SPARQL;
     }
 
@@ -187,6 +185,37 @@ SPARQL;
             .$this->escaper->destinationIri($id).' ws:dekatDengan ?neighbor . '
             .'?neighbor ws:idDestinasi ?idDestinasi . '
             .'} ORDER BY STR(?idDestinasi)';
+    }
+
+    public function searchableTexts(): string
+    {
+        return self::PREFIXES."\n".<<<'SPARQL'
+SELECT ?text WHERE {
+    ?destination a ws:DestinasiWisata .
+    {
+        ?destination ws:namaDestinasi ?text .
+    } UNION {
+        ?destination ws:namaAlternatif ?text .
+    } UNION {
+        ?destination ws:berlokasiDi/rdfs:label ?text .
+    } UNION {
+        ?destination ws:alamat ?text .
+    } UNION {
+        ?destination ws:deskripsiSingkat ?text .
+    } UNION {
+        ?destination ws:deskripsiLengkap ?text .
+    } UNION {
+        ?destination ws:petunjukLokasi ?text .
+    } UNION {
+        ?destination ws:kataKunci ?text .
+    } UNION {
+        ?destination ws:menyediakanFasilitas/rdfs:label ?text .
+    } UNION {
+        ?destination ws:menawarkanAktivitas/rdfs:label ?text .
+    }
+    FILTER(isLiteral(?text) && STR(?text) != "-")
+}
+SPARQL;
     }
 
     public function relatedIds(Destination $destination, int $limit): string
@@ -296,22 +325,16 @@ OPTIONAL { ?destination ws:memilikiTarif/ws:hargaMasuk ?priceValue . FILTER(isNu
 SPARQL;
 
         $query = trim((string) ($filters['q'] ?? ''));
-        if ($query !== '') {
-            $tokens = preg_split('/[^\p{L}\p{N}]+/u', Str::lower($query), -1, PREG_SPLIT_NO_EMPTY) ?: [];
-            $stopWords = ['di', 'yang', 'ke', 'dari', 'untuk', 'dengan', 'pada', 'dalam', 'serta', 'atau'];
+        $tokens = $this->tokenizer->tokenize($query);
+        if ($query !== '' && $tokens !== []) {
+            $scoreParts = [];
             foreach ($tokens as $token) {
-                if ($token === '' || in_array($token, $stopWords, true) || strlen($token) <= 1) {
-                    continue;
-                }
-
-                $pattern = '(^|[^\\p{L}\\p{N}])'.preg_quote($token, '/');
-                $literal = $this->escaper->literal($pattern);
-                $where .= "\nFILTER("
-                    .'REGEX(LCASE(STR(?nameValue)), '.$literal.') '
-                    .'|| EXISTS { ?destination ws:namaAlternatif ?alternativeValue . FILTER(STR(?alternativeValue) != "-" && REGEX(LCASE(STR(?alternativeValue)), '.$literal.')) } '
-                    .'|| EXISTS { ?destination ws:berlokasiDi/rdfs:label ?locationLabel . FILTER(REGEX(LCASE(STR(?locationLabel)), '.$literal.')) }'
-                    .' )';
+                $where .= "\nFILTER(".$this->tokenMatchExpression($token).')';
+                $scoreParts[] = $this->tokenScoreExpression($token);
             }
+            $where .= "\nBIND((".implode(' + ', $scoreParts).') AS ?searchScore)';
+        } else {
+            $where .= "\nBIND(0 AS ?searchScore)";
         }
 
         $type = $filters['jenis'] ?? null;
@@ -333,10 +356,83 @@ SPARQL;
         return $where;
     }
 
-    private function sort(mixed $sort): string
+    private function tokenMatchExpression(string $token): string
+    {
+        $pattern = $this->escaper->literal('(^|[^\\p{L}\\p{N}])'.preg_quote($token, '/'));
+
+        return implode(' || ', [
+            'EXISTS { ?destination ws:namaDestinasi ?matchName . FILTER(REGEX(LCASE(STR(?matchName)), '.$pattern.')) }',
+            'EXISTS { ?destination ws:namaAlternatif ?matchAlias . FILTER(REGEX(LCASE(STR(?matchAlias)), '.$pattern.')) }',
+            'EXISTS { ?destination ws:berlokasiDi/rdfs:label ?matchLocation . FILTER(REGEX(LCASE(STR(?matchLocation)), '.$pattern.')) }',
+            'EXISTS { ?destination ws:alamat ?matchAddress . FILTER(REGEX(LCASE(STR(?matchAddress)), '.$pattern.')) }',
+            'EXISTS { ?destination ws:deskripsiSingkat ?matchShortDescription . FILTER(REGEX(LCASE(STR(?matchShortDescription)), '.$pattern.')) }',
+            'EXISTS { ?destination ws:deskripsiLengkap ?matchFullDescription . FILTER(REGEX(LCASE(STR(?matchFullDescription)), '.$pattern.')) }',
+            'EXISTS { ?destination ws:petunjukLokasi ?matchDirections . FILTER(REGEX(LCASE(STR(?matchDirections)), '.$pattern.')) }',
+            'EXISTS { ?destination ws:kataKunci ?matchKeyword . FILTER(REGEX(LCASE(STR(?matchKeyword)), '.$pattern.')) }',
+            'EXISTS { ?destination ws:menyediakanFasilitas/rdfs:label ?matchFacility . FILTER(REGEX(LCASE(STR(?matchFacility)), '.$pattern.')) }',
+            'EXISTS { ?destination ws:menawarkanAktivitas/rdfs:label ?matchActivity . FILTER(REGEX(LCASE(STR(?matchActivity)), '.$pattern.')) }',
+        ]);
+    }
+
+    private function tokenScoreExpression(string $token): string
+    {
+        $defaults = [
+            'name_exact' => 1100,
+            'name_prefix' => 1000,
+            'name_word' => 900,
+            'alias_keyword' => 800,
+            'locality' => 600,
+            'address' => 400,
+            'description' => 200,
+        ];
+        $weights = function_exists('app') && app()->bound('config')
+            ? config('ontology.search.relevance_weights', $defaults)
+            : $defaults;
+        $literal = $this->escaper->literal($token);
+        $wordPattern = $this->escaper->literal('(^|[^\\p{L}\\p{N}])'.preg_quote($token, '/'));
+        $nameExact = 'EXISTS { ?destination ws:namaDestinasi ?scoreNameExact . FILTER(LCASE(STR(?scoreNameExact)) = '.$literal.') }';
+        $namePrefix = 'EXISTS { ?destination ws:namaDestinasi ?scoreNamePrefix . FILTER(STRSTARTS(LCASE(STR(?scoreNamePrefix)), '.$literal.')) }';
+        $nameWord = 'EXISTS { ?destination ws:namaDestinasi ?scoreNameWord . FILTER(REGEX(LCASE(STR(?scoreNameWord)), '.$wordPattern.')) }';
+        $aliasAndKeyword = implode(' || ', [
+            'EXISTS { ?destination ws:namaAlternatif ?scoreAlias . FILTER(REGEX(LCASE(STR(?scoreAlias)), '.$wordPattern.')) }',
+            'EXISTS { ?destination ws:kataKunci ?scoreKeyword . FILTER(REGEX(LCASE(STR(?scoreKeyword)), '.$wordPattern.')) }',
+            'EXISTS { ?destination ws:menyediakanFasilitas/rdfs:label ?scoreFacility . FILTER(REGEX(LCASE(STR(?scoreFacility)), '.$wordPattern.')) }',
+            'EXISTS { ?destination ws:menawarkanAktivitas/rdfs:label ?scoreActivity . FILTER(REGEX(LCASE(STR(?scoreActivity)), '.$wordPattern.')) }',
+        ]);
+        $locality = 'EXISTS { ?destination ws:berlokasiDi/rdfs:label ?scoreLocation . FILTER(REGEX(LCASE(STR(?scoreLocation)), '.$wordPattern.')) }';
+        $address = 'EXISTS { ?destination ws:alamat ?scoreAddress . FILTER(REGEX(LCASE(STR(?scoreAddress)), '.$wordPattern.')) }';
+        $description = implode(' || ', [
+            'EXISTS { ?destination ws:deskripsiSingkat ?scoreShortDescription . FILTER(REGEX(LCASE(STR(?scoreShortDescription)), '.$wordPattern.')) }',
+            'EXISTS { ?destination ws:deskripsiLengkap ?scoreFullDescription . FILTER(REGEX(LCASE(STR(?scoreFullDescription)), '.$wordPattern.')) }',
+            'EXISTS { ?destination ws:petunjukLokasi ?scoreDirections . FILTER(REGEX(LCASE(STR(?scoreDirections)), '.$wordPattern.')) }',
+        ]);
+
+        return 'IF('.$nameExact.', '.(int) ($weights['name_exact'] ?? 1100)
+            .', IF('.$namePrefix.', '.(int) ($weights['name_prefix'] ?? 1000)
+            .', IF('.$nameWord.', '.(int) ($weights['name_word'] ?? 900)
+            .', IF('.$aliasAndKeyword.', '.(int) ($weights['alias_keyword'] ?? 800)
+            .', IF('.$locality.', '.(int) ($weights['locality'] ?? 600)
+            .', IF('.$address.', '.(int) ($weights['address'] ?? 400)
+            .', IF('.$description.', '.(int) ($weights['description'] ?? 200).', 0))))))';
+    }
+
+    private function orderBy(string $sort): string
+    {
+        return match ($sort) {
+            'relevansi' => 'ORDER BY DESC(?relevanceSort) DESC(BOUND(?ratingSort)) DESC(?ratingSort) LCASE(STR(?nameSort)) STR(?idDestinasi) ',
+            'name' => 'ORDER BY LCASE(STR(?nameSort)) STR(?idDestinasi) ',
+            'id' => 'ORDER BY STR(?idDestinasi) ',
+            'rating_asc' => 'ORDER BY DESC(BOUND(?ratingSort)) ASC(?ratingSort) LCASE(STR(?nameSort)) STR(?idDestinasi) ',
+            'price_asc' => 'ORDER BY DESC(BOUND(?priceSort)) ASC(?priceSort) LCASE(STR(?nameSort)) STR(?idDestinasi) ',
+            'price_desc' => 'ORDER BY DESC(BOUND(?priceSort)) DESC(?priceSort) LCASE(STR(?nameSort)) STR(?idDestinasi) ',
+            default => 'ORDER BY DESC(BOUND(?ratingSort)) DESC(?ratingSort) LCASE(STR(?nameSort)) STR(?idDestinasi) ',
+        };
+    }
+
+    private function sort(mixed $sort, bool $hasQuery = false): string
     {
         return is_string($sort) && in_array($sort, DestinationRepository::SORTS, true)
             ? $sort
-            : 'rating';
+            : ($hasQuery ? 'relevansi' : 'rating');
     }
 }

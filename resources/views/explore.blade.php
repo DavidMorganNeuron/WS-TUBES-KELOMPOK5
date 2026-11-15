@@ -6,7 +6,7 @@
     $activeKabupaten = $filters['kabupaten'] ?? '';
     $activeSort = $filters['sort'] ?? 'name';
     $activeQuery = $filters['q'] ?? '';
-    $hasActiveFilters = $activeQuery !== '' || $activeType !== '' || $activeKabupaten !== '' || $activeSort !== 'name';
+    $hasActiveFilters = $activeQuery !== '' || $activeType !== '' || $activeKabupaten !== '' || $activeSort !== 'name' || ($filters['exact'] ?? false);
     $urlFor = function (array $overrides = []) use ($filters): string {
         $params = array_merge($filters, $overrides);
 
@@ -75,6 +75,10 @@
                         <option value="{{ $kabupaten }}" @selected($activeKabupaten === $kabupaten)>{{ $kabupaten }}</option>
                     @endforeach
                 </select>
+                <label class="inline-flex items-center gap-2 text-xs font-medium text-gray-600 whitespace-nowrap">
+                    <input type="checkbox" name="exact" value="1" @checked(($filters['exact'] ?? false)) class="rounded border-gray-300 text-brand-primary focus:ring-brand-primary">
+                    Tanpa koreksi otomatis
+                </label>
             </div>
 
             <div class="flex items-center gap-2 text-xs font-bold text-gray-500">
@@ -99,7 +103,7 @@
 
     <!-- Destination Grid -->
     <div id="destination-results" aria-busy="false">
-        @include('partials.destination-results', ['destinations' => $destinations])
+        @include('partials.destination-results', ['destinations' => $destinations, 'searchPlan' => $searchPlan, 'routeName' => 'destinations'])
     </div>
 
     <!-- Banner CTA -->

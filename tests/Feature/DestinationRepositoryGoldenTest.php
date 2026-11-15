@@ -31,6 +31,14 @@ class DestinationRepositoryGoldenTest extends TestCase
             $this->assertSame($case['ids'], $destinations->take(count($case['ids']))->pluck('id')->all());
         }
 
+        $nameSorted = $repository->search(['q' => 'dan', 'sort' => 'name'])->pluck('name')->all();
+        $expectedNameOrder = $nameSorted;
+        usort(
+            $expectedNameOrder,
+            static fn (string $left, string $right): int => strcmp(mb_strtolower($left), mb_strtolower($right)),
+        );
+        $this->assertSame($expectedNameOrder, $nameSorted);
+
         foreach ($golden['city_sorts'] as $sort => $expectedIds) {
             $destinations = $repository->search(['kabupaten' => 'Kota Medan', 'sort' => $sort]);
 

@@ -25,6 +25,10 @@ class DestinationController extends Controller
             $filters['sort'] = 'name';
         }
 
+        $searchPlan = $repository->planSearch(
+            $filters['q'] ?? '',
+            (bool) ($filters['exact'] ?? false),
+        );
         $destinations = $repository->paginate($filters)->withQueryString();
 
         return view('explore', [
@@ -33,6 +37,7 @@ class DestinationController extends Controller
             'facets' => $facets,
             'types' => DestinationRepository::TYPES,
             'sorts' => $sorts,
+            'searchPlan' => $searchPlan,
             'seo' => $seoDataFactory->destinations($request, $filters),
         ]);
     }
@@ -50,18 +55,26 @@ class DestinationController extends Controller
             $filters['sort'] = 'name';
         }
 
+        $searchPlan = $repository->planSearch(
+            $filters['q'] ?? '',
+            (bool) ($filters['exact'] ?? false),
+        );
         $destinations = $repository->paginate($filters)->withQueryString();
         $destinations->setPath(route('destinations'));
 
         return response()->json([
             'html' => view('partials.destination-results', [
                 'destinations' => $destinations,
+                'searchPlan' => $searchPlan,
+                'routeName' => 'destinations',
             ])->render(),
             'total' => $destinations->total(),
             'first_item' => $destinations->firstItem() ?? 0,
             'last_item' => $destinations->lastItem() ?? 0,
             'count' => $destinations->count(),
             'has_filters' => $this->hasActiveFilters($filters),
+            'correction' => $searchPlan->correction,
+            'suggestions' => $searchPlan->suggestions,
         ]);
     }
 
@@ -69,19 +82,26 @@ class DestinationController extends Controller
     {
         $request->validate([
             'q' => ['sometimes', 'nullable', 'string', 'max:200'],
+            'exact' => ['sometimes', 'nullable', 'boolean'],
         ]);
 
         $query = $request->string('q')->trim()->toString();
+        $exact = $request->boolean('exact');
+        $searchPlan = $repository->planSearch($query, $exact);
 
         $destinations = $query === ''
             ? collect()
-            : $repository->search(['q' => $query, 'sort' => 'relevansi', 'exact' => $request->boolean('exact')])->take(8);
+            : $repository->search(['q' => $query, 'sort' => 'relevansi', 'exact' => $exact])->take(8);
 
         return response()->json([
             'html' => view('partials.destination-suggestions', [
                 'destinations' => $destinations,
+                'searchPlan' => $searchPlan,
+                'routeName' => 'destinations',
             ])->render(),
             'count' => $destinations->count(),
+            'correction' => $searchPlan->correction,
+            'suggestions' => $searchPlan->suggestions,
         ]);
     }
 
@@ -141,7 +161,7 @@ class DestinationController extends Controller
     /**
      * @param  list<string>  $sortOptions
      * @param  list<string>  $kabupatenOptions
-     * @return array{q?: string, jenis?: string, kabupaten?: string, sort?: string}
+     * @return array{q?: string, jenis?: string, kabupaten?: string, sort?: string, exact?: bool}
      */
     private function filters(Request $request, array $sortOptions, array $kabupatenOptions): array
     {
@@ -173,13 +193,14 @@ class DestinationController extends Controller
     }
 
     /**
-     * @param  array{q?: string, jenis?: string, kabupaten?: string, sort?: string}  $filters
+     * @param  array{q?: string, jenis?: string, kabupaten?: string, sort?: string, exact?: bool}  $filters
      */
     private function hasActiveFilters(array $filters): bool
     {
         return ($filters['q'] ?? '') !== ''
             || ($filters['jenis'] ?? '') !== ''
             || ($filters['kabupaten'] ?? '') !== ''
-            || ($filters['sort'] ?? 'name') !== 'name';
+            || ($filters['sort'] ?? 'name') !== 'name'
+            || ($filters['exact'] ?? false);
     }
 }

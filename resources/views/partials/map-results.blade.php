@@ -9,6 +9,8 @@
     ];
 @endphp
 
+@include('partials.search-notice')
+
 <div class="flex justify-between items-center text-[10px] font-bold text-gray-500 uppercase tracking-wider">
     <span>Destinasi pada peta</span>
     <span>{{ \App\Support\IndonesianFormat::number($matchCount) }} ditemukan</span>

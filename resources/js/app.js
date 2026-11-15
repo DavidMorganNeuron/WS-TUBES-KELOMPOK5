@@ -262,9 +262,11 @@ const initLiveDestinations = () => {
 
             announce(
                 'destination-live-status',
-                payload.total === 0
-                    ? 'Tidak ada destinasi yang sesuai dengan saringan saat ini.'
-                    : `Menampilkan ${numberFormatter.format(payload.first_item)} hingga ${numberFormatter.format(payload.last_item)} dari ${numberFormatter.format(payload.total)} destinasi.`,
+                payload.correction
+                    ? `Kata kunci dikoreksi menjadi ${payload.correction.corrected}. ${numberFormatter.format(payload.total)} destinasi ditemukan.`
+                    : payload.total === 0
+                        ? 'Tidak ada destinasi yang sesuai dengan saringan saat ini.'
+                        : `Menampilkan ${numberFormatter.format(payload.first_item)} hingga ${numberFormatter.format(payload.last_item)} dari ${numberFormatter.format(payload.total)} destinasi.`,
             );
 
             window.history.replaceState({}, '', urlWithParams(form.action, params).toString());
@@ -290,6 +292,7 @@ const initLiveDestinations = () => {
 
     input?.addEventListener('input', debouncedUpdate);
     form.querySelectorAll('select').forEach((select) => select.addEventListener('change', () => update()));
+    form.querySelector('input[name="exact"]')?.addEventListener('change', () => update());
     form.addEventListener('submit', (event) => {
         event.preventDefault();
         update();
@@ -401,7 +404,12 @@ const initLiveMap = () => {
                 window.LiveMap.update(payload.markers);
             }
 
-            announce('map-live-status', `${numberFormatter.format(payload.matchCount)} destinasi ditemukan; ${numberFormatter.format(payload.markerCount)} memiliki koordinat.`);
+            announce(
+                'map-live-status',
+                payload.correction
+                    ? `Kata kunci dikoreksi menjadi ${payload.correction.corrected}. ${numberFormatter.format(payload.matchCount)} destinasi ditemukan; ${numberFormatter.format(payload.markerCount)} memiliki koordinat.`
+                    : `${numberFormatter.format(payload.matchCount)} destinasi ditemukan; ${numberFormatter.format(payload.markerCount)} memiliki koordinat.`,
+            );
 
             window.history.replaceState({}, '', urlWithParams(form.action, params).toString());
         } catch (error) {
@@ -425,6 +433,7 @@ const initLiveMap = () => {
     const debouncedUpdate = debounce(update);
 
     input?.addEventListener('input', debouncedUpdate);
+    form.querySelector('input[name="exact"]')?.addEventListener('change', update);
     form.addEventListener('submit', (event) => {
         event.preventDefault();
         update();
