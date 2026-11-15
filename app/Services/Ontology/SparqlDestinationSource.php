@@ -43,8 +43,9 @@ final class SparqlDestinationSource implements DestinationSource
         }
 
         $rows = $this->selectCached($this->queryBuilder->ids($filters));
+        $destinations = $this->destinationsForRows($rows);
 
-        return $this->destinationsForRows($rows);
+        return $this->orderForSearch($destinations, $filters);
     }
 
     /**
@@ -79,7 +80,10 @@ final class SparqlDestinationSource implements DestinationSource
             $pageRows,
             static fn (array $row): bool => isset($row['idDestinasi']),
         ));
-        $destinations = $this->destinationsForRows($destinationRows);
+        $destinations = $this->orderForSearch(
+            $this->destinationsForRows($destinationRows),
+            $filters,
+        );
 
         return new LengthAwarePaginator(
             $destinations,
@@ -489,6 +493,61 @@ SPARQL;
         $key = 'ontology.sparql.'.hash('sha256', $version.'|'.$query);
 
         return Cache::remember($key, $this->cacheTtl, fn (): array => $this->client->select($query));
+    }
+
+    private function orderForSearch(Collection $destinations, array $filters): Collection
+    {
+        $query = trim((string) ($filters['q'] ?? ''));
+        if ($query === '') {
+            return $destinations;
+        }
+
+        $tokens = preg_split('/[^\p{L}\p{N}]+/u', Str::lower($query), -1, PREG_SPLIT_NO_EMPTY) ?: [];
+        $stopWords = ['di', 'yang', 'ke', 'dari', 'untuk', 'dengan', 'pada', 'dalam', 'serta', 'atau'];
+        $tokens = array_values(array_filter(
+            array_map(static fn (string $token): string => Str::lower($token), $tokens),
+            static fn (string $token): bool => $token !== ''
+                && ! in_array($token, $stopWords, true)
+                && strlen($token) > 1,
+        ));
+
+        if ($tokens === []) {
+            return $destinations;
+        }
+
+        return $destinations
+            ->sortBy(fn (Destination $destination): array => [
+                -(float) $this->relevanceScore($destination, $tokens),
+                -(float) ($destination->rating ?? -1.0),
+                Str::lower($destination->name),
+                $destination->id,
+            ])
+            ->values();
+    }
+
+    private function relevanceScore(Destination $destination, array $tokens): float
+    {
+        $score = 0.0;
+
+        foreach ($tokens as $token) {
+            $name = Str::lower($destination->name);
+            $alt = Str::lower($destination->alternativeName);
+            $location = Str::lower($destination->location);
+
+            if ($name === $token || str_starts_with($name, $token) || $alt === $token || str_starts_with($alt, $token)) {
+                $score += 200.0;
+            } elseif (str_contains($name, $token)) {
+                $score += 120.0;
+            } elseif (str_contains($alt, $token)) {
+                $score += 100.0;
+            } elseif ($location === $token || str_starts_with($location, $token)) {
+                $score += 50.0;
+            } elseif (str_contains($location, $token)) {
+                $score += 30.0;
+            }
+        }
+
+        return $score + ($destination->rating ?? 0.0);
     }
 
     private function hasUnmatchableQuery(array $filters): bool

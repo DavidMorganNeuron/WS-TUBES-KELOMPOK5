@@ -19,7 +19,11 @@ class DestinationController extends Controller
 
         $facets = $repository->facets();
         $filters = $this->filters($request, array_keys($sorts), array_keys($facets['kabupaten']));
-        $filters['sort'] ??= 'name';
+        if (($filters['q'] ?? '') !== '' && ! array_key_exists('sort', $filters)) {
+            $filters['sort'] = 'relevansi';
+        } elseif (! array_key_exists('sort', $filters)) {
+            $filters['sort'] = 'name';
+        }
 
         $destinations = $repository->paginate($filters)->withQueryString();
 
@@ -40,7 +44,11 @@ class DestinationController extends Controller
 
         $facets = $repository->facets();
         $filters = $this->filters($request, array_keys($sorts), array_keys($facets['kabupaten']));
-        $filters['sort'] ??= 'name';
+        if (($filters['q'] ?? '') !== '' && ! array_key_exists('sort', $filters)) {
+            $filters['sort'] = 'relevansi';
+        } elseif (! array_key_exists('sort', $filters)) {
+            $filters['sort'] = 'name';
+        }
 
         $destinations = $repository->paginate($filters)->withQueryString();
         $destinations->setPath(route('destinations'));
@@ -67,7 +75,7 @@ class DestinationController extends Controller
 
         $destinations = $query === ''
             ? collect()
-            : $repository->search(['q' => $query, 'sort' => 'rating'])->take(8);
+            : $repository->search(['q' => $query, 'sort' => 'relevansi', 'exact' => $request->boolean('exact')])->take(8);
 
         return response()->json([
             'html' => view('partials.destination-suggestions', [
@@ -108,6 +116,7 @@ class DestinationController extends Controller
     private function sorts(): array
     {
         return [
+            'relevansi' => 'Paling relevan',
             'name' => 'Name A–Z',
             'rating' => 'Rating: high to low',
             'rating_asc' => 'Rating: low to high',
@@ -123,6 +132,7 @@ class DestinationController extends Controller
             'jenis' => ['sometimes', 'nullable', 'string', 'max:64'],
             'kabupaten' => ['sometimes', 'nullable', 'string', 'max:100'],
             'sort' => ['sometimes', 'nullable', 'string', 'max:32'],
+            'exact' => ['sometimes', 'nullable', 'boolean'],
         ]);
     }
 
@@ -138,6 +148,7 @@ class DestinationController extends Controller
             'jenis' => $request->string('jenis')->toString(),
             'kabupaten' => $request->string('kabupaten')->toString(),
             'sort' => $request->string('sort')->toString(),
+            'exact' => $request->boolean('exact'),
         ];
 
         if (! in_array($filters['jenis'], DestinationRepository::TYPES, true)) {
@@ -152,7 +163,11 @@ class DestinationController extends Controller
             $filters['sort'] = '';
         }
 
-        return array_filter($filters, static fn (string $value): bool => $value !== '');
+        if ($filters['exact'] === false) {
+            unset($filters['exact']);
+        }
+
+        return array_filter($filters, static fn (mixed $value): bool => $value !== '' && $value !== false && $value !== null);
     }
 
     /**

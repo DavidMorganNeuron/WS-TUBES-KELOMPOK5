@@ -12,7 +12,7 @@ final class DestinationRepository
 
     public const PROVINCES = ['Sumatera Utara'];
 
-    public const SORTS = ['rating', 'rating_asc', 'name', 'id', 'price_desc', 'price_asc'];
+    public const SORTS = ['relevansi', 'rating', 'rating_asc', 'name', 'id', 'price_desc', 'price_asc'];
 
     public function __construct(private DestinationSource $source) {}
 

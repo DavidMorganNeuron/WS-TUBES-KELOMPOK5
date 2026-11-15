@@ -39,19 +39,34 @@ class InMemoryDestinationSource implements DestinationSource
     }
 
     /**
-     * @param  array{q?: string|null, jenis?: string|null, kabupaten?: string|null, provinsi?: string|null, sort?: string|null}  $filters
+     * @param  array{q?: string|null, jenis?: string|null, kabupaten?: string|null, provinsi?: string|null, sort?: string|null, exact?: bool|int|string|null}  $filters
      * @return Collection<int, Destination>
      */
     public function search(array $filters = []): Collection
     {
-        $query = Str::lower(trim((string) ($filters['q'] ?? '')));
+        $query = trim((string) ($filters['q'] ?? ''));
         $type = $this->validType($filters['jenis'] ?? null);
         $kabupaten = trim((string) ($filters['kabupaten'] ?? ''));
         $province = $this->validProvince($filters['provinsi'] ?? null);
+        $exact = filter_var($filters['exact'] ?? false, FILTER_VALIDATE_BOOLEAN);
+
+        $tokens = $this->tokenize($query);
+        if ($query !== '' && $tokens === []) {
+            return collect();
+        }
+
+        $normalizedQuery = $query !== '' ? implode(' ', $tokens) : '';
+        if ($query !== '' && ! $exact) {
+            $vocabulary = $this->buildVocabulary();
+            $tokens = array_values(array_filter(array_map(
+                fn (string $token): string => $this->correctToken($token, $vocabulary) ?? $token,
+                $tokens,
+            ), static fn (string $value): bool => $value !== ''));
+        }
 
         $destinations = $this->all()
-            ->when($query !== '', fn (Collection $items): Collection => $items->filter(
-                fn (Destination $destination): bool => $this->matchesWordPrefix($destination, $query),
+            ->when($normalizedQuery !== '', fn (Collection $items): Collection => $items->filter(
+                fn (Destination $destination): bool => $this->matchesAllTokens($destination, $tokens),
             ))
             ->when($type !== null, fn (Collection $items): Collection => $items->filter(
                 fn (Destination $destination): bool => in_array($type, $destination->types, true),
@@ -63,11 +78,13 @@ class InMemoryDestinationSource implements DestinationSource
                 fn (Destination $destination): bool => $destination->province() === $province,
             ));
 
-        $sort = in_array($filters['sort'] ?? null, DestinationRepository::SORTS, true)
-            ? $filters['sort']
-            : 'rating';
+        $requestedSort = $filters['sort'] ?? null;
+        $sort = in_array($requestedSort, DestinationRepository::SORTS, true)
+            ? $requestedSort
+            : ($query !== '' ? 'relevansi' : 'rating');
 
         $destinations = match ($sort) {
+            'relevansi' => $destinations->sortByDesc(fn (Destination $destination): float => $this->relevanceScore($destination, $tokens)),
             'name' => $destinations->sortBy(fn (Destination $destination): array => [
                 Str::lower($destination->name),
                 $destination->id,
@@ -91,7 +108,240 @@ class InMemoryDestinationSource implements DestinationSource
             ]),
         };
 
-        return $destinations->values();
+        return $destinations
+            ->when($query !== '', fn (Collection $items): Collection => $items->sortBy(
+                fn (Destination $destination): array => [
+                    -(float) $this->relevanceScore($destination, $tokens),
+                    -(float) ($destination->rating ?? -1.0),
+                    Str::lower($destination->name),
+                    $destination->id,
+                ],
+            ))
+            ->values();
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function tokenize(string $query): array
+    {
+        $query = Str::lower(trim($query));
+        if ($query === '') {
+            return [];
+        }
+
+        $tokens = preg_split('/[^\p{L}\p{N}]+/u', $query, -1, PREG_SPLIT_NO_EMPTY) ?: [];
+        $stopWords = ['di', 'yang', 'ke', 'dari', 'untuk', 'dengan', 'pada', 'dalam', 'serta', 'atau'];
+
+        return array_values(array_filter(
+            array_map(static fn (string $token): string => Str::lower($token), $tokens),
+            static fn (string $token): bool => $token !== ''
+                && ! in_array($token, $stopWords, true)
+                && strlen($token) > 1
+                && preg_match('/^[\p{L}\p{N}]+$/u', $token) === 1,
+        ));
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function buildVocabulary(): array
+    {
+        $vocabulary = [];
+        foreach ($this->all() as $destination) {
+            foreach ($this->searchableFields($destination) as $field) {
+                foreach ($this->tokenize($field) as $token) {
+                    $vocabulary[$token] = true;
+                }
+            }
+        }
+
+        return array_keys($vocabulary);
+    }
+
+    private function correctToken(string $token, array $vocabulary): ?string
+    {
+        $token = Str::lower(trim($token));
+        if ($token === '' || preg_match('/^[\p{L}\p{N}]+$/u', $token) !== 1) {
+            return null;
+        }
+
+        $known = in_array($token, $vocabulary, true);
+        if ($known) {
+            return $token;
+        }
+
+        if (strlen($token) <= 3) {
+            return null;
+        }
+
+        $maxDistance = $this->maxDistance($token);
+        $best = null;
+        $bestScore = null;
+
+        foreach ($vocabulary as $candidate) {
+            if ($candidate === $token) {
+                return $token;
+            }
+
+            $distance = $this->damerauLevenshtein($token, $candidate);
+            if ($distance > $maxDistance) {
+                continue;
+            }
+
+            $prefixBonus = str_starts_with($candidate, $token) || str_starts_with($token, $candidate) ? 1 : 0;
+            $score = [$distance, $prefixBonus === 1 ? 0 : 1, abs(strlen($token) - strlen($candidate))];
+            $better = $best === null || $score[0] < $best[0] || ($score[0] === $best[0] && $score[1] < $best[1]) || ($score[0] === $best[0] && $score[1] === $best[1] && $score[2] < $best[2]);
+            if ($better) {
+                $best = $score;
+                $bestText = $candidate;
+            }
+        }
+
+        return $bestText ?? null;
+    }
+
+    /**
+     * @param  list<string>  $tokens
+     */
+    private function matchesAllTokens(Destination $destination, array $tokens): bool
+    {
+        if ($tokens === []) {
+            return false;
+        }
+
+        foreach ($tokens as $token) {
+            if (! $this->matchesToken($destination, $token)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @param  list<string>  $tokens
+     */
+    private function relevanceScore(Destination $destination, array $tokens): float
+    {
+        if ($tokens === []) {
+            return 0.0;
+        }
+
+        $score = 0.0;
+        $combined = implode(' ', $this->searchableFields($destination));
+        $normalized = Str::lower($combined);
+
+        foreach ($tokens as $token) {
+            $name = Str::lower($destination->name);
+            $alt = Str::lower($destination->alternativeName);
+            $location = Str::lower($destination->location);
+            $address = Str::lower($destination->address);
+            $description = Str::lower($destination->shortDescription.' '.$destination->fullDescription);
+            $tags = implode(' ', array_merge($destination->keywords, $destination->facilities, $destination->activities));
+            $tags = Str::lower($tags);
+
+            if ($name === $token || str_starts_with($name, $token) || $alt === $token || str_starts_with($alt, $token)) {
+                $score += 200;
+            } elseif (str_contains($name, $token)) {
+                $score += 120;
+            } elseif (str_contains($alt, $token) || str_contains($tags, $token)) {
+                $score += 100;
+            } elseif (str_contains($location, $token) || str_contains($address, $token)) {
+                $score += 50;
+            } elseif (str_contains($description, $token)) {
+                $score += 20;
+            }
+        }
+
+        $score += $destination->rating ?? 0;
+
+        return $score;
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function searchableFields(Destination $destination): array
+    {
+        return [
+            $destination->name,
+            $destination->alternativeName,
+            $destination->shortDescription,
+            $destination->fullDescription,
+            $destination->location,
+            $destination->address,
+            $destination->directions,
+            implode(' ', $destination->keywords),
+            implode(' ', $destination->facilities),
+            implode(' ', $destination->activities),
+        ];
+    }
+
+    private function matchesToken(Destination $destination, string $token): bool
+    {
+        foreach ($this->tokenMatchFields($destination) as $field) {
+            foreach ($this->tokenize($field) as $word) {
+                if ($word === $token || str_starts_with($word, $token)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function tokenMatchFields(Destination $destination): array
+    {
+        return [
+            $destination->name,
+            $destination->alternativeName,
+            $destination->location,
+        ];
+    }
+
+    private function maxDistance(string $token): int
+    {
+        $length = mb_strlen($token, 'UTF-8');
+
+        if ($length <= 3) {
+            return 0;
+        }
+
+        return $length >= 6 ? 2 : 1;
+    }
+
+    private function damerauLevenshtein(string $left, string $right): int
+    {
+        $leftChars = preg_split('//u', $left, -1, PREG_SPLIT_NO_EMPTY) ?: [];
+        $rightChars = preg_split('//u', $right, -1, PREG_SPLIT_NO_EMPTY) ?: [];
+        $lengthA = count($leftChars);
+        $lengthB = count($rightChars);
+
+        $previous = range(0, $lengthB);
+
+        for ($i = 1; $i <= $lengthA; $i++) {
+            $current = [$i];
+            for ($j = 1; $j <= $lengthB; $j++) {
+                $cost = $leftChars[$i - 1] === $rightChars[$j - 1] ? 0 : 1;
+                $insertion = $current[$j - 1] + 1;
+                $deletion = $previous[$j] + 1;
+                $substitution = $previous[$j - 1] + $cost;
+                $adjacent = PHP_INT_MAX;
+
+                if ($i > 1 && $j > 1 && $leftChars[$i - 1] === $rightChars[$j - 2] && $leftChars[$i - 2] === $rightChars[$j - 1]) {
+                    $adjacent = $previous[$j - 2] + 1;
+                }
+
+                $current[$j] = min($insertion, $deletion, $substitution, $adjacent);
+            }
+            $previous = $current;
+        }
+
+        return $previous[$lengthB];
     }
 
     /**

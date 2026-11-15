@@ -56,6 +56,7 @@ class MapController extends Controller
             'q' => ['sometimes', 'nullable', 'string', 'max:200'],
             'jenis' => ['sometimes', 'nullable', 'string', 'max:64'],
             'provinsi' => ['sometimes', 'nullable', 'string', 'max:64'],
+            'exact' => ['sometimes', 'nullable', 'boolean'],
         ]);
     }
 
@@ -68,6 +69,7 @@ class MapController extends Controller
             'q' => $request->string('q')->trim()->toString(),
             'jenis' => $request->string('jenis')->toString(),
             'provinsi' => $request->string('provinsi')->toString(),
+            'exact' => $request->boolean('exact'),
         ];
 
         if (! in_array($filters['jenis'], DestinationRepository::TYPES, true)) {
@@ -78,6 +80,10 @@ class MapController extends Controller
             $filters['provinsi'] = '';
         }
 
-        return array_filter($filters, static fn (string $value): bool => $value !== '');
+        if ($filters['exact'] === false) {
+            unset($filters['exact']);
+        }
+
+        return array_filter($filters, static fn (mixed $value): bool => $value !== '' && $value !== false && $value !== null);
     }
 }

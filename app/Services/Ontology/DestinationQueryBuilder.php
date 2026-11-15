@@ -60,6 +60,7 @@ SPARQL;
             .' } GROUP BY ?destination ?idDestinasi ';
 
         $query .= match ($sort) {
+            'relevansi' => 'ORDER BY DESC(BOUND(?ratingSort)) DESC(?ratingSort) LCASE(STR(?nameSort)) STR(?idDestinasi) ',
             'name' => 'ORDER BY LCASE(STR(?nameSort)) STR(?idDestinasi) ',
             'id' => 'ORDER BY STR(?idDestinasi) ',
             'rating_asc' => 'ORDER BY DESC(BOUND(?ratingSort)) ASC(?ratingSort) LCASE(STR(?nameSort)) STR(?idDestinasi) ',
@@ -297,12 +298,19 @@ SPARQL;
         $query = trim((string) ($filters['q'] ?? ''));
         if ($query !== '') {
             $tokens = preg_split('/[^\p{L}\p{N}]+/u', Str::lower($query), -1, PREG_SPLIT_NO_EMPTY) ?: [];
+            $stopWords = ['di', 'yang', 'ke', 'dari', 'untuk', 'dengan', 'pada', 'dalam', 'serta', 'atau'];
             foreach ($tokens as $token) {
+                if ($token === '' || in_array($token, $stopWords, true) || strlen($token) <= 1) {
+                    continue;
+                }
+
                 $pattern = '(^|[^\\p{L}\\p{N}])'.preg_quote($token, '/');
                 $literal = $this->escaper->literal($pattern);
-                $where .= "\nFILTER(REGEX(LCASE(STR(?nameValue)), {$literal}) || EXISTS { "
-                    .'?destination ws:namaAlternatif ?alternativeValue . '
-                    ."FILTER(REGEX(LCASE(STR(?alternativeValue)), {$literal})) })";
+                $where .= "\nFILTER("
+                    .'REGEX(LCASE(STR(?nameValue)), '.$literal.') '
+                    .'|| EXISTS { ?destination ws:namaAlternatif ?alternativeValue . FILTER(STR(?alternativeValue) != "-" && REGEX(LCASE(STR(?alternativeValue)), '.$literal.')) } '
+                    .'|| EXISTS { ?destination ws:berlokasiDi/rdfs:label ?locationLabel . FILTER(REGEX(LCASE(STR(?locationLabel)), '.$literal.')) }'
+                    .' )';
             }
         }
 
