@@ -25,6 +25,7 @@ use App\Services\Ontology\WikidataQueryBuilder;
 use App\Services\Ontology\WikidataRegionCatalog;
 use App\Services\Ontology\WikidataRegionRepository;
 use App\Services\Ontology\WikidataUserAgent;
+use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -171,6 +172,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        if ($this->app->environment('production')) {
+            Vite::useHotFile($this->app->storagePath('framework/vite-hot-file-disabled'));
+        }
     }
 }
