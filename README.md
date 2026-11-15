@@ -1,8 +1,8 @@
 <div align="center">
 
-# Sumatera Heritage &amp; Trails
+# WayFinder
 
-Jelajahi destinasi wisata Sumatera melalui pencarian, peta interaktif, dan panduan AI berbasis data semantik.
+Jelajahi destinasi wisata Sumatera Utara melalui pencarian, peta interaktif, dan data semantik.
 
 [![PHP](https://img.shields.io/badge/PHP-8.4-777BB4?style=for-the-badge&logo=php&logoColor=white)](https://www.php.net/)
 [![Laravel](https://img.shields.io/badge/Laravel-13-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)](https://laravel.com/)
@@ -16,7 +16,7 @@ Jelajahi destinasi wisata Sumatera melalui pencarian, peta interaktif, dan pandu
 
 ## Tentang proyek
 
-**Sumatera Heritage & Trails** adalah aplikasi web panduan wisata yang menyajikan informasi destinasi dari data berbasis ontologi. Pengunjung dapat menelusuri destinasi, melihat detail dan lokasinya, serta bertanya kepada **WayFinder AI** tentang informasi wisata.
+**WayFinder** adalah aplikasi web panduan wisata Sumatera Utara. Data destinasi dikelola sebagai graph RDF dan dapat disajikan melalui Apache Jena Fuseki atau berkas Turtle lokal. Chatbot berbasis Gemini tersedia secara opsional dan tidak diperlukan untuk fitur pencarian, detail, maupun peta.
 
 ## Fitur
 
@@ -26,7 +26,7 @@ Jelajahi destinasi wisata Sumatera melalui pencarian, peta interaktif, dan pandu
 - Lihat tautan Wikipedia/Wikivoyage, foto Commons, status warisan, ketinggian, atau tahun berdiri bila data tersedia.
 - Bagikan halaman detail dengan metadata Open Graph, RDFa, dan ekspor RDF dalam Turtle, RDF/XML, atau JSON-LD.
 - Temukan destinasi melalui peta interaktif berbasis Leaflet.
-- Tanyakan informasi destinasi melalui WayFinder AI.
+- Gunakan chatbot Gemini opsional jika kunci API tersedia; kunci hanya digunakan di sisi server.
 - Sajikan data destinasi dari Apache Jena Fuseki; mode file Turtle tersedia untuk pengembangan atau pengujian.
 - Validasi data ontologi dan kelola cache melalui perintah Artisan.
 
@@ -47,7 +47,7 @@ Jelajahi destinasi wisata Sumatera melalui pencarian, peta interaktif, dan pandu
 - PHP 8.4 dan Composer
 - Node.js `^20.19` atau `>=22.12`, beserta npm
 - Ekstensi PHP PDO MySQL
-- Apache Jena Fuseki untuk data destinasi
+- Apache Jena Fuseki untuk driver bawaan; driver Turtle lokal dapat digunakan tanpa Fuseki
 - Kunci Gemini hanya jika ingin menggunakan chatbot
 
 ## Menjalankan secara lokal
@@ -61,7 +61,7 @@ Jelajahi destinasi wisata Sumatera melalui pencarian, peta interaktif, dan pandu
 
    Skrip ini memasang dependensi, menyiapkan `.env`, membuat application key, menjalankan migrasi, memasang dependensi frontend, dan membangun aset.
 
-3. Sesuaikan `.env` bila diperlukan. Konfigurasi contoh memakai MySQL untuk session, cache, dan queue, serta Fuseki dengan dataset `WayFinder` untuk data destinasi. Pastikan MySQL dan Fuseki berjalan dan sesuaikan `DB_*` serta `FUSEKI_URL`/kredensialnya dengan lingkungan lokal.
+3. Sesuaikan `.env` bila diperlukan. Konfigurasi contoh memakai MySQL untuk session, cache, dan queue, serta Fuseki dengan dataset `WayFinder` untuk data destinasi. Pastikan MySQL dan Fuseki berjalan dan sesuaikan `DB_*` serta `FUSEKI_URL`/kredensialnya dengan lingkungan lokal. Jangan pernah meng-commit `.env`, kunci API, atau kredensial.
 4. Driver data destinasi default adalah Fuseki. Untuk memakai file ontologi v3 lokal pada pengembangan atau pengujian, atur `ONTOLOGY_DRIVER=ttl`. `ONTOLOGY_V3_TTL_PATH` adalah satu-satunya path graph v3 untuk runtime dan pemuatan Fuseki; `ONTOLOGY_V2_TTL_PATH` hanya dipakai sebagai sumber migrasi v2. Untuk mengaktifkan chatbot, isi `GEMINI_API_KEY` di `.env`. Jangan pernah membagikan atau meng-commit kunci API.
 5. Jalankan aplikasi:
 
@@ -76,6 +76,8 @@ Untuk pengembangan frontend dengan hot reload, jalankan di terminal terpisah:
 ```bash
 npm run dev
 ```
+
+Untuk deployment, gunakan `APP_ENV=production` dan `APP_DEBUG=false`, pasang dependensi Composer tanpa paket pengembangan, lalu jalankan `npm run build`. Jangan menyalin `public/hot` dari lingkungan pengembangan; berkas tersebut diabaikan Git, dan provider production menggunakan manifest build tanpa membaca marker HMR publik.
 
 ## Perintah data ontologi
 
@@ -122,6 +124,15 @@ php artisan fuseki:load --fresh
 Panduan instalasi, pembuatan dataset, akses, dan backup Fuseki tersedia di [docs/SETUP-FUSEKI.md](docs/SETUP-FUSEKI.md).
 
 Panduan metadata RDFa/Open Graph dan contoh endpoint ekspor tersedia di [docs/validasi-rdfa-ogp.md](docs/validasi-rdfa-ogp.md).
+
+Dokumentasi implementasi dan serah-terima:
+
+- [Arsitektur aplikasi](docs/ARSITEKTUR.md)
+- [Bukti kueri SPARQL dan validasi](docs/bukti-sparql.md)
+- [Keputusan desain](docs/keputusan-desain.md)
+- [Panduan integrasi rekan](docs/INTEGRASI-REKAN.md)
+- [Checklist pengumpulan](docs/CHECKLIST-PENGUMPULAN.md)
+- [Smoke test manual](docs/SMOKE-TEST.md)
 
 ## Pengujian
 
