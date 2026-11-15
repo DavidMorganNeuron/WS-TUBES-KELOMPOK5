@@ -9,6 +9,8 @@ use Illuminate\Support\Collection;
 
 final class SparqlRowMapper
 {
+    public function __construct(private readonly OpeningHoursResolver $openingHoursResolver) {}
+
     /**
      * @param  list<array<string, string|null>>  $rows
      * @return Collection<string, Destination>
@@ -29,6 +31,12 @@ final class SparqlRowMapper
             }
 
             $row['idDestinasi'] = $id;
+            $row['jamOperasional'] = $this->openingHoursResolver->resolve(
+                $row['keteranganJadwal'] ?? null,
+                $row['jamBuka'] ?? null,
+                $row['jamTutup'] ?? null,
+                $row['bukaSepanjangWaktu'] ?? null,
+            ) ?? '';
             $destinations->put($id, Destination::fromArray($row));
         }
 

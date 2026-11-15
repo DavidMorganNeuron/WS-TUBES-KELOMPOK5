@@ -154,6 +154,67 @@ class DestinationPagesTest extends TestCase
         }
     }
 
+    public function test_detail_and_map_show_known_schedule_while_unknown_schedules_stay_unmarked(): void
+    {
+        $destinations = $this->repository()->search();
+        $known = $destinations->first(static fn (Destination $destination): bool => $destination->openingHours !== '');
+        $unknown = $destinations->first(static fn (Destination $destination): bool => $destination->openingHours === '');
+
+        $this->assertNotNull($known);
+        $this->assertNotNull($unknown);
+        $this->assertSame('-', $unknown->openingHoursLabel());
+        $knownCard = Blade::render('<x-destination-card :destination="$destination" />', ['destination' => $known]);
+        $unknownCard = Blade::render('<x-destination-card :destination="$destination" />', ['destination' => $unknown]);
+        $this->assertStringContainsString('🕒', $knownCard);
+        $this->assertStringNotContainsString('🕒', $unknownCard);
+
+        $knownResponse = $this->get('/destinations/'.$known->id);
+        $knownResponse->assertOk();
+        $knownResponse->assertSee('Jam operasional');
+        $knownResponse->assertSee($known->openingHours);
+        $knownResponse->assertSee('rel="ws:memilikiJadwal"', false);
+        $knownResponse->assertSee('property="ws:keteranganJadwal"', false);
+        $knownResponse->assertSee('resource="'.rtrim((string) config('ontology.namespaces.data'), '/').'/jadwal-'.$known->id.'"', false);
+
+        $document = new \DOMDocument;
+        $previousErrorMode = libxml_use_internal_errors(true);
+        try {
+            $loaded = $document->loadHTML($knownResponse->getContent() ?? '');
+        } finally {
+            libxml_clear_errors();
+            libxml_use_internal_errors($previousErrorMode);
+        }
+        $this->assertTrue($loaded);
+        $xpath = new \DOMXPath($document);
+        $destinationSubject = $xpath->query('//*[@typeof="schema:TouristAttraction ws:DestinasiWisata"]')->item(0);
+        $this->assertInstanceOf(\DOMElement::class, $destinationSubject);
+        $schedule = $xpath->query('.//*[@rel="ws:memilikiJadwal"]', $destinationSubject)->item(0);
+        $this->assertInstanceOf(\DOMElement::class, $schedule);
+        $this->assertSame('ws:JadwalOperasional', $schedule->getAttribute('typeof'));
+        $this->assertSame(
+            rtrim((string) config('ontology.namespaces.data'), '/').'/jadwal-'.$known->id,
+            $schedule->getAttribute('resource'),
+        );
+        $this->assertSame(
+            $known->openingHours,
+            trim($xpath->evaluate('string(.//*[@property="ws:keteranganJadwal"])', $schedule)),
+        );
+
+        $unknownResponse = $this->get('/destinations/'.$unknown->id);
+        $unknownResponse->assertOk();
+        $unknownResponse->assertSee('Jam operasional');
+        $unknownText = preg_replace('/\s+/u', ' ', strip_tags($unknownResponse->getContent() ?? ''));
+        $this->assertIsString($unknownText);
+        $this->assertStringContainsString('Jam operasional -', $unknownText);
+        $unknownResponse->assertDontSee('Jadwal dapat berubah');
+        $unknownResponse->assertDontSee('rel="ws:memilikiJadwal"', false);
+        $unknownResponse->assertDontSee('property="ws:keteranganJadwal"', false);
+
+        $mapResponse = $this->get('/map/live?q='.urlencode($known->name));
+        $mapResponse->assertOk();
+        $this->assertStringContainsString($known->openingHours, $mapResponse->json('html'));
+    }
+
     public function test_detail_page_includes_open_graph_and_rdfa_metadata(): void
     {
         $destination = $this->repository()->find('ws-148');

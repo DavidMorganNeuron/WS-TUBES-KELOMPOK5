@@ -6,6 +6,8 @@ namespace App\Services\Ontology;
 
 final class OntologyGraphMapper
 {
+    public function __construct(private readonly OpeningHoursResolver $openingHoursResolver) {}
+
     /**
      * @param  list<array{subject: string, predicate: string, object: array{kind: string, value: string, datatype: ?string, language: ?string}}>  $triples
      * @return list<array<string, string|null>>
@@ -167,19 +169,14 @@ final class OntologyGraphMapper
     private function openingHours(array $properties, string $subject, string $namespace): ?string
     {
         foreach ($properties[$subject][$namespace.'memilikiJadwal'] ?? [] as $schedule) {
-            $description = $properties[$schedule][$namespace.'keteranganJadwal'][0] ?? null;
-            if ($description !== null && $description !== '-') {
-                return $description;
-            }
-
-            $opening = $properties[$schedule][$namespace.'jamBuka'][0] ?? null;
-            $closing = $properties[$schedule][$namespace.'jamTutup'][0] ?? null;
-            if ($opening !== null && $closing !== null) {
-                return $opening.' - '.$closing;
-            }
-
-            if (($properties[$schedule][$namespace.'bukaSepanjangWaktu'][0] ?? null) === 'true') {
-                return 'Selalu Buka';
+            $resolved = $this->openingHoursResolver->resolve(
+                $properties[$schedule][$namespace.'keteranganJadwal'][0] ?? null,
+                $properties[$schedule][$namespace.'jamBuka'][0] ?? null,
+                $properties[$schedule][$namespace.'jamTutup'][0] ?? null,
+                $properties[$schedule][$namespace.'bukaSepanjangWaktu'][0] ?? null,
+            );
+            if ($resolved !== null) {
+                return $resolved;
             }
         }
 

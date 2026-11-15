@@ -30,7 +30,7 @@
                     <span class="text-[10px] font-bold text-brand-primary whitespace-nowrap">⭐ {{ $destination->ratingLabel() }}</span>
                 </div>
                 <p class="text-[10px] text-gray-500 mb-1 truncate">{{ $destination->province() }} • {{ $destination->location }}</p>
-                <p class="text-[10px] text-gray-500 truncate">{{ $destination->openingHours !== '' ? $destination->openingHours : 'Jam buka belum tercatat' }}</p>
+                <p class="text-[10px] text-gray-500 truncate">{{ $destination->openingHoursLabel() }}</p>
                 <p class="text-[10px] font-bold text-green-600 mt-1 truncate">{{ $destination->priceLabel() }}</p>
             </div>
         </div>

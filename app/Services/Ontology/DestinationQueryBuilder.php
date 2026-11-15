@@ -134,6 +134,7 @@ SELECT ?destination ?idDestinasi ?namaDestinasi
     (SAMPLE(STR(?jamBukaValue)) AS ?jamBuka)
     (SAMPLE(STR(?jamTutupValue)) AS ?jamTutup)
     (SAMPLE(STR(?jadwalValue)) AS ?keteranganJadwal)
+    (SAMPLE(STR(?alwaysOpenValue)) AS ?bukaSepanjangWaktu)
     (GROUP_CONCAT(DISTINCT STR(?priceValue); separator=" | ") AS ?hargaMasuk)
     (GROUP_CONCAT(DISTINCT STR(?phoneValue); separator=" | ") AS ?noHpResmi)
     (GROUP_CONCAT(DISTINCT STR(?emailValue); separator=" | ") AS ?emailResmi)
@@ -162,6 +163,7 @@ WHERE {
         OPTIONAL { ?schedule ws:jamBuka ?jamBukaValue }
         OPTIONAL { ?schedule ws:jamTutup ?jamTutupValue }
         OPTIONAL { ?schedule ws:keteranganJadwal ?jadwalValue . FILTER(STR(?jadwalValue) != "-") }
+        OPTIONAL { ?schedule ws:bukaSepanjangWaktu ?alwaysOpenValue }
     }
     OPTIONAL { ?destination ws:memilikiTarif/ws:hargaMasuk ?priceValue }
     OPTIONAL { ?destination ws:memilikiKontak/ws:nomorHp ?phoneValue . FILTER(STR(?phoneValue) != "-") }

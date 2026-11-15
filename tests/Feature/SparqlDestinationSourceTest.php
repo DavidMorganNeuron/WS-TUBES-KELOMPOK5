@@ -190,6 +190,46 @@ class SparqlDestinationSourceTest extends TestCase
         Http::assertSentCount(2);
     }
 
+    public function test_fuseki_detail_rows_map_the_original_schedule_columns_to_opening_hours(): void
+    {
+        Http::preventStrayRequests();
+        Http::fake(fn () => Http::response($this->response([[
+            'idDestinasi' => ['type' => 'literal', 'value' => 'ws-001'],
+            'namaDestinasi' => ['type' => 'literal', 'value' => 'Destinasi One'],
+            'keteranganJadwal' => ['type' => 'literal', 'value' => 'Setiap Hari 08.00-18.00'],
+        ]])));
+
+        $destination = app(DestinationRepository::class)->find('ws-001');
+
+        $this->assertNotNull($destination);
+        $this->assertSame('Setiap Hari 08.00-18.00', $destination->openingHours);
+        Http::assertSentCount(1);
+    }
+
+    public function test_fuseki_detail_query_projects_opening_and_closing_times(): void
+    {
+        $queries = [];
+        Http::preventStrayRequests();
+        Http::fake(function (Request $request) use (&$queries) {
+            $queries[] = (string) ($request->data()['query'] ?? '');
+
+            return Http::response($this->response([[
+                'idDestinasi' => ['type' => 'literal', 'value' => 'ws-001'],
+                'namaDestinasi' => ['type' => 'literal', 'value' => 'Destinasi One'],
+                'jamBuka' => ['type' => 'literal', 'value' => '08:00:00'],
+                'jamTutup' => ['type' => 'literal', 'value' => '18:00:00'],
+                'bukaSepanjangWaktu' => ['type' => 'literal', 'value' => 'false'],
+            ]]));
+        });
+
+        $destination = app(DestinationRepository::class)->find('ws-001');
+
+        $this->assertNotNull($destination);
+        $this->assertSame('08.00 - 18.00', $destination->openingHours);
+        $this->assertStringContainsString('(SAMPLE(STR(?alwaysOpenValue)) AS ?bukaSepanjangWaktu)', $queries[0]);
+        Http::assertSentCount(1);
+    }
+
     public function test_exact_search_uses_a_separate_result_cache_and_reuses_the_cached_vocabulary(): void
     {
         $queries = [];

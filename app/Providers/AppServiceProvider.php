@@ -10,6 +10,7 @@ use App\Services\Ontology\FusekiClient;
 use App\Services\Ontology\InMemoryDestinationSource;
 use App\Services\Ontology\OntologyConfiguration;
 use App\Services\Ontology\OntologyGraphMapper;
+use App\Services\Ontology\OpeningHoursResolver;
 use App\Services\Ontology\SearchPlanner;
 use App\Services\Ontology\SearchTokenizer;
 use App\Services\Ontology\SearchVocabulary;
@@ -51,6 +52,10 @@ class AppServiceProvider extends ServiceProvider
         });
 
         $this->app->singleton(TurtleParser::class);
+        $this->app->singleton(
+            OpeningHoursResolver::class,
+            fn (): OpeningHoursResolver => new OpeningHoursResolver((string) config('ontology.unknown_label')),
+        );
         $this->app->singleton(OntologyGraphMapper::class);
         $this->app->singleton(SparqlEscaper::class);
         $this->app->singleton(SparqlRowMapper::class);

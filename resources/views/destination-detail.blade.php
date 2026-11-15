@@ -24,6 +24,10 @@
     ];
     $placeholder = asset('images/placeholders/'.($placeholderSlugs[$destination->primaryType()] ?? 'destinasi').'.svg');
     $hasContact = $destination->phone !== '' || $destination->email !== '' || $destination->instagram !== '';
+    $dataNamespace = config('ontology.namespaces.data');
+    $scheduleResource = is_string($dataNamespace)
+        ? rtrim($dataNamespace, '/').'/jadwal-'.$destination->id
+        : null;
 @endphp
 
 @section('content')
@@ -179,9 +183,10 @@
                     <div class="flex justify-between gap-4 border-b border-gray-100 pb-2"><span>Kategori</span><span class="font-bold text-gray-900 text-right">{{ implode(', ', $destination->types) }}</span></div>
                     <div class="flex justify-between gap-4 border-b border-gray-100 pb-2"><span>Provinsi</span><span class="font-bold text-gray-900 text-right">{{ $destination->province() }}</span></div>
                     <div class="flex justify-between gap-4 border-b border-gray-100 pb-2"><span>ID ontologi</span><span class="font-bold text-gray-900 text-right">ID <span property="ws:idDestinasi">{{ $destination->id }}</span></span></div>
-                    @if ($destination->openingHours !== '')
-                        <div class="flex justify-between gap-4 border-b border-gray-100 pb-2"><span>Jam operasional</span><span class="font-bold text-gray-900 text-right" property="ws:keteranganJadwal">{{ $destination->openingHours }}</span></div>
-                    @endif
+                    <div class="flex justify-between gap-4 border-b border-gray-100 pb-2">
+                        <span class="shrink-0">Jam operasional</span>
+                        <span class="min-w-0 max-w-[65%] break-words whitespace-normal text-right font-bold text-gray-900">{{ $destination->openingHoursLabel() }}</span>
+                    </div>
                     @foreach ($destination->prices as $price)
                         @if (preg_match('/^[+-]?\d+(?:\.\d+)?$/', $price) === 1)
                             <meta property="ws:hargaMasuk" content="{{ $price }}" datatype="xsd:decimal">
@@ -278,13 +283,19 @@
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    @if ($destination->openingHours !== '')
-                        <div class="border border-gray-100 bg-gray-50 rounded-xl p-4">
-                            <p class="font-bold text-sm text-gray-900 mb-1 flex items-center gap-2">🕒 Jam operasional</p>
-                            <p class="text-xs text-gray-700 font-bold mb-1">{{ $destination->openingHours }}</p>
+                    <div class="border border-gray-100 bg-gray-50 rounded-xl p-4 min-w-0">
+                        <p class="font-bold text-sm text-gray-900 mb-1 flex items-center gap-2">🕒 Jam operasional</p>
+                        <p class="text-xs text-gray-700 font-bold mb-1 break-words whitespace-normal">
+                            @if ($destination->openingHours !== '' && is_string($scheduleResource))
+                                <span rel="ws:memilikiJadwal" resource="{{ $scheduleResource }}" typeof="ws:JadwalOperasional"><span property="ws:keteranganJadwal">{{ $destination->openingHours }}</span></span>
+                            @else
+                                {{ $destination->openingHoursLabel() }}
+                            @endif
+                        </p>
+                        @if ($destination->openingHours !== '')
                             <p class="text-[10px] text-gray-500">Jadwal dapat berubah saat hari libur atau cuaca ekstrem.</p>
-                        </div>
-                    @endif
+                        @endif
+                    </div>
 
                     <div class="border border-gray-100 bg-gray-50 rounded-xl p-4">
                         <p class="font-bold text-sm text-gray-900 mb-1 flex items-center gap-2">🎟️ Harga tiket</p>

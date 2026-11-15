@@ -197,6 +197,13 @@ final readonly class Destination
         return IndonesianFormat::rating($this->rating);
     }
 
+    public function openingHoursLabel(): string
+    {
+        return $this->openingHours !== ''
+            ? $this->openingHours
+            : (string) config('ontology.unknown_label');
+    }
+
     public function mapsUrl(): string
     {
         if ($this->hasCoordinates()) {
