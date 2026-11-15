@@ -11,6 +11,7 @@ final readonly class DestinationLinkedData
      * @param  list<LinkedResource>  $facilities
      * @param  list<LinkedResource>  $activities
      * @param  list<LinkedResource>  $neighbors
+     * @param  list<LinkedResource>  $regionNeighbors
      */
     public function __construct(
         public string $iri,
@@ -19,6 +20,7 @@ final readonly class DestinationLinkedData
         public array $facilities = [],
         public array $activities = [],
         public array $neighbors = [],
+        public array $regionNeighbors = [],
     ) {}
 
     public function categoryForLabel(string $label): ?LinkedResource

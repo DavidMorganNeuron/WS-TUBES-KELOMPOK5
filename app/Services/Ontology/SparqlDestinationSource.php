@@ -359,34 +359,16 @@ SPARQL;
      */
     public function nearby(Destination $destination, ?int $limit = null): Collection
     {
-        if (! $destination->hasCoordinates()) {
-            return collect();
-        }
-
-        $maxNeighbors = (int) config('ontology.nearby.max_neighbors', 3);
-        $limit = min($maxNeighbors, max(1, $limit ?? $maxNeighbors));
         $query = $this->queryBuilder->nearbyIds($destination->id);
         $ids = array_values(array_filter(array_map(
             static fn (array $row): mixed => $row['idDestinasi'] ?? null,
             $this->selectCached($query),
         ), static fn (mixed $id): bool => is_string($id) && preg_match('/^ws-\d{3}$/', $id) === 1));
-        $neighbors = $this->destinationsForIds($ids);
+        if ($limit !== null) {
+            $ids = array_slice($ids, 0, max(0, $limit));
+        }
 
-        return $neighbors
-            ->reject(static fn (Destination $item): bool => ! $item->hasCoordinates())
-            ->map(fn (Destination $item): array => [
-                'destination' => $item,
-                'distance' => $this->distance($destination, $item),
-            ])
-            ->filter(fn (array $item): bool => $item['distance'] <= (float) config('ontology.nearby.radius_km', 15.0))
-            ->sortBy(fn (array $item): array => [
-                $item['distance'],
-                Str::lower($item['destination']->name),
-                $item['destination']->id,
-            ])
-            ->take($limit)
-            ->pluck('destination')
-            ->values();
+        return $this->destinationsForIds($ids);
     }
 
     /**
@@ -582,18 +564,5 @@ SPARQL;
         }
 
         return $id;
-    }
-
-    private function distance(Destination $origin, Destination $destination): float
-    {
-        $earthRadiusKm = 6371.0;
-        $latitudeDelta = deg2rad((float) $destination->latitude - (float) $origin->latitude);
-        $longitudeDelta = deg2rad((float) $destination->longitude - (float) $origin->longitude);
-        $haversine = sin($latitudeDelta / 2) ** 2
-            + cos(deg2rad((float) $origin->latitude))
-            * cos(deg2rad((float) $destination->latitude))
-            * sin($longitudeDelta / 2) ** 2;
-
-        return $earthRadiusKm * 2 * asin(min(1.0, sqrt($haversine)));
     }
 }

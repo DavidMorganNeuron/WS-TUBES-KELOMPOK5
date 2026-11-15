@@ -191,10 +191,12 @@
     </div>
     @if ($topRegion !== null)
         <div class="mt-8">
-            <x-wikidata-region
+            <x-info-wilayah
                 :region="$wikidataRegion"
-                :title="'Informasi wilayah: '.$topRegion['label']"
-                heading-id="wikidata-dashboard-region-heading"
+                :region-name="$topRegion['label']"
+                :region-resource="$regionResource"
+                :region-neighbors="$regionNeighbors"
+                heading-id="dashboard-region-heading"
             />
         </div>
     @endif

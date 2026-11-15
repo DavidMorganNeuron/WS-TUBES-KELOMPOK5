@@ -547,29 +547,17 @@ class InMemoryDestinationSource implements DestinationSource
      */
     public function nearby(Destination $destination, ?int $limit = null): Collection
     {
-        if (! $destination->hasCoordinates()) {
-            return collect();
+        $links = $this->nearbyLinks();
+        $ids = $links[$destination->id] ?? [];
+        if ($limit !== null) {
+            $ids = array_slice($ids, 0, max(0, $limit));
         }
 
-        $radius = (float) config('ontology.nearby.radius_km', 15.0);
-        $maximum = (int) config('ontology.nearby.max_neighbors', 3);
-        $limit = min($maximum, max(1, $limit ?? $maximum));
+        $destinations = $this->all()->keyBy('id');
 
-        return $this->all()
-            ->reject(fn (Destination $candidate): bool => $candidate->id === $destination->id)
-            ->filter(fn (Destination $candidate): bool => $candidate->hasCoordinates())
-            ->map(fn (Destination $candidate): array => [
-                'destination' => $candidate,
-                'distance' => $this->distance($destination, $candidate),
-            ])
-            ->filter(fn (array $candidate): bool => $candidate['distance'] <= $radius)
-            ->sortBy(fn (array $candidate): array => [
-                $candidate['distance'],
-                Str::lower($candidate['destination']->name),
-                $candidate['destination']->id,
-            ])
-            ->take($limit)
-            ->pluck('destination')
+        return collect($ids)
+            ->map(static fn (string $id): ?Destination => $destinations->get($id))
+            ->filter(static fn (?Destination $item): bool => $item !== null)
             ->values();
     }
 
@@ -646,6 +634,58 @@ class InMemoryDestinationSource implements DestinationSource
         return $this->graphMapper->destinations(
             $this->parser->parseTriplesFile($this->ttlPath),
         );
+    }
+
+    /**
+     * @return array<string, list<string>>
+     */
+    private function nearbyLinks(): array
+    {
+        $cacheKey = $this->cacheKey();
+
+        return Cache::remember(
+            'ontology.nearby-links.'.hash('sha256', $cacheKey),
+            $this->cacheTtl,
+            function (): array {
+                $dataNamespace = (string) config('ontology.namespaces.data');
+                $nearbyPredicate = (string) config('ontology.namespaces.ws').'dekatDengan';
+                $links = [];
+
+                foreach ($this->parser->parseTriplesFile($this->ttlPath) as $triple) {
+                    if (($triple['predicate'] ?? null) !== $nearbyPredicate
+                        || ($triple['object']['kind'] ?? null) !== 'iri') {
+                        continue;
+                    }
+
+                    $sourceId = $this->destinationIdFromIri((string) ($triple['subject'] ?? ''), $dataNamespace);
+                    $neighborId = $this->destinationIdFromIri((string) $triple['object']['value'], $dataNamespace);
+                    if ($sourceId !== null && $neighborId !== null && $sourceId !== $neighborId) {
+                        $links[$sourceId][$neighborId] = true;
+                    }
+                }
+
+                foreach ($links as $sourceId => $neighborIds) {
+                    $neighborIds = array_keys($neighborIds);
+                    sort($neighborIds, SORT_STRING);
+                    $links[$sourceId] = $neighborIds;
+                }
+
+                ksort($links, SORT_STRING);
+
+                return $links;
+            },
+        );
+    }
+
+    private function destinationIdFromIri(string $iri, string $namespace): ?string
+    {
+        if (! str_starts_with($iri, $namespace)) {
+            return null;
+        }
+
+        $id = substr($iri, strlen($namespace));
+
+        return preg_match('/^ws-\d{3}$/', $id) === 1 ? $id : null;
     }
 
     /**
@@ -788,18 +828,5 @@ class InMemoryDestinationSource implements DestinationSource
             'sha256',
             'ttl|'.$this->ttlPath.'|'.$modifiedAt.'|'.$fileSize.'|'.$version,
         );
-    }
-
-    private function distance(Destination $origin, Destination $destination): float
-    {
-        $earthRadiusKm = 6371.0;
-        $latitudeDelta = deg2rad((float) $destination->latitude - (float) $origin->latitude);
-        $longitudeDelta = deg2rad((float) $destination->longitude - (float) $origin->longitude);
-        $latitudeOrigin = deg2rad((float) $origin->latitude);
-        $latitudeDestination = deg2rad((float) $destination->latitude);
-        $haversine = sin($latitudeDelta / 2) ** 2
-            + cos($latitudeOrigin) * cos($latitudeDestination) * sin($longitudeDelta / 2) ** 2;
-
-        return $earthRadiusKm * 2 * asin(min(1.0, sqrt($haversine)));
     }
 }

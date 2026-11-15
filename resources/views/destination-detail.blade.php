@@ -257,10 +257,11 @@
                 </div>
             </div>
 
-            <x-wikidata-region
+            <x-info-wilayah
                 :region="$wikidataRegion"
                 :region-resource="$linkedData->region?->iri"
-                :title="'Informasi wilayah: '.($destination->location !== '' ? $destination->location : $destination->province())"
+                :region-name="$destination->location !== '' ? $destination->location : $destination->province()"
+                :region-neighbors="$linkedData->regionNeighbors"
             />
 
             <!-- Visitor Information -->
@@ -419,18 +420,27 @@
                 @endif
             </div>
 
-            @if ($linkedData->neighbors !== [])
+            @if ($nearbyDestinations->isNotEmpty())
+                @php
+                    $neighborResources = collect($linkedData->neighbors)->keyBy('destinationId');
+                @endphp
                 <div class="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm">
                     <h2 class="text-xl font-serif font-bold text-gray-900 mb-4">Destinasi terdekat</h2>
-                    <div class="flex flex-wrap gap-2">
-                        @foreach ($linkedData->neighbors as $neighbor)
-                            <span class="rounded-full border border-gray-200 px-3 py-1 text-xs text-gray-700" rel="ws:dekatDengan" resource="{{ $neighbor->iri }}" typeof="{{ $neighbor->type }}">
-                                @if ($neighbor->destinationId !== null)
-                                    <a property="{{ $neighbor->labelProperty }}" href="{{ route('destination.detail', $neighbor->destinationId) }}" class="hover:text-brand-primary">{{ $neighbor->label }}</a>
-                                @else
-                                    <span property="{{ $neighbor->labelProperty }}">{{ $neighbor->label }}</span>
-                                @endif
-                            </span>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        @foreach ($nearbyDestinations as $item)
+                            @php
+                                $neighbor = $neighborResources->get($item->id);
+                            @endphp
+                            @if ($neighbor !== null)
+                                <x-destination-card
+                                    :destination="$item"
+                                    :show-description="false"
+                                    :rdfa-resource="$neighbor->iri"
+                                    :rdfa-type="$neighbor->type"
+                                    rdfa-relation="ws:dekatDengan"
+                                    :rdfa-label-property="$neighbor->labelProperty"
+                                />
+                            @endif
                         @endforeach
                     </div>
                 </div>

@@ -17,6 +17,7 @@ final class DestinationLinkedDataProvider
         'facility' => ['ws:Fasilitas', 'rdfs:label'],
         'activity' => ['ws:Aktivitas', 'rdfs:label'],
         'neighbor' => ['ws:DestinasiWisata', 'ws:namaDestinasi schema:name'],
+        'regionNeighbor' => ['ws:KabupatenKota', 'rdfs:label'],
     ];
 
     public function __construct(
@@ -56,6 +57,7 @@ final class DestinationLinkedDataProvider
             'facility' => [],
             'activity' => [],
             'neighbor' => [],
+            'regionNeighbor' => [],
         ];
 
         foreach ($rows as $row) {
@@ -107,6 +109,7 @@ final class DestinationLinkedDataProvider
             facilities: $resources['facility'],
             activities: $resources['activity'],
             neighbors: $resources['neighbor'],
+            regionNeighbors: $resources['regionNeighbor'],
         );
     }
 
@@ -140,6 +143,12 @@ final class DestinationLinkedDataProvider
 
             if ($triple['predicate'] === $namespace.'dekatDengan') {
                 $resources['neighbor'][$triple['object']['value']] = true;
+            }
+        }
+
+        foreach (array_keys($resources['region'] ?? []) as $regionIri) {
+            foreach ($properties[$regionIri][$namespace.'berbatasanDengan'] ?? [] as $neighborIri) {
+                $resources['regionNeighbor'][$neighborIri] = true;
             }
         }
 

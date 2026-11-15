@@ -95,10 +95,12 @@ class DestinationController extends Controller
         $destination = $repository->find($id);
 
         abort_if($destination === null, 404);
+        $linkedData = $linkedDataProvider->forDestination($id);
 
         return view('destination-detail', [
             'destination' => $destination,
-            'linkedData' => $linkedDataProvider->forDestination($id),
+            'linkedData' => $linkedData,
+            'nearbyDestinations' => $repository->nearby($destination),
             'seo' => $seoDataFactory->destination($destination),
             'wikidataRegion' => $wikidataRegionRepository->findForRegion(
                 $destination->location,

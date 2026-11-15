@@ -1,6 +1,10 @@
 @props([
     'destination',
     'showDescription' => true,
+    'rdfaResource' => null,
+    'rdfaType' => null,
+    'rdfaRelation' => null,
+    'rdfaLabelProperty' => null,
 ])
 
 @php
@@ -21,7 +25,14 @@
     $detailUrl = route('destination.detail', $destination->id);
 @endphp
 
-<article class="bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100 flex flex-col hover:shadow-md transition">
+<article
+    @if (is_string($rdfaResource) && $rdfaResource !== '' && is_string($rdfaRelation) && $rdfaRelation !== '')
+        rel="{{ $rdfaRelation }}"
+        resource="{{ $rdfaResource }}"
+        @if (is_string($rdfaType) && $rdfaType !== '') typeof="{{ $rdfaType }}" @endif
+    @endif
+    class="bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100 flex flex-col hover:shadow-md transition"
+>
     <div class="relative h-56 bg-gray-100 skeleton-shimmer overflow-hidden">
         <a href="{{ $detailUrl }}" class="block h-full">
             <img src="{{ $destination->imageUrl() }}" alt="{{ $destination->name }}" class="w-full h-full object-cover transition-opacity duration-300" loading="lazy" onload="this.closest('.skeleton-shimmer')?.classList.remove('skeleton-shimmer')" onerror="this.closest('.skeleton-shimmer')?.classList.remove('skeleton-shimmer')">
@@ -50,7 +61,11 @@
         </div>
 
         <h3 class="font-bold text-lg text-gray-900 mb-2">
-            <a href="{{ $detailUrl }}" class="hover:text-brand-primary transition">{{ $destination->name }}</a>
+            <a
+                href="{{ $detailUrl }}"
+                @if (is_string($rdfaLabelProperty) && $rdfaLabelProperty !== '') property="{{ $rdfaLabelProperty }}" @endif
+                class="hover:text-brand-primary transition"
+            >{{ $destination->name }}</a>
         </h3>
 
         @if ($showDescription)

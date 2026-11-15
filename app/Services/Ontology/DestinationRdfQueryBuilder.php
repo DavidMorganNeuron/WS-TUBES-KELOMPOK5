@@ -89,6 +89,8 @@ WHERE {
         { ?destination ws:menawarkanAktivitas ?resource . BIND("activity" AS ?kind) }
         UNION
         { ?destination ws:dekatDengan ?resource . BIND("neighbor" AS ?kind) }
+        UNION
+        { ?destination ws:berlokasiDi/ws:berbatasanDengan ?resource . BIND("regionNeighbor" AS ?kind) }
     }
     OPTIONAL { ?resource rdfs:label ?resourceLabel }
     OPTIONAL { ?resource ws:namaDestinasi ?destinationName }

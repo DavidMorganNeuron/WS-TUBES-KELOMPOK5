@@ -3,10 +3,12 @@
 namespace Tests\Feature;
 
 use App\Data\Destination;
+use App\Data\LinkedResource;
 use App\Services\Ontology\DestinationLinkedDataProvider;
 use App\Services\Ontology\DestinationRepository;
 use App\Services\Ontology\WikidataRegionRepository;
 use App\Support\IndonesianFormat;
+use Illuminate\Support\Facades\Blade;
 use Tests\TestCase;
 
 class DestinationPagesTest extends TestCase
@@ -165,19 +167,143 @@ class DestinationPagesTest extends TestCase
             'schema:TouristAttraction ws:DestinasiWisata',
             $xpath->evaluate('string(//*[@typeof="schema:TouristAttraction ws:DestinasiWisata"]/@typeof)'),
         );
-        $response->assertSee('Informasi wilayah terkait');
-        $response->assertSee('Detail pendukung untuk konteks administratif wilayah.');
+        $response->assertSee('Mengenal wilayah');
+        $response->assertSee('Tentang '.$destination->location);
         $this->assertSame(1, $xpath->query('//link[@rel="alternate" and @type="text/turtle"]')->length);
         $linkedRegion = app(DestinationLinkedDataProvider::class)->forDestination('ws-148')->region;
         $this->assertNotNull($linkedRegion);
         $wikidataRegion = app(WikidataRegionRepository::class)->findForRegion($destination->location);
         $this->assertNotNull($wikidataRegion);
-        $sameAsLink = $xpath->query('//a[@rel="owl:sameAs"]')->item(0);
-        $this->assertInstanceOf(\DOMElement::class, $sameAsLink);
-        $this->assertSame($linkedRegion->iri, $sameAsLink->getAttribute('about'));
-        $this->assertSame($wikidataRegion['wikidata_url'], $sameAsLink->getAttribute('href'));
-        $this->assertNotSame('', $sameAsLink->getAttribute('about'));
-        $this->assertNotSame('-', $sameAsLink->getAttribute('href'));
+        $sameAs = $xpath->query('//span[@rel="owl:sameAs"]')->item(0);
+        $this->assertInstanceOf(\DOMElement::class, $sameAs);
+        $this->assertSame($linkedRegion->iri, $sameAs->getAttribute('about'));
+        $this->assertSame($wikidataRegion['wikidata_url'], $sameAs->getAttribute('resource'));
+        $this->assertNotSame('', $sameAs->getAttribute('about'));
+        $this->assertNotSame('-', $sameAs->getAttribute('resource'));
+    }
+
+    public function test_region_cards_hide_provenance_terms_on_home_and_destination_pages(): void
+    {
+        $destination = $this->repository()->find('ws-148');
+        $this->assertNotNull($destination);
+
+        foreach (['/', '/destinations/'.$destination->id] as $path) {
+            $response = $this->get($path);
+            $response->assertOk();
+
+            $document = new \DOMDocument;
+            $previousErrorMode = libxml_use_internal_errors(true);
+            try {
+                $loaded = $document->loadHTML($response->getContent() ?? '');
+            } finally {
+                libxml_clear_errors();
+                libxml_use_internal_errors($previousErrorMode);
+            }
+
+            $this->assertTrue($loaded);
+            $text = mb_strtolower($document->getElementsByTagName('body')->item(0)?->textContent ?? '');
+            foreach (['wikidata', 'sumber', 'snapshot', 'identitas', 'referensi', 'query service'] as $forbidden) {
+                $this->assertStringNotContainsString($forbidden, $text, "Teks terlarang '{$forbidden}' tampil pada {$path}.");
+            }
+            $this->assertDoesNotMatchRegularExpression('/\bQ\d+\b/i', $text);
+        }
+    }
+
+    public function test_nearby_destination_cards_preserve_neighbor_rdfa_and_match_repository_results(): void
+    {
+        $destination = $this->repository()->find('ws-148');
+        $this->assertNotNull($destination);
+        $nearby = $this->repository()->nearby($destination);
+        $linkedNeighbors = app(DestinationLinkedDataProvider::class)->forDestination($destination->id)->neighbors;
+        $linkedIds = collect($linkedNeighbors)->pluck('destinationId')->sort()->values()->all();
+
+        $this->assertSame($nearby->pluck('id')->sort()->values()->all(), $linkedIds);
+
+        $response = $this->get('/destinations/'.$destination->id);
+        $response->assertOk();
+        $document = new \DOMDocument;
+        $previousErrorMode = libxml_use_internal_errors(true);
+        try {
+            $loaded = $document->loadHTML($response->getContent() ?? '');
+        } finally {
+            libxml_clear_errors();
+            libxml_use_internal_errors($previousErrorMode);
+        }
+
+        $this->assertTrue($loaded);
+        $xpath = new \DOMXPath($document);
+        $cards = $xpath->query('//h2[normalize-space(.)="Destinasi terdekat"]/following-sibling::div[1]/article[@rel="ws:dekatDengan"]');
+        $this->assertSame($nearby->count(), $cards->length);
+
+        foreach ($nearby as $index => $neighbor) {
+            $card = $cards->item($index);
+            $this->assertInstanceOf(\DOMElement::class, $card);
+            $this->assertSame(config('ontology.namespaces.data').$neighbor->id, $card->getAttribute('resource'));
+            $this->assertSame($neighbor->name, trim($xpath->evaluate('string(.//a[@property="ws:namaDestinasi schema:name"])', $card)));
+            $this->assertSame(route('destination.detail', $neighbor->id), $xpath->evaluate('string(.//a[@property="ws:namaDestinasi schema:name"]/@href)', $card));
+        }
+    }
+
+    public function test_region_component_renders_safe_facts_optional_links_and_no_empty_card(): void
+    {
+        $complete = Blade::render('<x-info-wilayah :region="$region" :region-name="$regionName" :region-resource="$regionResource" :region-neighbors="$regionNeighbors" :wikipedia-url="$wikipediaUrl" :wikivoyage-url="$wikivoyageUrl" />', [
+            'region' => [
+                'wikidata_label' => 'Kabupaten Contoh',
+                'wikidata_url' => 'https://www.wikidata.org/entity/Q12345',
+                'image_url' => 'https://upload.wikimedia.org/example.jpg',
+                'image_page_url' => 'https://commons.wikimedia.org/wiki/File:Contoh.jpg',
+                'website_url' => 'https://contoh.go.id/',
+                'population' => ['amount' => '123456'],
+                'area' => [
+                    'amount' => '999',
+                    'unit_qid' => 'Q999',
+                    'normalized' => ['amount' => '5000000', 'unit_qid' => 'Q25343'],
+                ],
+            ],
+            'regionName' => 'Kabupaten Contoh',
+            'regionResource' => config('ontology.namespaces.data').'wilayah-kabupaten-contoh',
+            'regionNeighbors' => [
+                new LinkedResource(
+                    iri: config('ontology.namespaces.data').'wilayah-kabupaten-lain',
+                    label: 'Kabupaten Lain',
+                    type: 'ws:KabupatenKota',
+                ),
+            ],
+            'wikipediaUrl' => 'https://id.wikipedia.org/wiki/Kabupaten_Contoh',
+            'wikivoyageUrl' => 'https://id.wikivoyage.org/wiki/Kabupaten_Contoh',
+        ]);
+        $this->assertStringContainsString('123.456', $complete);
+        $this->assertStringContainsString('5,00 km²', $complete);
+        $this->assertStringContainsString('contoh.go.id', $complete);
+        $this->assertStringContainsString('Baca selengkapnya', $complete);
+        $this->assertStringContainsString('Panduan perjalanan', $complete);
+        $this->assertStringContainsString('rel="owl:sameAs"', $complete);
+        $this->assertStringContainsString('rel="ws:berbatasanDengan"', $complete);
+        $this->assertStringContainsString('href="'.route('destinations', ['kabupaten' => 'Kabupaten Lain']).'"', $complete);
+        $this->assertStringContainsString('loading="lazy"', $complete);
+        $this->assertStringContainsString('referrerpolicy="no-referrer"', $complete);
+
+        $unsafe = Blade::render('<x-info-wilayah :region="$region" :region-name="$regionName" :region-resource="$regionResource" :wikipedia-url="$wikipediaUrl" :wikivoyage-url="$wikivoyageUrl" />', [
+            'region' => [
+                'wikidata_label' => 'Wilayah',
+                'wikidata_url' => 'javascript:alert(1)',
+                'image_url' => 'https://evil.example/image.svg',
+                'image_page_url' => 'javascript:alert(1)',
+                'website_url' => 'javascript:alert(1)',
+                'population' => ['amount' => '<script>alert(1)</script>'],
+                'area' => ['amount' => '1', 'unit_qid' => 'javascript:alert(1)'],
+            ],
+            'regionName' => 'Wilayah',
+            'regionResource' => 'javascript:alert(1)',
+            'wikipediaUrl' => 'javascript:alert(1)',
+            'wikivoyageUrl' => 'https://evil.example/travel',
+        ]);
+        $this->assertStringNotContainsString('javascript:', $unsafe);
+        $this->assertStringNotContainsString('evil.example', $unsafe);
+        $this->assertStringNotContainsString('<script', $unsafe);
+
+        $empty = Blade::render('<x-info-wilayah :region="$region" />', ['region' => null]);
+        $this->assertSame('', trim($empty));
     }
 
     public function test_detail_page_handles_sparse_destination_data(): void
