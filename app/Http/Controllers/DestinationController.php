@@ -26,12 +26,13 @@ class DestinationController extends Controller
             $filterOptions['activities'],
             $filterOptions['facilities'],
         );
+        $searchFilters = $filters;
         if (($filters['q'] ?? '') === '' && ! array_key_exists('sort', $filters)) {
-            $filters['sort'] = 'name';
+            $searchFilters['sort'] = 'name';
         }
 
         $searchPlan = $repository->planSearch($filters['q'] ?? '');
-        $destinations = $repository->paginate($filters)->withQueryString();
+        $destinations = $repository->paginate($searchFilters)->withQueryString();
 
         return view('explore', [
             'destinations' => $destinations,
@@ -59,12 +60,13 @@ class DestinationController extends Controller
             $filterOptions['activities'],
             $filterOptions['facilities'],
         );
+        $searchFilters = $filters;
         if (($filters['q'] ?? '') === '' && ! array_key_exists('sort', $filters)) {
-            $filters['sort'] = 'name';
+            $searchFilters['sort'] = 'name';
         }
 
         $searchPlan = $repository->planSearch($filters['q'] ?? '');
-        $destinations = $repository->paginate($filters)->withQueryString();
+        $destinations = $repository->paginate($searchFilters)->withQueryString();
         $destinations->setPath(route('destinations'));
 
         return response()->json([

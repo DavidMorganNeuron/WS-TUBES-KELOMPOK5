@@ -17,7 +17,7 @@ Pencarian tidak hanya membandingkan nama destinasi. Kecamatan bukan properti ter
 
 Query dipangkas, dijadikan huruf kecil, lalu dipisah pada karakter selain huruf atau angka Unicode. Kata stop yang dikonfigurasi adalah `di`, `yang`, `ke`, `dari`, `untuk`, `dengan`, `pada`, `dalam`, `serta`, dan `atau`. Token satu huruf tetap dicari sebagai awalan kata, agar pengetikan satu karakter langsung menghasilkan destinasi yang cocok. Panjang query dibatasi 200 karakter, paling banyak delapan token, dan setiap token paling banyak 40 karakter; input nonkosong di luar batas menghasilkan nol kecocokan, bukan daftar seluruh destinasi.
 
-Direktori juga menyediakan dropdown `dapatMelakukan` dan `memilikiFasilitas` yang diisi dari label aktivitas dan fasilitas unik pada dataset aktif. Pilihan diterapkan tanpa peka huruf besar-kecil dan mencari kecocokan sebagian; destinasi tanpa properti tersebut tetap muncul saat dropdown terkait tidak dipilih.
+Direktori menyediakan dropdown `dapatMelakukan` yang diisi dari label aktivitas unik pada dataset aktif. Pilihan diterapkan tanpa peka huruf besar-kecil dan mencari kecocokan sebagian. Filter `memilikiFasilitas` tetap didukung oleh backend untuk permintaan yang menyertakan parameter tersebut, tetapi tidak ditampilkan sebagai dropdown pada direktori.
 
 ## Relevansi global
 
@@ -33,7 +33,7 @@ Setiap token harus cocok dengan setidaknya satu bidang. Skor dihitung sekali per
 | Alamat | 400 |
 | Deskripsi atau petunjuk lokasi | 200 |
 
-Saat ada kata kunci, urutan relevansi diterapkan otomatis dengan skor global tertinggi terlebih dahulu, lalu rating dan nama sebagai pemutus seri. Relevansi bukan lagi pilihan filter tersendiri. Bobot berada di `config/ontology.php`.
+Saat ada kata kunci dan pengguna tidak memilih urutan manual, urutan relevansi diterapkan otomatis dengan skor global tertinggi terlebih dahulu, lalu rating dan nama sebagai pemutus seri. Urutan bawaan tidak ditampilkan sebagai pilihan dropdown; opsi urutan manual tetap dapat dipilih. Bobot berada di `config/ontology.php`.
 
 ## Koreksi typo
 

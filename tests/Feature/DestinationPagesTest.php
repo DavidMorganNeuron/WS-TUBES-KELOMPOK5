@@ -76,11 +76,12 @@ class DestinationPagesTest extends TestCase
         $response->assertSee('Jelajahi Destinasi Sumatera Utara');
         $filterOptions = $this->repository()->filterOptions();
         $response->assertSee('<select name="dapatMelakukan"', false);
-        $response->assertSee('<select name="memilikiFasilitas"', false);
+        $response->assertDontSee('<select name="memilikiFasilitas"', false);
+        $response->assertSee('<option value="" hidden', false);
+        $response->assertSee('>Urutan bawaan</option>', false);
+        $response->assertDontSee('Urutan otomatis');
         $this->assertNotEmpty($filterOptions['activities']);
-        $this->assertNotEmpty($filterOptions['facilities']);
         $response->assertSee('value="'.e($filterOptions['activities'][0]).'"', false);
-        $response->assertSee('value="'.e($filterOptions['facilities'][0]).'"', false);
         $response->assertDontSee('Paling relevan');
         $response->assertDontSee('Tanpa koreksi otomatis');
         $response->assertDontSee('Menampilkan 1');
@@ -100,6 +101,16 @@ class DestinationPagesTest extends TestCase
             ->assertOk()
             ->assertSee('Danau Toba')
             ->assertDontSee('Aek Sijorni');
+    }
+
+    public function test_search_uses_relevance_by_default_without_a_manual_sort(): void
+    {
+        $expectedNames = $this->repository()->search(['q' => 'toba'])->take(3)->pluck('name')->all();
+        $this->assertCount(3, $expectedNames);
+
+        $this->get('/destinations?q=toba')
+            ->assertOk()
+            ->assertSeeInOrder($expectedNames);
     }
 
     public function test_destinations_page_can_be_filtered_by_kabupaten(): void

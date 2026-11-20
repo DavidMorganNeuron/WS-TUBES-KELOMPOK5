@@ -59,7 +59,7 @@
                     <input type="text" name="q" value="{{ $activeQuery }}" placeholder="Cari nama objek wisata, kaldera, atau pulau..." class="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm outline-none focus:border-brand-primary" autocomplete="off" aria-label="Saring destinasi berdasarkan nama">
                 </div>
                 <select name="sort" class="bg-gray-50 border border-gray-200 text-sm font-medium text-gray-700 rounded-lg px-4 py-2 outline-none w-full sm:w-48" aria-label="Urutkan destinasi">
-                    <option value="" @selected($activeSort === '')>Urutan otomatis</option>
+                    <option value="" hidden @selected($activeSort === '')>Urutan bawaan</option>
                     @foreach ($sorts as $value => $label)
                         <option value="{{ $value }}" @selected($activeSort === $value)>{{ [
                             'name' => 'Nama: A–Z',
@@ -80,12 +80,6 @@
                     <option value="">Semua aktivitas</option>
                     @foreach ($filterOptions['activities'] as $activity)
                         <option value="{{ $activity }}" @selected($activeActivity === $activity)>{{ $activity }}</option>
-                    @endforeach
-                </select>
-                <select name="memilikiFasilitas" class="bg-gray-50 border border-gray-200 text-sm font-medium text-gray-700 rounded-lg px-4 py-2 outline-none w-full sm:w-56" aria-label="Saring berdasarkan fasilitas">
-                    <option value="">Semua fasilitas</option>
-                    @foreach ($filterOptions['facilities'] as $facility)
-                        <option value="{{ $facility }}" @selected($activeFacility === $facility)>{{ $facility }}</option>
                     @endforeach
                 </select>
             </div>

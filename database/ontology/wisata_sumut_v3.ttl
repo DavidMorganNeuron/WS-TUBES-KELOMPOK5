@@ -2838,7 +2838,7 @@ data:media-ws-235 ws:urlMedia "https://zjglidcehtsqqqhbdxyp.supabase.co/storage/
 data:media-ws-236 rdf:type ws:Media .
 data:media-ws-236 ws:urlMedia "https://asset.tribunnews.com/TRLXthBprwXcGvd6zJfK9zPEl0I=/1200x675/filters:upscale():quality(30):format(webp):focal(0.5x0.5:0.5x0.5)/medan/foto/bank/originals/suasana-pengunjung-menikmati-sejuknya-air-terjun-aek-martolu.jpg"^^xsd:anyURI .
 data:media-ws-237 rdf:type ws:Media .
-data:media-ws-237 ws:urlMedia "https://www.kompasiana.com/liviasibuea4463/657959bade948f7ba90ec552/pesona-keindahan-air-terjun-jambuara-indah"^^xsd:anyURI .
+data:media-ws-237 ws:urlMedia "https://awsimages.detik.net.id/community/media/visual/2021/02/08/dev-jambuara-air-terjun-untuk-liburan-segar-di-simalungun.jpeg?w=1200"^^xsd:anyURI .
 data:media-ws-238 rdf:type ws:Media .
 data:media-ws-238 ws:urlMedia "https://wahananews.co/photo/berita/dir032022/air-terjun-kembar-katasa-yang-menawan-di-simalungun_fQ80Y06YGm.jpg"^^xsd:anyURI .
 data:media-ws-239 rdf:type ws:Media .
@@ -2850,7 +2850,7 @@ data:media-ws-241 ws:urlMedia "https://lh3.googleusercontent.com/grass-cs/AABkmL
 data:media-ws-242 rdf:type ws:Media .
 data:media-ws-242 ws:urlMedia "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT9CD40eotxuFGt4IyydeZLhw8d7FJGHp6oRA0AO9dVpwwPvFWW"^^xsd:anyURI .
 data:media-ws-243 rdf:type ws:Media .
-data:media-ws-243 ws:urlMedia "https://apabuka.com/images/danau-marsabut.jpg"^^xsd:anyURI .
+data:media-ws-243 ws:urlMedia "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRbnW8mvNhQmE8MpdfsRDB4nLHQ3daaupKIx18dNh5ST8KYZrGQlvhEUn8&s=10"^^xsd:anyURI .
 data:media-ws-244 rdf:type ws:Media .
 data:media-ws-244 ws:urlMedia "https://lh3.googleusercontent.com/grass-cs/AABkmLcyY3vF9XSPHcKk0afStt4oC1b0dE2GHbuI06XHTdFoa54c3RiHLBhsqfTU5jPbDiCvOMbBwoA75MJAvaMe-reu_Z4ubmwGB2UKv52x488mb_NyWweJNYu6JFF3EVTJdxskgaun=s1360-w1360-h1020-rw"^^xsd:anyURI .
 data:media-ws-245 rdf:type ws:Media .
