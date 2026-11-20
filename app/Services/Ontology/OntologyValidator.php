@@ -6,6 +6,13 @@ namespace App\Services\Ontology;
 
 final class OntologyValidator
 {
+    private NorthSumatraCoverage $coverage;
+
+    public function __construct(?NorthSumatraCoverage $coverage = null)
+    {
+        $this->coverage = $coverage ?? NorthSumatraCoverage::fromConfig();
+    }
+
     /**
      * @param  list<array{subject: string, predicate: string, object: array{kind: string, value: string, datatype: ?string, language: ?string}}>  $triples
      * @return array{
@@ -34,6 +41,7 @@ final class OntologyValidator
         $errors = [];
         $types = [];
         $properties = [];
+        $coordinates = [];
         $classCounts = array_fill_keys(OntologyMigrator::CLASSES, 0);
         $objectPropertyCounts = array_fill_keys(array_keys(OntologyMigrator::OBJECT_PROPERTIES), 0);
         $dataPropertyCounts = array_fill_keys(array_keys(OntologyMigrator::DATA_PROPERTIES), 0);
@@ -303,11 +311,14 @@ final class OntologyValidator
                 }
 
                 $latitude = $triple['predicate'] === OntologyMigrator::WS_NS.'lintang';
-                $minimum = $latitude ? 0.5 : 97.0;
-                $maximum = $latitude ? 4.5 : 100.5;
-                if ((float) $value < $minimum || (float) $value > $maximum) {
-                    $errors[] = "{$triple['subject']}: koordinat di luar batas Sumatera Utara ({$value}).";
-                }
+                $coordinates[$triple['subject']][$latitude ? 'latitude' : 'longitude'] = (float) $value;
+            }
+        }
+
+        foreach ($coordinates as $subject => $coordinate) {
+            if (isset($coordinate['latitude'], $coordinate['longitude'])
+                && ! $this->coverage->contains($coordinate['latitude'], $coordinate['longitude'])) {
+                $errors[] = "{$subject}: koordinat di luar batas Sumatera Utara ({$coordinate['latitude']}, {$coordinate['longitude']}).";
             }
         }
 

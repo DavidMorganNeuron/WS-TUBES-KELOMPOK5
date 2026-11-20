@@ -21,6 +21,29 @@ class SparqlDestinationSourceTest extends TestCase
         Cache::flush();
     }
 
+    public function test_filter_options_are_loaded_and_deduplicated_from_sparql_labels(): void
+    {
+        Http::fake(fn (Request $request) => Http::response($this->response([
+            [
+                'kind' => ['type' => 'literal', 'value' => 'activity'],
+                'label' => ['type' => 'literal', 'value' => 'Berenang'],
+            ],
+            [
+                'kind' => ['type' => 'literal', 'value' => 'activity'],
+                'label' => ['type' => 'literal', 'value' => 'berenang'],
+            ],
+            [
+                'kind' => ['type' => 'literal', 'value' => 'facility'],
+                'label' => ['type' => 'literal', 'value' => 'Toilet'],
+            ],
+        ])));
+
+        $options = app(DestinationRepository::class)->filterOptions();
+
+        $this->assertSame(['Berenang'], $options['activities']);
+        $this->assertSame(['Toilet'], $options['facilities']);
+    }
+
     public function test_paginated_search_uses_count_id_and_detail_queries_and_preserves_id_order(): void
     {
         Http::fake(function (Request $request) {

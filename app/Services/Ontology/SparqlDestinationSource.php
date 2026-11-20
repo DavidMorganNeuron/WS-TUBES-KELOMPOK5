@@ -34,7 +34,7 @@ final class SparqlDestinationSource implements DestinationSource
     }
 
     /**
-     * @param  array{q?: string|null, jenis?: string|null, kabupaten?: string|null, provinsi?: string|null, sort?: string|null, exact?: bool|int|string|null}  $filters
+     * @param  array{q?: string|null, jenis?: string|null, kabupaten?: string|null, provinsi?: string|null, sort?: string|null, dapatMelakukan?: string|null, memilikiFasilitas?: string|null, exact?: bool|int|string|null}  $filters
      * @return Collection<int, Destination>
      */
     public function search(array $filters = []): Collection
@@ -79,7 +79,40 @@ final class SparqlDestinationSource implements DestinationSource
     }
 
     /**
-     * @param  array{q?: string|null, jenis?: string|null, kabupaten?: string|null, provinsi?: string|null, sort?: string|null, exact?: bool|int|string|null}  $filters
+     * @return array{activities: list<string>, facilities: list<string>}
+     */
+    public function filterOptions(): array
+    {
+        $rows = $this->selectCached($this->queryBuilder->filterOptions());
+        $options = ['activities' => [], 'facilities' => []];
+
+        foreach ($rows as $row) {
+            $label = $row['label'] ?? null;
+            $kind = $row['kind'] ?? null;
+            if (! is_string($label) || ! is_string($kind) || trim($label) === '') {
+                continue;
+            }
+
+            if ($kind === 'activity') {
+                $options['activities'][] = trim($label);
+            } elseif ($kind === 'facility') {
+                $options['facilities'][] = trim($label);
+            }
+        }
+
+        foreach ($options as $key => $labels) {
+            $options[$key] = collect($labels)
+                ->unique(static fn (string $label): string => mb_strtolower($label, 'UTF-8'))
+                ->sort(static fn (string $left, string $right): int => strnatcasecmp($left, $right))
+                ->values()
+                ->all();
+        }
+
+        return $options;
+    }
+
+    /**
+     * @param  array{q?: string|null, jenis?: string|null, kabupaten?: string|null, provinsi?: string|null, sort?: string|null, dapatMelakukan?: string|null, memilikiFasilitas?: string|null, exact?: bool|int|string|null}  $filters
      */
     public function paginate(array $filters = [], int $perPage = 9): LengthAwarePaginator
     {

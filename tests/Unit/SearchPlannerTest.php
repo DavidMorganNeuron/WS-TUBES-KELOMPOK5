@@ -17,6 +17,7 @@ class SearchPlannerTest extends TestCase
         $tokenizer = new SearchTokenizer;
 
         $this->assertSame(['wisata', 'danau', 'toba'], $tokenizer->tokenize('Wisata di Danau Yang Toba'));
+        $this->assertSame(['a'], $tokenizer->tokenize('A'));
         $this->assertSame([], $tokenizer->tokenize(str_repeat('a', 201)));
         $this->assertSame([], $tokenizer->tokenize(implode(' ', array_fill(0, 9, 'wisata'))));
     }

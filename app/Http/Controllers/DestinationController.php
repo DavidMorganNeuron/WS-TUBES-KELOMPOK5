@@ -18,17 +18,19 @@ class DestinationController extends Controller
         $sorts = $this->sorts();
 
         $facets = $repository->facets();
-        $filters = $this->filters($request, array_keys($sorts), array_keys($facets['kabupaten']));
-        if (($filters['q'] ?? '') !== '' && ! array_key_exists('sort', $filters)) {
-            $filters['sort'] = 'relevansi';
-        } elseif (! array_key_exists('sort', $filters)) {
+        $filterOptions = $repository->filterOptions();
+        $filters = $this->filters(
+            $request,
+            array_keys($sorts),
+            array_keys($facets['kabupaten']),
+            $filterOptions['activities'],
+            $filterOptions['facilities'],
+        );
+        if (($filters['q'] ?? '') === '' && ! array_key_exists('sort', $filters)) {
             $filters['sort'] = 'name';
         }
 
-        $searchPlan = $repository->planSearch(
-            $filters['q'] ?? '',
-            (bool) ($filters['exact'] ?? false),
-        );
+        $searchPlan = $repository->planSearch($filters['q'] ?? '');
         $destinations = $repository->paginate($filters)->withQueryString();
 
         return view('explore', [
@@ -37,6 +39,7 @@ class DestinationController extends Controller
             'facets' => $facets,
             'types' => DestinationRepository::TYPES,
             'sorts' => $sorts,
+            'filterOptions' => $filterOptions,
             'searchPlan' => $searchPlan,
             'seo' => $seoDataFactory->destinations($request, $filters),
         ]);
@@ -48,17 +51,19 @@ class DestinationController extends Controller
         $sorts = $this->sorts();
 
         $facets = $repository->facets();
-        $filters = $this->filters($request, array_keys($sorts), array_keys($facets['kabupaten']));
-        if (($filters['q'] ?? '') !== '' && ! array_key_exists('sort', $filters)) {
-            $filters['sort'] = 'relevansi';
-        } elseif (! array_key_exists('sort', $filters)) {
+        $filterOptions = $repository->filterOptions();
+        $filters = $this->filters(
+            $request,
+            array_keys($sorts),
+            array_keys($facets['kabupaten']),
+            $filterOptions['activities'],
+            $filterOptions['facilities'],
+        );
+        if (($filters['q'] ?? '') === '' && ! array_key_exists('sort', $filters)) {
             $filters['sort'] = 'name';
         }
 
-        $searchPlan = $repository->planSearch(
-            $filters['q'] ?? '',
-            (bool) ($filters['exact'] ?? false),
-        );
+        $searchPlan = $repository->planSearch($filters['q'] ?? '');
         $destinations = $repository->paginate($filters)->withQueryString();
         $destinations->setPath(route('destinations'));
 
@@ -82,16 +87,14 @@ class DestinationController extends Controller
     {
         $request->validate([
             'q' => ['sometimes', 'nullable', 'string', 'max:200'],
-            'exact' => ['sometimes', 'nullable', 'boolean'],
         ]);
 
         $query = $request->string('q')->trim()->toString();
-        $exact = $request->boolean('exact');
-        $searchPlan = $repository->planSearch($query, $exact);
+        $searchPlan = $repository->planSearch($query);
 
         $destinations = $query === ''
             ? collect()
-            : $repository->search(['q' => $query, 'sort' => 'relevansi', 'exact' => $exact])->take(8);
+            : $repository->search(['q' => $query, 'sort' => 'relevansi'])->take(8);
 
         return response()->json([
             'html' => view('partials.destination-suggestions', [
@@ -141,7 +144,6 @@ class DestinationController extends Controller
     private function sorts(): array
     {
         return [
-            'relevansi' => 'Paling relevan',
             'name' => 'Name A–Z',
             'rating' => 'Rating: high to low',
             'rating_asc' => 'Rating: low to high',
@@ -157,23 +159,32 @@ class DestinationController extends Controller
             'jenis' => ['sometimes', 'nullable', 'string', 'max:64'],
             'kabupaten' => ['sometimes', 'nullable', 'string', 'max:100'],
             'sort' => ['sometimes', 'nullable', 'string', 'max:32'],
-            'exact' => ['sometimes', 'nullable', 'boolean'],
+            'dapatMelakukan' => ['sometimes', 'nullable', 'string', 'max:100'],
+            'memilikiFasilitas' => ['sometimes', 'nullable', 'string', 'max:100'],
         ]);
     }
 
     /**
      * @param  list<string>  $sortOptions
      * @param  list<string>  $kabupatenOptions
-     * @return array{q?: string, jenis?: string, kabupaten?: string, sort?: string, exact?: bool}
+     * @param  list<string>  $activityOptions
+     * @param  list<string>  $facilityOptions
+     * @return array{q?: string, jenis?: string, kabupaten?: string, sort?: string, dapatMelakukan?: string, memilikiFasilitas?: string}
      */
-    private function filters(Request $request, array $sortOptions, array $kabupatenOptions): array
-    {
+    private function filters(
+        Request $request,
+        array $sortOptions,
+        array $kabupatenOptions,
+        array $activityOptions,
+        array $facilityOptions,
+    ): array {
         $filters = [
             'q' => $request->string('q')->trim()->toString(),
             'jenis' => $request->string('jenis')->toString(),
             'kabupaten' => $request->string('kabupaten')->toString(),
             'sort' => $request->string('sort')->toString(),
-            'exact' => $request->boolean('exact'),
+            'dapatMelakukan' => $request->string('dapatMelakukan')->trim()->toString(),
+            'memilikiFasilitas' => $request->string('memilikiFasilitas')->trim()->toString(),
         ];
 
         if (! in_array($filters['jenis'], DestinationRepository::TYPES, true)) {
@@ -188,22 +199,36 @@ class DestinationController extends Controller
             $filters['sort'] = '';
         }
 
-        if ($filters['exact'] === false) {
-            unset($filters['exact']);
-        }
+        $filters['dapatMelakukan'] = $this->matchingOption($filters['dapatMelakukan'], $activityOptions);
+        $filters['memilikiFasilitas'] = $this->matchingOption($filters['memilikiFasilitas'], $facilityOptions);
 
-        return array_filter($filters, static fn (mixed $value): bool => $value !== '' && $value !== false && $value !== null);
+        return array_filter($filters, static fn (mixed $value): bool => $value !== '' && $value !== null);
     }
 
     /**
-     * @param  array{q?: string, jenis?: string, kabupaten?: string, sort?: string, exact?: bool}  $filters
+     * @param  list<string>  $options
+     */
+    private function matchingOption(string $value, array $options): string
+    {
+        foreach ($options as $option) {
+            if (mb_strtolower($value, 'UTF-8') === mb_strtolower($option, 'UTF-8')) {
+                return $option;
+            }
+        }
+
+        return '';
+    }
+
+    /**
+     * @param  array{q?: string, jenis?: string, kabupaten?: string, sort?: string, dapatMelakukan?: string, memilikiFasilitas?: string}  $filters
      */
     private function hasActiveFilters(array $filters): bool
     {
         return ($filters['q'] ?? '') !== ''
             || ($filters['jenis'] ?? '') !== ''
             || ($filters['kabupaten'] ?? '') !== ''
-            || ($filters['sort'] ?? 'name') !== 'name'
-            || ($filters['exact'] ?? false);
+            || ($filters['dapatMelakukan'] ?? '') !== ''
+            || ($filters['memilikiFasilitas'] ?? '') !== ''
+            || ($filters['sort'] ?? 'name') !== 'name';
     }
 }

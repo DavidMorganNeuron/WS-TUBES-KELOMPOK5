@@ -15,7 +15,7 @@
 - ws-061 — Pea Taharan: Kabupaten Samosir; alamat: -
 - ws-195 — Siantar Waterpark: Kota Pematang Siantar; alamat: Jl. Rakutta Sembiring No. 1, Kel. Naga Pita, Kec. Siantar Martoba, Kota Pematangsiantar, Sumatera Utara
 
-## Koordinat di luar batas Sumatera Utara (lintang 0.5–4.5, bujur 97.0–100.5)
+## Koordinat di luar cakupan: lintang 0.5–4.5, bujur 97–100.5; lintang -0.5–0.5, bujur 97.9–98.7
 - Tidak ditemukan.
 
 ## Nama destinasi duplikat
@@ -45,9 +45,11 @@
 - ws-211 — Jungle River Sibolangit: Senin-Jumat 08.00-23.00, Sabtu-Minggu 00.00-23.00
 - ws-215 — Singapore Land Waterpark: Senin-Kamis 10.00-18.00, Jumat-Minggu 09.00-18.00
 - ws-219 — Pos Bloc Medan: Senin-Kamis 10.00-22.00, Jumat-Minggu 07.00-00.00
+- ws-296 — Avros Park: Senin - Jumat 09.00 - 23.00 & Sabtu - Minggu 08.00 - 23.00
+- ws-303 — Loken Barn Resort: Senin - Jumat 08.00 - 20.00 & Sabtu - Minggu 07.00 - 21.30
 
 ## URL gambar dari host tidak stabil
-- `encrypted-tbn0.gstatic.com`: 61 URL.
+- `encrypted-tbn0.gstatic.com`: 71 URL.
   - ws-003 — https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQE7wOvcID9TwfKkPbBKcm7aZX-82KpsdExisn2A3NJ8pgb_3zNS6EpyhE&s=10
   - ws-004 — https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSE12qMoDoDqBknnfKaHFevvqxNXPQv2XSrFvXLVy2EKZMBi3JHXRB70AuF&s=10
   - ws-008 — https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2gWYgebUo3AUtOA2BcI_Pb-VIGFSZptd-QqLBRKiGciOGlz4ydjW1ZkVX&s=10
@@ -109,6 +111,16 @@
   - ws-224 — https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRZdYjTRToL2qnFrGL8EgwWCWv4mj0a-cWVxlrYBW0DSxS_erjQLKNJzeRk&s=10
   - ws-226 — https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_JGGBG_Oq2f3pbW0lRomzehwR6Ty7ymPHUavMSZGVT2Pt2Q9rXv8HSyQ&s=10
   - ws-228 — https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSA3KBZlzX9UZSuXkCE8XdJySDIJk5pfYkECvgp0UFhsQN88cux098SO6Qw&s=10
+  - ws-231 — https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIgpvMY2ohD3-xNRqGxv63hsiIQS8__1En60nJkT5gyb5uC_hme6N2cnU&s=10
+  - ws-242 — https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT9CD40eotxuFGt4IyydeZLhw8d7FJGHp6oRA0AO9dVpwwPvFWW
+  - ws-247 — https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSMuGToYNsOIkjG-x2aAQe8oMNezcptHg3zSJBcRoN_1A&s
+  - ws-248 — https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRni34RP5sKmvVubOQmjopLpcOXqwSf6ST-EgBrNPLPCkrZYHE
+  - ws-254 — https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR1VV5KQgIXALGnDcsmtUtydO7AS8raJR4HwRfajyf5gnpnEHSG
+  - ws-258 — https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSViqU4eTNif0mVfQOR45ZQ3Nhm4kpn8dwklb2yuifEs_CE6DKc
+  - ws-265 — https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNDX1dpmx1eQlIvrGjHncXFypiAEAyVaZexkJkjQUq7-H1muA2B7NdZGk&s=10
+  - ws-281 — https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTtqdltMdX4cYgmnk8RkRD31nGocNuMkzFnRJn95zmGCKGxvGW
+  - ws-300 — https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJ5W-YEqvW11V_89VxXHP0LwaSOSJCkgaufvDgU4t66XPGhatS
+  - ws-303 — https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2cWeIHApzi0mSeAurB66VVrn6TyJ2zACRHwwNSGiBGvTZzOFv8IN1CqQ&s=10
 - `pinimg.com`: 3 URL.
   - ws-002 — https://i.pinimg.com/1200x/6a/7c/f7/6a7cf77bd4e5a5b426a261c5bebed355.jpg
   - ws-124 — https://i.pinimg.com/736x/82/7b/64/827b6402b2b435ce2ff1dc022e58aa93.jpg

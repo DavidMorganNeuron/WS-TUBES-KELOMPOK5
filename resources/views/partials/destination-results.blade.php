@@ -1,8 +1,3 @@
-@php
-    $firstItem = $destinations->firstItem() ?? 0;
-    $lastItem = $destinations->lastItem() ?? 0;
-@endphp
-
 @include('partials.search-notice')
 
 @if ($destinations->isEmpty())
@@ -19,10 +14,7 @@
         @endforeach
     </div>
 
-    <div class="flex flex-col sm:flex-row justify-between items-center gap-4 border-t border-gray-200 pt-6 mb-16">
-        <span class="text-sm text-gray-500">
-            Menampilkan {{ \App\Support\IndonesianFormat::number($firstItem) }}–{{ \App\Support\IndonesianFormat::number($lastItem) }} dari {{ \App\Support\IndonesianFormat::number($destinations->total()) }} destinasi
-        </span>
+    <div class="flex justify-center border-t border-gray-200 pt-6 mb-16">
         <div>
             {{ $destinations->onEachSide(1)->links('pagination.text') }}
         </div>

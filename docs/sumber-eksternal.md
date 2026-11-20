@@ -50,7 +50,7 @@ Jalur halaman menggunakan timeout pendek (`live_timeout`, bawaan 3 detik), tanpa
 Angka di bawah dihitung langsung dari snapshot setelah refresh live pada **15 November 2026**; angka ini bukan perkiraan cakupan seluruh Wikidata:
 
 - **Wilayah:** 30 wilayah terverifikasi; koordinat 30/30, gambar 12/30, Wikipedia Indonesia 30/30, Wikivoyage Indonesia 4/30 dan Inggris 1/30, label Indonesia 30/30, label Inggris 30/30, alias minimal satu bahasa 30/30, populasi 30/30, luas 30/30, dan situs resmi 24/30. Pasangan batas P47 yang diperiksa silang berjumlah 51.
-- **Destinasi:** 1 QID disetujui dari 228 destinasi lokal; gambar Commons 1/1, artikel Wikipedia Indonesia 0/1, Wikivoyage 0/1, status warisan 0/1, ketinggian terverifikasi dalam meter 0/1, dan tahun berdiri pada presisi yang diterima 0/1. [Snapshot detail destinasi](../database/ontology/external/wikidata-destinasi-detail.json) hanya menanyakan QID yang disetujui.
+- **Destinasi:** 1 QID disetujui dari 304 destinasi lokal; gambar Commons 1/1, artikel Wikipedia Indonesia 0/1, Wikivoyage 0/1, status warisan 0/1, ketinggian terverifikasi dalam meter 0/1, dan tahun berdiri pada presisi yang diterima 0/1. [Snapshot detail destinasi](../database/ontology/external/wikidata-destinasi-detail.json) hanya menanyakan QID yang disetujui.
 - Angka wilayah dan destinasi dapat dihitung ulang dari [snapshot detail wilayah](../database/ontology/external/wikidata-wilayah-detail.json) dan snapshot destinasi di atas. Refresh berikutnya dapat mengubah cakupan.
 - Daftar kandidat dan alasan keputusan terdapat di [kandidat-tautan-wikidata.md](./kandidat-tautan-wikidata.md). Hasil penemuan adalah kandidat, bukan bukti identitas otomatis selain entri yang lolos aturan persetujuan.
 

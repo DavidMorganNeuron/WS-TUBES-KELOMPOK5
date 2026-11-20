@@ -31,13 +31,13 @@ php artisan ontology:validate
 Keluaran nyata:
 
 ```text
-Total destinasi: 228
+Total destinasi: 304
 sameAs wilayah: 30
 sameAs destinasi: 1
-Total destinasi sumber v2: 228
-Destinasi berating: 215
+Total destinasi sumber v2: 304
+Destinasi berating: 291
 Destinasi tanpa rating: 13
-Rata-rata rating: 4.38
+Rata-rata rating: 4.39
 Validasi ontologi v3 lulus.
 ```
 
@@ -45,13 +45,15 @@ Pemeriksaan relasi dan sentinel dari keluaran yang sama:
 
 | Pemeriksaan | Hasil |
 | --- | ---: |
+| Total triple v3 | 13.469 |
 | `berbatasanDengan` | 102 |
-| `dekatDengan` | 532 |
+| `dekatDengan` | 746 |
 | Sentinel `ratingPengunjung` | 13 |
-| Sentinel `nomorHp` | 150 |
-| Sentinel `email` | 197 |
+| Sentinel `nomorHp` | 196 |
+| Sentinel `email` | 267 |
+| Sentinel `urlInstagram` | 160 |
 
-Angka email 197 adalah keluaran aktual. Angka ini berbeda dari acuan 195 yang pernah disebut; dataset tidak diubah untuk menyamakan angka tersebut.
+Angka sentinel adalah keluaran generator; email 267 berbeda dari acuan lama karena teks diproses dan tidak disamakan dengan mengubah data.
 
 ## Perintah pengulangan
 

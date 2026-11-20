@@ -1,6 +1,6 @@
 # Fitur pencarian
 
-WayFinder memakai satu rencana pencarian untuk driver Fuseki dan Turtle. Pencarian biasa membentuk query SPARQL yang sama-sama memeriksa bidang di bawah ini; jalur Turtle menerapkan aturan pencocokan dan urutan relevansi yang setara di aplikasi.
+WayFinder memakai satu rencana pencarian untuk driver Fuseki dan Turtle. Pencarian direktori secara otomatis mengoreksi typo dan menyaring berdasarkan bidang di bawah ini; jalur SPARQL dan Turtle menerapkan aturan pencocokan yang setara.
 
 ## Bidang yang dicari
 
@@ -15,7 +15,9 @@ Pencarian tidak hanya membandingkan nama destinasi. Kecamatan bukan properti ter
 
 ## Token dan stop word
 
-Query dipangkas, dijadikan huruf kecil, lalu dipisah pada karakter selain huruf atau angka Unicode. Kata stop yang dikonfigurasi adalah `di`, `yang`, `ke`, `dari`, `untuk`, `dengan`, `pada`, `dalam`, `serta`, dan `atau`. Token satu huruf diabaikan kecuali angka. Panjang query dibatasi 200 karakter, paling banyak delapan token, dan setiap token paling banyak 40 karakter; input nonkosong di luar batas menghasilkan nol kecocokan, bukan daftar seluruh destinasi.
+Query dipangkas, dijadikan huruf kecil, lalu dipisah pada karakter selain huruf atau angka Unicode. Kata stop yang dikonfigurasi adalah `di`, `yang`, `ke`, `dari`, `untuk`, `dengan`, `pada`, `dalam`, `serta`, dan `atau`. Token satu huruf tetap dicari sebagai awalan kata, agar pengetikan satu karakter langsung menghasilkan destinasi yang cocok. Panjang query dibatasi 200 karakter, paling banyak delapan token, dan setiap token paling banyak 40 karakter; input nonkosong di luar batas menghasilkan nol kecocokan, bukan daftar seluruh destinasi.
+
+Direktori juga menyediakan dropdown `dapatMelakukan` dan `memilikiFasilitas` yang diisi dari label aktivitas dan fasilitas unik pada dataset aktif. Pilihan diterapkan tanpa peka huruf besar-kecil dan mencari kecocokan sebagian; destinasi tanpa properti tersebut tetap muncul saat dropdown terkait tidak dipilih.
 
 ## Relevansi global
 
@@ -31,7 +33,7 @@ Setiap token harus cocok dengan setidaknya satu bidang. Skor dihitung sekali per
 | Alamat | 400 |
 | Deskripsi atau petunjuk lokasi | 200 |
 
-Urutan `relevansi` memakai skor global tertinggi terlebih dahulu, lalu rating dan nama sebagai pemutus seri. Bobot berada di `config/ontology.php`.
+Saat ada kata kunci, urutan relevansi diterapkan otomatis dengan skor global tertinggi terlebih dahulu, lalu rating dan nama sebagai pemutus seri. Relevansi bukan lagi pilihan filter tersendiri. Bobot berada di `config/ontology.php`.
 
 ## Koreksi typo
 
@@ -43,7 +45,7 @@ Kosakata dibangun dari teks yang memang dapat dicari. Koreksi memakai jarak edit
 
 Untuk kata terakhir, pencocokan dan koreksi juga mempertimbangkan awalan kosakata, sehingga kata yang masih diketik dapat menemukan bentuk lengkapnya. Bila token tidak dapat dikoreksi, saran terdekat dibatasi sampai tiga. Contoh: `dnau toba` dikoreksi menjadi `danau toba`; nilai `correction` pada respons live tetap berisi teks awal dan teks koreksi agar kontrak JSON tetap eksplisit.
 
-Tambahkan `exact=1` untuk melewati koreksi ejaan dan memakai token query apa adanya. Ini tidak mengubah bentuk dasar respons JSON; field `correction` bernilai `null` bila tidak ada koreksi.
+Koreksi typo selalu aktif pada pencarian direktori. Pencarian peta tetap mendukung `exact=1` untuk mempertahankan teks apa adanya; pilihan ini tidak tersedia pada direktori.
 
 ## Keamanan dan pilihan implementasi
 

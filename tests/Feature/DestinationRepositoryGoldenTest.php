@@ -42,7 +42,7 @@ class DestinationRepositoryGoldenTest extends TestCase
         foreach ($golden['city_sorts'] as $sort => $expectedIds) {
             $destinations = $repository->search(['kabupaten' => 'Kota Medan', 'sort' => $sort]);
 
-            $this->assertSame(23, $destinations->count());
+            $this->assertSame(34, $destinations->count());
             $this->assertSame($expectedIds, $destinations->take(count($expectedIds))->pluck('id')->all());
         }
 
@@ -55,7 +55,7 @@ class DestinationRepositoryGoldenTest extends TestCase
             $dashboard['top_rated']->pluck('id')->all(),
         );
         $this->assertSame(
-            ['label' => 'Kabupaten Karo', 'count' => 26],
+            ['label' => 'Kabupaten Karo', 'count' => 35],
             $dashboard['top_region'],
         );
         $this->assertSame([], $repository->search(['q' => '!!!'])->all());
@@ -70,7 +70,7 @@ class DestinationRepositoryGoldenTest extends TestCase
 
         $this->assertNotNull($destination);
         $this->assertSame('Sumatera Utara', $destination->province());
-        $this->assertSame(['Sumatera Utara' => 228], $repository->facets()['provinces']);
+        $this->assertSame(['Sumatera Utara' => 304], $repository->facets()['provinces']);
         $this->assertSame(
             $allIds,
             $repository->search(['provinsi' => 'Aceh', 'sort' => 'id'])->pluck('id')->all(),

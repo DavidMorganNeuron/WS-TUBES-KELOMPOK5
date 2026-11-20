@@ -9,6 +9,13 @@ use InvalidArgumentException;
 
 final class OntologyMigrator
 {
+    private NorthSumatraCoverage $coverage;
+
+    public function __construct(?NorthSumatraCoverage $coverage = null)
+    {
+        $this->coverage = $coverage ?? NorthSumatraCoverage::fromConfig();
+    }
+
     public const RDF_NS = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#';
 
     public const RDFS_NS = 'http://www.w3.org/2000/01/rdf-schema#';
@@ -882,7 +889,7 @@ final class OntologyMigrator
 
     private function isWithinNorthSumatra(float $latitude, float $longitude): bool
     {
-        return $latitude >= 0.5 && $latitude <= 4.5 && $longitude >= 97.0 && $longitude <= 100.5;
+        return $this->coverage->contains($latitude, $longitude);
     }
 
     private function haversineKm(float $latitude1, float $longitude1, float $latitude2, float $longitude2): float

@@ -17,7 +17,7 @@ interface DestinationSource
     public function all(): Collection;
 
     /**
-     * @param  array{q?: string|null, jenis?: string|null, kabupaten?: string|null, provinsi?: string|null, sort?: string|null, exact?: bool|int|string|null}  $filters
+     * @param  array{q?: string|null, jenis?: string|null, kabupaten?: string|null, provinsi?: string|null, sort?: string|null, dapatMelakukan?: string|null, memilikiFasilitas?: string|null, exact?: bool|int|string|null}  $filters
      * @return Collection<int, Destination>
      */
     public function search(array $filters = []): Collection;
@@ -30,7 +30,7 @@ interface DestinationSource
     public function searchableTexts(): array;
 
     /**
-     * @param  array{q?: string|null, jenis?: string|null, kabupaten?: string|null, provinsi?: string|null, sort?: string|null, exact?: bool|int|string|null}  $filters
+     * @param  array{q?: string|null, jenis?: string|null, kabupaten?: string|null, provinsi?: string|null, sort?: string|null, dapatMelakukan?: string|null, memilikiFasilitas?: string|null, exact?: bool|int|string|null}  $filters
      */
     public function paginate(array $filters = [], int $perPage = 9): LengthAwarePaginator;
 
@@ -61,6 +61,11 @@ interface DestinationSource
      * @return array{total: int, types: array<string, int>, provinces: array<string, int>, kabupaten: array<string, int>, average_rating: float|null, rated_count: int, with_coordinates: int, with_media: int}
      */
     public function facets(): array;
+
+    /**
+     * @return array{activities: list<string>, facilities: list<string>}
+     */
+    public function filterOptions(): array;
 
     /**
      * @return array{total: int, types: array<string, int>, provinces: array<string, int>, kabupaten: array<string, int>, average_rating: float|null, rated_count: int, with_coordinates: int, with_media: int, top_rated: Collection<int, Destination>, top_region: array{label: string, count: int}|null}

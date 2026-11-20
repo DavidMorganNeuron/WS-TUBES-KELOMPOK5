@@ -29,7 +29,7 @@ SPARQL;
     }
 
     /**
-     * @param  array{q?: string|null, jenis?: string|null, kabupaten?: string|null, provinsi?: string|null, sort?: string|null}  $filters
+     * @param  array{q?: string|null, jenis?: string|null, kabupaten?: string|null, provinsi?: string|null, sort?: string|null, dapatMelakukan?: string|null, memilikiFasilitas?: string|null}  $filters
      */
     public function count(array $filters): string
     {
@@ -40,7 +40,7 @@ SPARQL;
     }
 
     /**
-     * @param  array{q?: string|null, jenis?: string|null, kabupaten?: string|null, provinsi?: string|null, sort?: string|null}  $filters
+     * @param  array{q?: string|null, jenis?: string|null, kabupaten?: string|null, provinsi?: string|null, sort?: string|null, dapatMelakukan?: string|null, memilikiFasilitas?: string|null}  $filters
      */
     public function ids(
         array $filters,
@@ -75,7 +75,7 @@ SPARQL;
     }
 
     /**
-     * @param  array{q?: string|null, jenis?: string|null, kabupaten?: string|null, provinsi?: string|null, sort?: string|null}  $filters
+     * @param  array{q?: string|null, jenis?: string|null, kabupaten?: string|null, provinsi?: string|null, sort?: string|null, dapatMelakukan?: string|null, memilikiFasilitas?: string|null}  $filters
      */
     public function page(array $filters, int $limit, int $offset): string
     {
@@ -220,6 +220,27 @@ SELECT ?text WHERE {
 SPARQL;
     }
 
+    public function filterOptions(): string
+    {
+        return self::PREFIXES."\n".<<<'SPARQL'
+SELECT DISTINCT ?kind ?label WHERE {
+    {
+        ?destination a ws:DestinasiWisata ;
+            ws:menawarkanAktivitas ?activity .
+        ?activity rdfs:label ?label .
+        BIND("activity" AS ?kind)
+    } UNION {
+        ?destination a ws:DestinasiWisata ;
+            ws:menyediakanFasilitas ?facility .
+        ?facility rdfs:label ?label .
+        BIND("facility" AS ?kind)
+    }
+    FILTER(isLiteral(?label) && STR(?label) != "" && STR(?label) != "-")
+}
+ORDER BY ?kind LCASE(STR(?label))
+SPARQL;
+    }
+
     public function relatedIds(Destination $destination, int $limit): string
     {
         if ($destination->types === []) {
@@ -314,7 +335,7 @@ SPARQL;
     }
 
     /**
-     * @param  array{q?: string|null, jenis?: string|null, kabupaten?: string|null, provinsi?: string|null, sort?: string|null}  $filters
+     * @param  array{q?: string|null, jenis?: string|null, kabupaten?: string|null, provinsi?: string|null, sort?: string|null, dapatMelakukan?: string|null, memilikiFasilitas?: string|null}  $filters
      */
     private function where(array $filters): string
     {
@@ -357,7 +378,48 @@ SPARQL;
             }
         }
 
+        $activity = trim((string) ($filters['dapatMelakukan'] ?? ''));
+        if ($activity !== '') {
+            $pattern = $this->escaper->literal($this->regexLiteral($activity));
+            $where .= "\nOPTIONAL { ?destination ws:menawarkanAktivitas/rdfs:label ?activityFilter . "
+                .'FILTER('.$this->caseInsensitiveRegex('?activityFilter', $pattern).') }'
+                ."\nFILTER(BOUND(?activityFilter))";
+        }
+
+        $facility = trim((string) ($filters['memilikiFasilitas'] ?? ''));
+        if ($facility !== '') {
+            $pattern = $this->escaper->literal($this->regexLiteral($facility));
+            $where .= "\nOPTIONAL { ?destination ws:menyediakanFasilitas/rdfs:label ?facilityFilter . "
+                .'FILTER('.$this->caseInsensitiveRegex('?facilityFilter', $pattern).') }'
+                ."\nFILTER(BOUND(?facilityFilter))";
+        }
+
         return $where;
+    }
+
+    private function regexLiteral(string $value): string
+    {
+        return strtr($value, [
+            '\\' => '\\\\',
+            '.' => '\\.',
+            '^' => '\\^',
+            '$' => '\\$',
+            '|' => '\\|',
+            '?' => '\\?',
+            '*' => '\\*',
+            '+' => '\\+',
+            '(' => '\\(',
+            ')' => '\\)',
+            '[' => '\\[',
+            ']' => '\\]',
+            '{' => '\\{',
+            '}' => '\\}',
+        ]);
+    }
+
+    private function caseInsensitiveRegex(string $variable, string $pattern): string
+    {
+        return 'REGEX(STR('.$variable.'), '.$pattern.', "i")';
     }
 
     private function tokenMatchExpression(string $token): string
@@ -365,16 +427,16 @@ SPARQL;
         $pattern = $this->escaper->literal('(^|[^\\p{L}\\p{N}])'.preg_quote($token, '/'));
 
         return implode(' || ', [
-            'EXISTS { ?destination ws:namaDestinasi ?matchName . FILTER(REGEX(LCASE(STR(?matchName)), '.$pattern.')) }',
-            'EXISTS { ?destination ws:namaAlternatif ?matchAlias . FILTER(REGEX(LCASE(STR(?matchAlias)), '.$pattern.')) }',
-            'EXISTS { ?destination ws:berlokasiDi/rdfs:label ?matchLocation . FILTER(REGEX(LCASE(STR(?matchLocation)), '.$pattern.')) }',
-            'EXISTS { ?destination ws:alamat ?matchAddress . FILTER(REGEX(LCASE(STR(?matchAddress)), '.$pattern.')) }',
-            'EXISTS { ?destination ws:deskripsiSingkat ?matchShortDescription . FILTER(REGEX(LCASE(STR(?matchShortDescription)), '.$pattern.')) }',
-            'EXISTS { ?destination ws:deskripsiLengkap ?matchFullDescription . FILTER(REGEX(LCASE(STR(?matchFullDescription)), '.$pattern.')) }',
-            'EXISTS { ?destination ws:petunjukLokasi ?matchDirections . FILTER(REGEX(LCASE(STR(?matchDirections)), '.$pattern.')) }',
-            'EXISTS { ?destination ws:kataKunci ?matchKeyword . FILTER(REGEX(LCASE(STR(?matchKeyword)), '.$pattern.')) }',
-            'EXISTS { ?destination ws:menyediakanFasilitas/rdfs:label ?matchFacility . FILTER(REGEX(LCASE(STR(?matchFacility)), '.$pattern.')) }',
-            'EXISTS { ?destination ws:menawarkanAktivitas/rdfs:label ?matchActivity . FILTER(REGEX(LCASE(STR(?matchActivity)), '.$pattern.')) }',
+            'EXISTS { ?destination ws:namaDestinasi ?matchName . FILTER('.$this->caseInsensitiveRegex('?matchName', $pattern).') }',
+            'EXISTS { ?destination ws:namaAlternatif ?matchAlias . FILTER('.$this->caseInsensitiveRegex('?matchAlias', $pattern).') }',
+            'EXISTS { ?destination ws:berlokasiDi/rdfs:label ?matchLocation . FILTER('.$this->caseInsensitiveRegex('?matchLocation', $pattern).') }',
+            'EXISTS { ?destination ws:alamat ?matchAddress . FILTER('.$this->caseInsensitiveRegex('?matchAddress', $pattern).') }',
+            'EXISTS { ?destination ws:deskripsiSingkat ?matchShortDescription . FILTER('.$this->caseInsensitiveRegex('?matchShortDescription', $pattern).') }',
+            'EXISTS { ?destination ws:deskripsiLengkap ?matchFullDescription . FILTER('.$this->caseInsensitiveRegex('?matchFullDescription', $pattern).') }',
+            'EXISTS { ?destination ws:petunjukLokasi ?matchDirections . FILTER('.$this->caseInsensitiveRegex('?matchDirections', $pattern).') }',
+            'EXISTS { ?destination ws:kataKunci ?matchKeyword . FILTER('.$this->caseInsensitiveRegex('?matchKeyword', $pattern).') }',
+            'EXISTS { ?destination ws:menyediakanFasilitas/rdfs:label ?matchFacility . FILTER('.$this->caseInsensitiveRegex('?matchFacility', $pattern).') }',
+            'EXISTS { ?destination ws:menawarkanAktivitas/rdfs:label ?matchActivity . FILTER('.$this->caseInsensitiveRegex('?matchActivity', $pattern).') }',
         ]);
     }
 
@@ -396,19 +458,19 @@ SPARQL;
         $wordPattern = $this->escaper->literal('(^|[^\\p{L}\\p{N}])'.preg_quote($token, '/'));
         $nameExact = 'EXISTS { ?destination ws:namaDestinasi ?scoreNameExact . FILTER(LCASE(STR(?scoreNameExact)) = '.$literal.') }';
         $namePrefix = 'EXISTS { ?destination ws:namaDestinasi ?scoreNamePrefix . FILTER(STRSTARTS(LCASE(STR(?scoreNamePrefix)), '.$literal.')) }';
-        $nameWord = 'EXISTS { ?destination ws:namaDestinasi ?scoreNameWord . FILTER(REGEX(LCASE(STR(?scoreNameWord)), '.$wordPattern.')) }';
+        $nameWord = 'EXISTS { ?destination ws:namaDestinasi ?scoreNameWord . FILTER('.$this->caseInsensitiveRegex('?scoreNameWord', $wordPattern).') }';
         $aliasAndKeyword = implode(' || ', [
-            'EXISTS { ?destination ws:namaAlternatif ?scoreAlias . FILTER(REGEX(LCASE(STR(?scoreAlias)), '.$wordPattern.')) }',
-            'EXISTS { ?destination ws:kataKunci ?scoreKeyword . FILTER(REGEX(LCASE(STR(?scoreKeyword)), '.$wordPattern.')) }',
-            'EXISTS { ?destination ws:menyediakanFasilitas/rdfs:label ?scoreFacility . FILTER(REGEX(LCASE(STR(?scoreFacility)), '.$wordPattern.')) }',
-            'EXISTS { ?destination ws:menawarkanAktivitas/rdfs:label ?scoreActivity . FILTER(REGEX(LCASE(STR(?scoreActivity)), '.$wordPattern.')) }',
+            'EXISTS { ?destination ws:namaAlternatif ?scoreAlias . FILTER('.$this->caseInsensitiveRegex('?scoreAlias', $wordPattern).') }',
+            'EXISTS { ?destination ws:kataKunci ?scoreKeyword . FILTER('.$this->caseInsensitiveRegex('?scoreKeyword', $wordPattern).') }',
+            'EXISTS { ?destination ws:menyediakanFasilitas/rdfs:label ?scoreFacility . FILTER('.$this->caseInsensitiveRegex('?scoreFacility', $wordPattern).') }',
+            'EXISTS { ?destination ws:menawarkanAktivitas/rdfs:label ?scoreActivity . FILTER('.$this->caseInsensitiveRegex('?scoreActivity', $wordPattern).') }',
         ]);
-        $locality = 'EXISTS { ?destination ws:berlokasiDi/rdfs:label ?scoreLocation . FILTER(REGEX(LCASE(STR(?scoreLocation)), '.$wordPattern.')) }';
-        $address = 'EXISTS { ?destination ws:alamat ?scoreAddress . FILTER(REGEX(LCASE(STR(?scoreAddress)), '.$wordPattern.')) }';
+        $locality = 'EXISTS { ?destination ws:berlokasiDi/rdfs:label ?scoreLocation . FILTER('.$this->caseInsensitiveRegex('?scoreLocation', $wordPattern).') }';
+        $address = 'EXISTS { ?destination ws:alamat ?scoreAddress . FILTER('.$this->caseInsensitiveRegex('?scoreAddress', $wordPattern).') }';
         $description = implode(' || ', [
-            'EXISTS { ?destination ws:deskripsiSingkat ?scoreShortDescription . FILTER(REGEX(LCASE(STR(?scoreShortDescription)), '.$wordPattern.')) }',
-            'EXISTS { ?destination ws:deskripsiLengkap ?scoreFullDescription . FILTER(REGEX(LCASE(STR(?scoreFullDescription)), '.$wordPattern.')) }',
-            'EXISTS { ?destination ws:petunjukLokasi ?scoreDirections . FILTER(REGEX(LCASE(STR(?scoreDirections)), '.$wordPattern.')) }',
+            'EXISTS { ?destination ws:deskripsiSingkat ?scoreShortDescription . FILTER('.$this->caseInsensitiveRegex('?scoreShortDescription', $wordPattern).') }',
+            'EXISTS { ?destination ws:deskripsiLengkap ?scoreFullDescription . FILTER('.$this->caseInsensitiveRegex('?scoreFullDescription', $wordPattern).') }',
+            'EXISTS { ?destination ws:petunjukLokasi ?scoreDirections . FILTER('.$this->caseInsensitiveRegex('?scoreDirections', $wordPattern).') }',
         ]);
 
         return 'IF('.$nameExact.', '.(int) ($weights['name_exact'] ?? 1100)

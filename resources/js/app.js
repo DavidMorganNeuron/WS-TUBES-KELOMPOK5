@@ -214,7 +214,6 @@ const initLiveDestinations = () => {
 
     const input = form.querySelector('input[name="q"]');
     const results = document.getElementById('destination-results');
-    const showing = document.getElementById('destination-showing');
     const reset = document.getElementById('destination-reset');
     const pillContainer = document.querySelector('[data-category-pills]');
     const liveUrl = form.dataset.liveUrl;
@@ -252,10 +251,6 @@ const initLiveDestinations = () => {
 
             results.innerHTML = payload.html;
 
-            if (showing) {
-                showing.textContent = `Menampilkan ${numberFormatter.format(payload.first_item)}–${numberFormatter.format(payload.last_item)} dari ${numberFormatter.format(payload.total)}`;
-            }
-
             if (reset) {
                 reset.classList.toggle('hidden', ! payload.has_filters);
             }
@@ -266,7 +261,7 @@ const initLiveDestinations = () => {
                     ? `Kata kunci dikoreksi menjadi ${payload.correction.corrected}. ${numberFormatter.format(payload.total)} destinasi ditemukan.`
                     : payload.total === 0
                         ? 'Tidak ada destinasi yang sesuai dengan saringan saat ini.'
-                        : `Menampilkan ${numberFormatter.format(payload.first_item)} hingga ${numberFormatter.format(payload.last_item)} dari ${numberFormatter.format(payload.total)} destinasi.`,
+                        : `${numberFormatter.format(payload.total)} destinasi ditemukan.`,
             );
 
             window.history.replaceState({}, '', urlWithParams(form.action, params).toString());
@@ -292,7 +287,6 @@ const initLiveDestinations = () => {
 
     input?.addEventListener('input', debouncedUpdate);
     form.querySelectorAll('select').forEach((select) => select.addEventListener('change', () => update()));
-    form.querySelector('input[name="exact"]')?.addEventListener('change', () => update());
     form.addEventListener('submit', (event) => {
         event.preventDefault();
         update();

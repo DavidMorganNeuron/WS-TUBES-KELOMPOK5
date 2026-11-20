@@ -26,7 +26,7 @@ final class DestinationRepository
     }
 
     /**
-     * @param  array{q?: string|null, jenis?: string|null, kabupaten?: string|null, provinsi?: string|null, sort?: string|null, exact?: bool|int|string|null}  $filters
+     * @param  array{q?: string|null, jenis?: string|null, kabupaten?: string|null, provinsi?: string|null, sort?: string|null, dapatMelakukan?: string|null, memilikiFasilitas?: string|null, exact?: bool|int|string|null}  $filters
      * @return Collection<int, Destination>
      */
     public function search(array $filters = []): Collection
@@ -40,7 +40,7 @@ final class DestinationRepository
     }
 
     /**
-     * @param  array{q?: string|null, jenis?: string|null, kabupaten?: string|null, provinsi?: string|null, sort?: string|null, exact?: bool|int|string|null}  $filters
+     * @param  array{q?: string|null, jenis?: string|null, kabupaten?: string|null, provinsi?: string|null, sort?: string|null, dapatMelakukan?: string|null, memilikiFasilitas?: string|null, exact?: bool|int|string|null}  $filters
      */
     public function paginate(array $filters = [], int $perPage = 9): LengthAwarePaginator
     {
@@ -99,6 +99,14 @@ final class DestinationRepository
     public function facets(): array
     {
         return $this->source->facets();
+    }
+
+    /**
+     * @return array{activities: list<string>, facilities: list<string>}
+     */
+    public function filterOptions(): array
+    {
+        return $this->source->filterOptions();
     }
 
     /**

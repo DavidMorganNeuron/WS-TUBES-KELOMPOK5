@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\Data\Destination;
+use App\Services\Ontology\DestinationRepository;
 use Tests\TestCase;
 
 class LiveSearchTest extends TestCase
@@ -18,8 +20,14 @@ class LiveSearchTest extends TestCase
         $this->assertStringContainsString('Danau Toba', $response->json('html'));
     }
 
-    public function test_destinations_live_endpoint_does_not_match_arbitrary_substrings(): void
+    public function test_destinations_live_endpoint_matches_single_letter_prefixes_but_not_arbitrary_substrings(): void
     {
+        $singleLetter = $this->getJson('/destinations/live?q=D');
+
+        $singleLetter->assertOk();
+        $this->assertGreaterThan(0, $singleLetter->json('total'));
+        $this->assertStringContainsString('Danau Toba', $singleLetter->json('html'));
+
         $response = $this->getJson('/destinations/live?q=oba');
 
         $response->assertOk();
@@ -27,7 +35,7 @@ class LiveSearchTest extends TestCase
         $this->assertStringContainsString('Tidak ada destinasi yang sesuai dengan saringan', $response->json('html'));
     }
 
-    public function test_live_search_corrects_a_transposed_typo_and_exact_mode_disables_it(): void
+    public function test_live_search_corrects_a_transposed_typo_even_when_legacy_exact_parameter_is_present(): void
     {
         $corrected = $this->getJson('/destinations/live?q=dnau+toba');
 
@@ -39,13 +47,13 @@ class LiveSearchTest extends TestCase
         $exact = $this->getJson('/destinations/live?q=dnau&exact=1');
 
         $exact->assertOk()
-            ->assertJsonPath('correction', null)
-            ->assertJsonPath('total', 0);
+            ->assertJsonPath('correction.corrected', 'danau');
+        $this->assertGreaterThan(0, $exact->json('total'));
     }
 
     public function test_live_search_matches_all_tokens_across_destination_fields(): void
     {
-        $response = $this->getJson('/destinations/live?q=Holbung+Bolon&exact=1');
+        $response = $this->getJson('/destinations/live?q=Holbung+Bolon');
 
         $response->assertOk();
         $this->assertGreaterThan(0, $response->json('total'));
@@ -60,6 +68,24 @@ class LiveSearchTest extends TestCase
         $this->assertTrue($response->json('has_filters'));
         $this->assertGreaterThan(0, $response->json('total'));
         $this->assertStringContainsString('Kota Medan', $response->json('html'));
+    }
+
+    public function test_destinations_live_endpoint_filters_optional_activities_and_facilities_case_insensitively(): void
+    {
+        $destination = app(DestinationRepository::class)
+            ->search()
+            ->first(static fn (Destination $item): bool => $item->activities !== [] && $item->facilities !== []);
+
+        $this->assertNotNull($destination);
+
+        $response = $this->getJson('/destinations/live?'.http_build_query([
+            'dapatMelakukan' => mb_strtoupper($destination->activities[0]),
+            'memilikiFasilitas' => mb_strtoupper($destination->facilities[0]),
+        ]));
+
+        $response->assertOk();
+        $this->assertGreaterThan(0, $response->json('total'));
+        $this->assertStringContainsString($destination->name, $response->json('html'));
     }
 
     public function test_map_live_endpoint_returns_results_and_markers(): void

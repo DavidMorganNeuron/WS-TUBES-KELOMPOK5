@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Services\Ontology\OntologyDestinationIdConsistency;
+use App\Services\Ontology\TurtleParser;
 use App\Services\Ontology\WikidataClient;
 use App\Services\Ontology\WikidataDestinationLinkCatalog;
 use App\Services\Ontology\WikidataQuery;
@@ -28,6 +30,24 @@ final class WikidataIntegrationTest extends TestCase
     {
         parent::setUp();
         $this->forgetLiveCache();
+    }
+
+    public function test_destination_id_consistency_accepts_matching_sets_and_rejects_drift(): void
+    {
+        Http::fake();
+
+        $parser = new TurtleParser;
+        $consistency = app(OntologyDestinationIdConsistency::class);
+        $v3Triples = $parser->parseTriplesFile(base_path('database/ontology/wisata_sumut_v3.ttl'));
+        $sourceRows = $parser->parseFile(base_path('database/ontology/wisata_sumut_v2.ttl'));
+
+        $consistency->validate($sourceRows, $v3Triples);
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Jalankan php artisan ontology:migrate-v3 terlebih dahulu');
+        $consistency->validate(array_slice($sourceRows, 0, 228), $v3Triples);
+
+        Http::assertNothingSent();
     }
 
     public function test_query_builder_accepts_only_validated_qids(): void

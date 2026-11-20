@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Console\Commands;
 
+use App\Services\Ontology\OntologyDestinationIdConsistency;
 use App\Services\Ontology\TurtleParser;
 use App\Services\Ontology\WikidataClient;
 use App\Services\Ontology\WikidataDestinationCandidateMatcher;
@@ -27,6 +28,7 @@ final class WikidataRefresh extends Command
         WikidataClient $client,
         WikidataQueryBuilder $queryBuilder,
         TurtleParser $parser,
+        OntologyDestinationIdConsistency $destinationIds,
     ): int {
         if (! $this->option('candidates-only')) {
             try {
@@ -168,9 +170,15 @@ final class WikidataRefresh extends Command
             }
 
             $sourceRows = $parser->parseFile($sourcePath);
-            if (count($sourceRows) !== 228) {
-                throw new RuntimeException('Pencocokan kandidat dibatalkan karena sumber lokal bukan 228 destinasi yang diharapkan.');
+            if ($sourceRows === []) {
+                throw new RuntimeException('Sumber lokal v2 kosong.');
             }
+
+            $v3Path = base_path((string) config('ontology.ttl_path'));
+            if (! is_file($v3Path)) {
+                throw new RuntimeException("Graph v3 tidak ditemukan: {$v3Path}");
+            }
+            $destinationIds->validate($sourceRows, $parser->parseTriplesFile($v3Path));
 
             $matches = $candidateMatcher->match($sourceRows, $candidateRows, $nameRows);
             $existingLinks = $destinationLinks->load();

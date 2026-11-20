@@ -55,6 +55,21 @@ return [
         'max_neighbors' => 3,
     ],
 
+    'coverage_boxes' => [
+        'daratan_sumut' => [
+            'min_latitude' => 0.5,
+            'max_latitude' => 4.5,
+            'min_longitude' => 97.0,
+            'max_longitude' => 100.5,
+        ],
+        'kepulauan_batu' => [
+            'min_latitude' => -0.5,
+            'max_latitude' => 0.5,
+            'min_longitude' => 97.9,
+            'max_longitude' => 98.7,
+        ],
+    ],
+
     'search' => [
         'stop_words' => ['di', 'yang', 'ke', 'dari', 'untuk', 'dengan', 'pada', 'dalam', 'serta', 'atau'],
         'relevance_weights' => [

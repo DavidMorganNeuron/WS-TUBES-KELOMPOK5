@@ -33,8 +33,7 @@ final class SearchTokenizer
                 return [];
             }
 
-            if (in_array($token, $stopWords, true)
-                || (mb_strlen($token, 'UTF-8') === 1 && preg_match('/^\p{N}$/u', $token) !== 1)) {
+            if (in_array($token, $stopWords, true)) {
                 continue;
             }
 
@@ -56,8 +55,7 @@ final class SearchTokenizer
             array_map(static fn (string $token): string => Str::lower($token), $tokens),
             static fn (string $token): bool => mb_strlen($token, 'UTF-8') <= 40
                 && preg_match('/^[\p{L}\p{N}]+$/u', $token) === 1
-                && ! in_array($token, $stopWords, true)
-                && (mb_strlen($token, 'UTF-8') > 1 || preg_match('/^\p{N}$/u', $token) === 1),
+                && ! in_array($token, $stopWords, true),
         ));
     }
 

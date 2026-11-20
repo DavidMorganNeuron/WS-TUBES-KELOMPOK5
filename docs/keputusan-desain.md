@@ -18,6 +18,10 @@ Kemiripan nama atau jarak tidak cukup untuk menyatakan dua entitas sama. Hanya Q
 
 IRI entity Wikidata yang dihasilkan mengikuti bentuk `http://www.wikidata.org/entity/Q…`. Pemetaan properti, lisensi, dan bukti sitelink tersedia di [sumber eksternal](sumber-eksternal.md).
 
+## Cakupan koordinat dan Kepulauan Batu
+
+Gerbang kualitas data memakai dua kotak yang dikonfigurasi terpusat: daratan Sumatera Utara pada lintang 0,5–4,5 dan bujur 97,0–100,5, serta Kepulauan Batu pada lintang -0,5–0,5 dan bujur 97,9–98,7. Keputusan ini membolehkan `ws-264 Pulau Telo` tanpa memperluas satu kotak tunggal secara berlebihan. Kotak pencarian kandidat Wikidata tetap memakai cakupan daratan lama dan oleh karena itu tidak mencakup semua Kepulauan Batu; keterbatasan ini memerlukan evaluasi kandidat eksternal secara terpisah.
+
 ## Pengayaan live yang gagal secara lunak
 
 Data eksternal menggunakan cache dan snapshot, batch `VALUES`, timeout pendek, tanpa retry pada jalur web, dan fallback sampai `null`. Pemutus sirkuit hanya menyimpan status kegagalan. Kegagalan atau data rusak tidak boleh mengisi cache data maupun menggagalkan halaman. Sumber eksternal dijelaskan dalam dokumentasi, bukan sebagai label asal pada UI.

@@ -4,16 +4,16 @@
 @php
     $activeType = $filters['jenis'] ?? '';
     $activeKabupaten = $filters['kabupaten'] ?? '';
-    $activeSort = $filters['sort'] ?? 'name';
+    $activeSort = $filters['sort'] ?? '';
     $activeQuery = $filters['q'] ?? '';
-    $hasActiveFilters = $activeQuery !== '' || $activeType !== '' || $activeKabupaten !== '' || $activeSort !== 'name' || ($filters['exact'] ?? false);
+    $activeActivity = $filters['dapatMelakukan'] ?? '';
+    $activeFacility = $filters['memilikiFasilitas'] ?? '';
+    $hasActiveFilters = $activeQuery !== '' || $activeType !== '' || $activeKabupaten !== '' || $activeActivity !== '' || $activeFacility !== '' || ($activeSort !== '' && $activeSort !== 'name');
     $urlFor = function (array $overrides = []) use ($filters): string {
         $params = array_merge($filters, $overrides);
 
         return route('destinations', array_filter($params, static fn ($value): bool => $value !== null && $value !== ''));
     };
-    $firstItem = $destinations->firstItem() ?? 0;
-    $lastItem = $destinations->lastItem() ?? 0;
 @endphp
 
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full overflow-x-hidden">
@@ -53,12 +53,13 @@
                 <input type="hidden" name="jenis" value="{{ $activeType }}">
             @endif
 
-            <div class="flex-grow w-full flex flex-col sm:flex-row sm:flex-wrap lg:flex-nowrap gap-3">
+            <div class="flex-grow w-full flex flex-col sm:flex-row sm:flex-wrap gap-3">
                 <div class="relative flex-grow min-w-[12rem]">
                     <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" aria-hidden="true">🔍</span>
                     <input type="text" name="q" value="{{ $activeQuery }}" placeholder="Cari nama objek wisata, kaldera, atau pulau..." class="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm outline-none focus:border-brand-primary" autocomplete="off" aria-label="Saring destinasi berdasarkan nama">
                 </div>
                 <select name="sort" class="bg-gray-50 border border-gray-200 text-sm font-medium text-gray-700 rounded-lg px-4 py-2 outline-none w-full sm:w-48" aria-label="Urutkan destinasi">
+                    <option value="" @selected($activeSort === '')>Urutan otomatis</option>
                     @foreach ($sorts as $value => $label)
                         <option value="{{ $value }}" @selected($activeSort === $value)>{{ [
                             'name' => 'Nama: A–Z',
@@ -75,16 +76,20 @@
                         <option value="{{ $kabupaten }}" @selected($activeKabupaten === $kabupaten)>{{ $kabupaten }}</option>
                     @endforeach
                 </select>
-                <label class="inline-flex items-center gap-2 text-xs font-medium text-gray-600 whitespace-nowrap">
-                    <input type="checkbox" name="exact" value="1" @checked(($filters['exact'] ?? false)) class="rounded border-gray-300 text-brand-primary focus:ring-brand-primary">
-                    Tanpa koreksi otomatis
-                </label>
+                <select name="dapatMelakukan" class="bg-gray-50 border border-gray-200 text-sm font-medium text-gray-700 rounded-lg px-4 py-2 outline-none w-full sm:w-56" aria-label="Saring berdasarkan aktivitas">
+                    <option value="">Semua aktivitas</option>
+                    @foreach ($filterOptions['activities'] as $activity)
+                        <option value="{{ $activity }}" @selected($activeActivity === $activity)>{{ $activity }}</option>
+                    @endforeach
+                </select>
+                <select name="memilikiFasilitas" class="bg-gray-50 border border-gray-200 text-sm font-medium text-gray-700 rounded-lg px-4 py-2 outline-none w-full sm:w-56" aria-label="Saring berdasarkan fasilitas">
+                    <option value="">Semua fasilitas</option>
+                    @foreach ($filterOptions['facilities'] as $facility)
+                        <option value="{{ $facility }}" @selected($activeFacility === $facility)>{{ $facility }}</option>
+                    @endforeach
+                </select>
             </div>
 
-            <div class="flex items-center gap-2 text-xs font-bold text-gray-500">
-                <span id="destination-showing" role="status" aria-live="polite">Menampilkan {{ \App\Support\IndonesianFormat::number($firstItem) }}–{{ \App\Support\IndonesianFormat::number($lastItem) }} dari {{ \App\Support\IndonesianFormat::number($destinations->total()) }}</span>
-                <a id="destination-reset" href="{{ route('destinations') }}" class="text-brand-accent hover:underline {{ $hasActiveFilters ? '' : 'hidden' }}">Hapus saringan</a>
-            </div>
         </form>
 
         <p id="destination-live-status" class="sr-only" role="status" aria-live="polite"></p>
@@ -98,6 +103,7 @@
                     {{ $type }} ({{ \App\Support\IndonesianFormat::number($facets['types'][$type] ?? 0) }})
                 </a>
             @endforeach
+            <a id="destination-reset" href="{{ route('destinations') }}" class="text-xs font-medium px-3 py-1.5 rounded-full transition bg-white border border-gray-200 text-brand-accent hover:border-brand-accent {{ $hasActiveFilters ? '' : 'hidden' }}">Hapus saringan</a>
         </div>
     </div>
 

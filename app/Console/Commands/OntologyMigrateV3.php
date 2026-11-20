@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Console\Commands;
 
+use App\Services\Ontology\NorthSumatraCoverage;
 use App\Services\Ontology\OntologyMigrator;
 use App\Services\Ontology\OntologyValidator;
 use App\Services\Ontology\TurtleParser;
@@ -16,7 +17,7 @@ use Illuminate\Console\Command;
 use InvalidArgumentException;
 use JsonException;
 
-#[Signature('ontology:migrate-v3 {--source=} {--output=} {--dry-run}')]
+#[Signature('ontology:migrate-v3 {--source=} {--output=} {--report=} {--dry-run}')]
 #[Description('Migrasikan sumber Turtle v2 menjadi ontologi v3')]
 final class OntologyMigrateV3 extends Command
 {
@@ -32,6 +33,8 @@ final class OntologyMigrateV3 extends Command
         $output = (string) ($this->option('output') ?: config('ontology.ttl_path'));
         $sourcePath = $this->resolvePath($source);
         $outputPath = $this->resolvePath($output);
+        $report = (string) ($this->option('report') ?: 'docs/laporan-anomali-data.md');
+        $reportPath = $this->resolvePath($report);
         $boundaryPath = $this->resolvePath((string) config('ontology.wikidata_regions_path'));
 
         if (! is_file($sourcePath)) {
@@ -91,6 +94,16 @@ final class OntologyMigrateV3 extends Command
             return self::FAILURE;
         }
 
+        if ($validation['errors'] !== []) {
+            $this->newLine();
+            $this->error('Validasi ontologi v3 gagal:');
+            foreach ($validation['errors'] as $error) {
+                $this->line(' - '.$error);
+            }
+
+            return self::FAILURE;
+        }
+
         $this->table(['Ringkasan migrasi', 'Jumlah'], [
             ['Destinasi sumber', $result['stats']['destinations']],
             ['Wilayah terverifikasi', $result['stats']['districts']],
@@ -113,13 +126,12 @@ final class OntologyMigrateV3 extends Command
                 return self::FAILURE;
             }
 
-            if (file_put_contents($outputPath, $turtle, LOCK_EX) === false) {
+            if (! $this->writeAtomically($outputPath, $turtle)) {
                 $this->error("Berkas ontologi tidak dapat ditulis: {$outputPath}");
 
                 return self::FAILURE;
             }
 
-            $reportPath = base_path('docs/laporan-anomali-data.md');
             $reportDirectory = dirname($reportPath);
             if (! is_dir($reportDirectory) && ! mkdir($reportDirectory, 0755, true) && ! is_dir($reportDirectory)) {
                 $this->error("Direktori laporan tidak dapat dibuat: {$reportDirectory}");
@@ -127,7 +139,8 @@ final class OntologyMigrateV3 extends Command
                 return self::FAILURE;
             }
 
-            if (file_put_contents($reportPath, $this->renderAnomalyReport($sourcePath, $boundarySource, $result['anomalies']), LOCK_EX) === false) {
+            $coverage = NorthSumatraCoverage::fromConfig();
+            if (! $this->writeAtomically($reportPath, $this->renderAnomalyReport($sourcePath, $boundarySource, $result['anomalies'], $coverage))) {
                 $this->error("Laporan anomali tidak dapat ditulis: {$reportPath}");
 
                 return self::FAILURE;
@@ -137,27 +150,42 @@ final class OntologyMigrateV3 extends Command
             $this->info("Laporan anomali ditulis: {$reportPath}");
         }
 
-        if ($validation['errors'] !== []) {
-            $this->newLine();
-            $this->error('Validasi ontologi v3 gagal:');
-            foreach ($validation['errors'] as $error) {
-                $this->line(' - '.$error);
-            }
-
-            return self::FAILURE;
-        }
-
         $this->info('Validasi ontologi v3 lulus.');
 
         return self::SUCCESS;
+    }
+
+    private function writeAtomically(string $path, string $contents): bool
+    {
+        $directory = dirname($path);
+        $temporary = tempnam($directory, '.ontology-migrate-');
+        if ($temporary === false) {
+            return false;
+        }
+
+        try {
+            if (file_put_contents($temporary, $contents, LOCK_EX) === false) {
+                return false;
+            }
+
+            return rename($temporary, $path);
+        } finally {
+            if (is_file($temporary)) {
+                unlink($temporary);
+            }
+        }
     }
 
     /**
      * @param  array<string, mixed>  $boundarySource
      * @param  array<string, mixed>  $anomalies
      */
-    private function renderAnomalyReport(string $sourcePath, array $boundarySource, array $anomalies): string
-    {
+    private function renderAnomalyReport(
+        string $sourcePath,
+        array $boundarySource,
+        array $anomalies,
+        NorthSumatraCoverage $coverage,
+    ): string {
         $lines = [
             '# Laporan anomali data wisata Sumatera Utara',
             '',
@@ -169,7 +197,7 @@ final class OntologyMigrateV3 extends Command
         ];
 
         $this->appendRecords($lines, '## Kabupaten/kota pada `beradaDi` tidak ditemukan pada alamat', $anomalies['address_region_mismatches'] ?? [], static fn (array $row): string => "{$row['id']} — {$row['name']}: {$row['region']}; alamat: {$row['address']}");
-        $this->appendRecords($lines, '## Koordinat di luar batas Sumatera Utara (lintang 0.5–4.5, bujur 97.0–100.5)', $anomalies['coordinates_outside_bounds'] ?? [], static fn (array $row): string => "{$row['id']} — {$row['name']}: {$row['latitude']}, {$row['longitude']}");
+        $this->appendRecords($lines, '## Koordinat di luar cakupan: '.$coverage->summary(), $anomalies['coordinates_outside_bounds'] ?? [], static fn (array $row): string => "{$row['id']} — {$row['name']}: {$row['latitude']}, {$row['longitude']}");
         $this->appendGroupedRecords($lines, '## Nama destinasi duplikat', $anomalies['duplicate_names'] ?? [], static fn (array $row): string => "{$row['id']} — {$row['name']}");
         $this->appendRecords($lines, '## Harga masuk negatif', $anomalies['negative_prices'] ?? [], static fn (array $row): string => "{$row['id']} — {$row['name']}: {$row['price']}");
         $this->appendRecords($lines, '## Rating numerik di luar rentang 0–5', $anomalies['ratings_outside_range'] ?? [], static fn (array $row): string => "{$row['id']} — {$row['name']}: {$row['rating']}");

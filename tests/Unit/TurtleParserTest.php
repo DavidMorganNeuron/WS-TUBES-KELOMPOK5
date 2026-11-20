@@ -132,7 +132,7 @@ class TurtleParserTest extends TestCase
         $this->assertSame(config('ontology.unknown_label'), $destination->toMapMarker()['price']);
     }
 
-    public function test_v3_ttl_schedule_coverage_is_208_known_and_20_unknown_destinations(): void
+    public function test_v3_ttl_schedule_coverage_matches_generated_dataset(): void
     {
         $triples = $this->parser->parseTriplesFile('database/ontology/wisata_sumut_v3.ttl');
         $rows = app(OntologyGraphMapper::class)->destinations($triples);
@@ -141,9 +141,9 @@ class TurtleParserTest extends TestCase
             $rows,
         ));
 
-        $this->assertCount(228, $destinations);
-        $this->assertSame(208, $destinations->where('openingHours', '!=', '')->count());
-        $this->assertSame(20, $destinations->where('openingHours', '')->count());
+        $this->assertCount(304, $destinations);
+        $this->assertSame(282, $destinations->where('openingHours', '!=', '')->count());
+        $this->assertSame(22, $destinations->where('openingHours', '')->count());
     }
 
     public function test_it_handles_a_minimal_inline_turtle_document(): void

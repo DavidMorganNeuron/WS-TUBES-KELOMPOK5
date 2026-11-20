@@ -65,7 +65,7 @@ class InMemoryDestinationSource implements DestinationSource
     }
 
     /**
-     * @param  array{q?: string|null, jenis?: string|null, kabupaten?: string|null, provinsi?: string|null, sort?: string|null, exact?: bool|int|string|null}  $filters
+     * @param  array{q?: string|null, jenis?: string|null, kabupaten?: string|null, provinsi?: string|null, sort?: string|null, dapatMelakukan?: string|null, memilikiFasilitas?: string|null, exact?: bool|int|string|null}  $filters
      * @return Collection<int, Destination>
      */
     public function search(array $filters = []): Collection
@@ -74,6 +74,8 @@ class InMemoryDestinationSource implements DestinationSource
         $type = $this->validType($filters['jenis'] ?? null);
         $kabupaten = trim((string) ($filters['kabupaten'] ?? ''));
         $province = $this->validProvince($filters['provinsi'] ?? null);
+        $activity = trim((string) ($filters['dapatMelakukan'] ?? ''));
+        $facility = trim((string) ($filters['memilikiFasilitas'] ?? ''));
         $plan = $this->planSearch($query, filter_var($filters['exact'] ?? false, FILTER_VALIDATE_BOOLEAN));
         if ($query !== '' && $plan->tokens === []) {
             return collect();
@@ -94,6 +96,12 @@ class InMemoryDestinationSource implements DestinationSource
             ))
             ->when($province !== null, fn (Collection $items): Collection => $items->filter(
                 fn (Destination $destination): bool => $destination->province() === $province,
+            ))
+            ->when($activity !== '', fn (Collection $items): Collection => $items->filter(
+                fn (Destination $destination): bool => $this->matchesAnyValue($destination->activities, $activity),
+            ))
+            ->when($facility !== '', fn (Collection $items): Collection => $items->filter(
+                fn (Destination $destination): bool => $this->matchesAnyValue($destination->facilities, $facility),
             ));
 
         $requestedSort = $filters['sort'] ?? null;
@@ -249,7 +257,23 @@ class InMemoryDestinationSource implements DestinationSource
     }
 
     /**
-     * @param  array{q?: string|null, jenis?: string|null, kabupaten?: string|null, provinsi?: string|null, sort?: string|null}  $filters
+     * @param  list<string>  $values
+     */
+    private function matchesAnyValue(array $values, string $query): bool
+    {
+        $normalizedQuery = Str::lower($query);
+
+        foreach ($values as $value) {
+            if (Str::contains(Str::lower($value), $normalizedQuery)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param  array{q?: string|null, jenis?: string|null, kabupaten?: string|null, provinsi?: string|null, sort?: string|null, dapatMelakukan?: string|null, memilikiFasilitas?: string|null}  $filters
      */
     public function paginate(array $filters = [], int $perPage = 9): LengthAwarePaginator
     {
@@ -374,6 +398,25 @@ class InMemoryDestinationSource implements DestinationSource
             ->map(fn (Destination $destination): array => $destination->toMapMarker())
             ->values()
             ->all();
+    }
+
+    /**
+     * @return array{activities: list<string>, facilities: list<string>}
+     */
+    public function filterOptions(): array
+    {
+        $destinations = $this->all();
+        $activities = $destinations->flatMap(
+            static fn (Destination $destination): array => $destination->activities,
+        );
+        $facilities = $destinations->flatMap(
+            static fn (Destination $destination): array => $destination->facilities,
+        );
+
+        return [
+            'activities' => $this->sortedUniqueLabels($activities),
+            'facilities' => $this->sortedUniqueLabels($facilities),
+        ];
     }
 
     /**
@@ -732,5 +775,20 @@ class InMemoryDestinationSource implements DestinationSource
             'sha256',
             'ttl|'.$this->ttlPath.'|'.$modifiedAt.'|'.$fileSize.'|'.$version,
         );
+    }
+
+    /**
+     * @param  Collection<int, string>  $labels
+     * @return list<string>
+     */
+    private function sortedUniqueLabels(Collection $labels): array
+    {
+        return $labels
+            ->map(static fn (string $label): string => trim($label))
+            ->filter(static fn (string $label): bool => $label !== '' && $label !== '-')
+            ->unique(static fn (string $label): string => Str::lower($label))
+            ->sort(static fn (string $left, string $right): int => strnatcasecmp($left, $right))
+            ->values()
+            ->all();
     }
 }

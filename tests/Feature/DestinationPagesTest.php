@@ -8,7 +8,6 @@ use App\Services\Ontology\DestinationLinkedDataProvider;
 use App\Services\Ontology\DestinationRepository;
 use App\Services\Ontology\WikidataClient;
 use App\Services\Ontology\WikidataRegionRepository;
-use App\Support\IndonesianFormat;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
@@ -75,9 +74,17 @@ class DestinationPagesTest extends TestCase
 
         $response->assertOk();
         $response->assertSee('Jelajahi Destinasi Sumatera Utara');
-        $response->assertSee('Menampilkan 1');
+        $filterOptions = $this->repository()->filterOptions();
+        $response->assertSee('<select name="dapatMelakukan"', false);
+        $response->assertSee('<select name="memilikiFasilitas"', false);
+        $this->assertNotEmpty($filterOptions['activities']);
+        $this->assertNotEmpty($filterOptions['facilities']);
+        $response->assertSee('value="'.e($filterOptions['activities'][0]).'"', false);
+        $response->assertSee('value="'.e($filterOptions['facilities'][0]).'"', false);
+        $response->assertDontSee('Paling relevan');
+        $response->assertDontSee('Tanpa koreksi otomatis');
+        $response->assertDontSee('Menampilkan 1');
         $destinations = $this->repository()->search(['sort' => 'name']);
-        $response->assertSee('dari '.IndonesianFormat::number($destinations->count()));
         $response->assertSeeInOrder($destinations->take(2)->pluck('name')->all());
         $response->assertDontSee('name="provinsi"', false);
     }
@@ -120,12 +127,12 @@ class DestinationPagesTest extends TestCase
     public function test_destinations_page_clamps_an_out_of_range_page_to_the_last_page(): void
     {
         $response = $this->get('/destinations?page=9999');
-        $total = $this->repository()->search(['sort' => 'name'])->count();
-        $lastPageFirstItem = ((int) ceil($total / 9) - 1) * 9 + 1;
+        $destinations = $this->repository()->search(['sort' => 'name']);
+        $lastPageFirstItem = ((int) ceil($destinations->count() / 9) - 1) * 9;
+        $lastPageNames = $destinations->slice($lastPageFirstItem, 2)->pluck('name')->all();
 
         $response->assertOk();
-        $response->assertSee('Menampilkan '.IndonesianFormat::number($lastPageFirstItem));
-        $response->assertSee('dari '.IndonesianFormat::number($total));
+        $response->assertSeeInOrder($lastPageNames);
     }
 
     public function test_destinations_page_shows_an_empty_state_for_unmatched_search(): void

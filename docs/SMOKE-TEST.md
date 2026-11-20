@@ -17,7 +17,7 @@ php artisan fuseki:load --dry-run
 php artisan ontology:doctor
 ```
 
-`ontology:validate` harus melaporkan 228 destinasi, 30 sameAs wilayah, jumlah sameAs destinasi sesuai daftar persetujuan, 102 relasi `berbatasanDengan`, dan validasi lulus. `fuseki:load --dry-run` tidak mengubah dataset. Jalankan `php artisan fuseki:load` hanya setelah memastikan URL/dataset benar dan backup tersedia.
+`ontology:validate` harus melaporkan 304 destinasi, 30 sameAs wilayah, jumlah sameAs destinasi sesuai daftar persetujuan, 102 relasi `berbatasanDengan`, 746 relasi `dekatDengan`, dan validasi lulus. `fuseki:load --dry-run` tidak mengubah dataset. Jalankan `php artisan fuseki:load` hanya setelah memastikan URL/dataset benar dan backup tersedia.
 
 ## 3. Halaman dan pencarian
 
