@@ -194,7 +194,7 @@
         class="fixed inset-0 z-[9999] hidden h-[100dvh] w-screen flex-col overflow-hidden bg-white text-gray-900 shadow-2xl"
     >
         <!-- HEADER -->
-        <header id="chatbot-header" class="flex shrink-0 items-center justify-between border-b border-gray-200 bg-white px-4 py-3 sm:px-6">
+        <header id="chatbot-header" class="flex shrink-0 items-center justify-between border-b border-gray-200 bg-white px-4 py-3 sm:px-6 cursor-grab active:cursor-grabbing select-none">
             <div class="flex min-w-0 items-center gap-3">
                 <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#92400e] text-white" aria-hidden="true">
                     <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
@@ -216,21 +216,15 @@
 
         <!-- KONTEN UTAMA -->
         <main id="chatbot-body-container" class="relative flex min-h-0 flex-1 flex-col bg-white">
-            <section id="chatbot-empty-state" class="flex min-h-0 flex-1 flex-col items-center justify-center px-4 py-8 sm:px-8" aria-labelledby="chatbot-greeting">
-                <div class="w-full max-w-3xl">
-                    <h3 id="chatbot-greeting" data-chatbot-greeting class="mb-8 min-h-10 text-center text-2xl font-semibold tracking-tight text-gray-800 sm:text-3xl"></h3>
-                    <form id="chat-form" class="flex w-full items-end gap-3 rounded-3xl border border-gray-200 bg-white p-3 shadow-sm transition focus-within:border-[#92400e] focus-within:ring-2 focus-within:ring-[#92400e]/15">
-                        <textarea id="chat-input" maxlength="800" rows="1" placeholder="Tanyakan tentang destinasi Sumatera Utara..." class="max-h-40 min-h-12 flex-1 resize-none border-0 bg-transparent px-3 py-3 text-sm text-gray-800 outline-none placeholder:text-gray-400 focus:ring-0" autocomplete="off" aria-label="Pesan untuk WayFinder AI" aria-describedby="chatbot-status"></textarea>
-                        <button id="btn-send-chat" type="submit" disabled class="flex h-11 shrink-0 items-center justify-center rounded-full bg-[#92400e] px-5 text-sm font-bold text-white transition hover:bg-[#7a350c] focus:outline-none focus:ring-2 focus:ring-[#92400e] focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-35" aria-label="Kirim pesan">
-                            Kirim
-                        </button>
-                    </form>
-                </div>
-            </section>
-
-            <section id="chatbot-conversation" class="hidden min-h-0 flex-1 flex-col">
+            <section id="chatbot-conversation" class="flex min-h-0 flex-1 flex-col">
                 <div id="chat-messages" class="flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto px-4 py-6 sm:px-8" role="log" aria-live="polite" aria-relevant="additions">
-                    <div id="chat-message-list" class="mx-auto flex w-full max-w-3xl flex-col gap-5"></div>
+                    <div id="chat-message-list" class="mx-auto flex w-full max-w-3xl flex-col gap-5">
+                        <article class="flex justify-start" aria-label="Balasan WayFinder AI">
+                            <div class="prose prose-sm max-w-[90%] break-words rounded-2xl rounded-tl-sm border border-gray-200 bg-white px-4 py-3 text-sm text-gray-800 shadow-sm sm:max-w-[80%]">
+                                Halo! Ada destinasi wisata di Sumatera Utara yang ingin Anda cari atau tanyakan?
+                            </div>
+                        </article>
+                    </div>
                 </div>
                 <div id="chatbot-loading" class="mx-auto hidden w-full max-w-3xl px-4 pb-4 text-sm text-gray-500" aria-hidden="true">
                     <span class="inline-flex animate-pulse items-center gap-2 rounded-full bg-gray-100 px-4 py-2">
@@ -238,12 +232,28 @@
                         WayFinder AI sedang memproses data...
                     </span>
                 </div>
-                <div id="chat-input-area" class="shrink-0 border-t border-gray-200 bg-white px-4 py-4 sm:px-8">
-                    <div id="chat-input-dock" class="mx-auto w-full max-w-3xl"></div>
+                <div id="chat-input-area" class="shrink-0 border-t border-gray-200 bg-white px-4 pt-4 pb-8 sm:px-8">
+                    <form id="chat-form" class="mx-auto flex w-full max-w-3xl items-end gap-3 rounded-3xl border border-gray-200 bg-white p-3 shadow-sm transition focus-within:border-[#92400e] focus-within:ring-2 focus-within:ring-[#92400e]/15">
+                        <textarea id="chat-input" maxlength="800" rows="1" placeholder="Tanyakan tentang destinasi Sumatera Utara..." class="max-h-40 min-h-12 flex-1 resize-none border-0 bg-transparent px-3 py-3 text-sm text-gray-800 outline-none placeholder:text-gray-400 focus:outline-none focus:ring-0" autocomplete="off" aria-label="Pesan untuk WayFinder AI" aria-describedby="chatbot-status"></textarea>
+                        <button id="btn-send-chat" type="submit" disabled class="flex h-11 shrink-0 items-center justify-center rounded-full bg-[#92400e] px-5 text-sm font-bold text-white transition hover:bg-[#7a350c] focus:outline-none focus:ring-2 focus:ring-[#92400e] focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-35" aria-label="Kirim pesan">
+                            Kirim
+                        </button>
+                    </form>
                     <p class="mx-auto mt-2 max-w-3xl text-center text-[11px] text-gray-400">Jawaban AI merujuk pada informasi yang tersedia di dataset destinasi.</p>
                 </div>
             </section>
         </main>
+        <button
+            id="chatbot-resize-handle"
+            type="button"
+            class="absolute bottom-1 right-1 z-20 hidden flex h-7 w-7 items-center justify-center rounded-full text-gray-500 transition hover:bg-gray-100 hover:text-gray-800 cursor-nwse-resize touch-none"
+            aria-label="Ubah ukuran jendela asisten"
+            title="Tarik untuk mengubah ukuran"
+        >
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 20h6v-6M10 20 20 10"/>
+            </svg>
+        </button>
         <p id="chatbot-status" class="sr-only" role="status" aria-live="polite"></p>
     </div>
 

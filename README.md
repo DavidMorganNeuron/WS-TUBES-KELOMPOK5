@@ -25,7 +25,7 @@ Jelajahi destinasi wisata Sumatera Utara melalui pencarian, peta interaktif, dan
 - Lihat detail destinasi, kategori, informasi, dan atribusi gambar.
 - Lihat tautan Wikipedia/Wikivoyage, foto Commons, status warisan, ketinggian, atau tahun berdiri bila data tersedia.
 - Bagikan halaman detail dengan metadata Open Graph, RDFa, dan ekspor RDF dalam Turtle, RDF/XML, atau JSON-LD.
-- Temukan destinasi melalui peta interaktif berbasis Leaflet.
+- Temukan destinasi melalui peta interaktif Google Maps jika `GOOGLE_MAPS_API_KEY` tersedia; Leaflet menjadi fallback.
 - Gunakan chatbot Gemini opsional jika kunci API tersedia; kunci hanya digunakan di sisi server.
 - Sajikan data destinasi dari Apache Jena Fuseki; mode file Turtle tersedia untuk pengembangan atau pengujian.
 - Validasi data ontologi dan kelola cache melalui perintah Artisan.
@@ -37,7 +37,7 @@ Jelajahi destinasi wisata Sumatera Utara melalui pencarian, peta interaktif, dan
 | Backend | PHP 8.4, Laravel 13 |
 | Frontend | JavaScript, Blade, Tailwind CSS 4 |
 | Build frontend | Vite 8 |
-| Peta | Leaflet, MarkerCluster |
+| Peta | Google Maps JavaScript API (opsional), Leaflet, MarkerCluster |
 | Data semantik | RDF/Turtle, SPARQL, Apache Jena Fuseki |
 | Penyimpanan aplikasi | MySQL (session, cache, dan queue) |
 | Chatbot | Google Gemini API (opsional) |
@@ -49,6 +49,7 @@ Jelajahi destinasi wisata Sumatera Utara melalui pencarian, peta interaktif, dan
 - Ekstensi PHP PDO MySQL
 - Apache Jena Fuseki untuk driver bawaan; driver Turtle lokal dapat digunakan tanpa Fuseki
 - Kunci Gemini hanya jika ingin menggunakan chatbot
+- Kunci Google Maps hanya jika ingin memakai Google Maps JavaScript API pada peta
 
 ## Menjalankan secara lokal
 
@@ -63,7 +64,8 @@ Jelajahi destinasi wisata Sumatera Utara melalui pencarian, peta interaktif, dan
 
 3. Sesuaikan `.env` bila diperlukan. Konfigurasi contoh memakai MySQL untuk session, cache, dan queue, serta Fuseki dengan dataset `WayFinder` untuk data destinasi. Pastikan MySQL dan Fuseki berjalan dan sesuaikan `DB_*` serta `FUSEKI_URL`/kredensialnya dengan lingkungan lokal. Jangan pernah meng-commit `.env`, kunci API, atau kredensial.
 4. Driver data destinasi default adalah Fuseki. Untuk memakai file ontologi v3 lokal pada pengembangan atau pengujian, atur `ONTOLOGY_DRIVER=ttl`. `ONTOLOGY_V3_TTL_PATH` adalah satu-satunya path graph v3 untuk runtime dan pemuatan Fuseki; `ONTOLOGY_V2_TTL_PATH` hanya dipakai sebagai sumber migrasi v2. Untuk mengaktifkan chatbot, isi `GEMINI_API_KEY` di `.env`. Jangan pernah membagikan atau meng-commit kunci API.
-5. Jalankan aplikasi:
+5. Untuk memakai Google Maps JavaScript API pada halaman `/map`, isi `GOOGLE_MAPS_API_KEY`. Key ini dikirim ke browser dan bukan rahasia; batasi dengan HTTP referrer dan API yang diizinkan pada Google Cloud. Jika key tidak tersedia atau skrip Maps gagal dimuat, peta tetap memakai Leaflet.
+6. Jalankan aplikasi:
 
    ```bash
    php artisan serve

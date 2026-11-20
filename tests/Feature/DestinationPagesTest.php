@@ -53,7 +53,7 @@ class DestinationPagesTest extends TestCase
         $response->assertDontSee('Sumatera Heritage &amp; Trails');
     }
 
-    public function test_chatbot_is_available_as_a_fullscreen_ready_dialog_from_the_navigation(): void
+    public function test_chatbot_opens_as_a_resizable_popup_from_the_navigation(): void
     {
         $response = $this->get('/');
 
@@ -61,8 +61,16 @@ class DestinationPagesTest extends TestCase
         $response->assertSee('id="btn-chatbot"', false);
         $response->assertSee('id="wayfinder-chatbot"', false);
         $response->assertSee('aria-modal="true"', false);
-        $response->assertSee('data-chatbot-greeting', false);
+        $response->assertSee('Halo! Ada destinasi wisata di Sumatera Utara yang ingin Anda cari atau tanyakan?');
+        $response->assertDontSee('Sebaiknya kita mulai dari mana?');
+        $response->assertDontSee('id="chatbot-empty-state"', false);
         $response->assertSee('id="chat-input"', false);
+        $response->assertSee('id="chat-input-area"', false);
+        $response->assertSee('id="chatbot-resize-handle"', false);
+        $response->assertSee('focus:outline-none focus:ring-0', false);
+        $response->assertSee('overflow-y-auto', false);
+        $response->assertSee('cursor-grab active:cursor-grabbing select-none', false);
+        $response->assertSee('Jawaban AI merujuk pada informasi yang tersedia di dataset destinasi.');
         $response->assertSee('id="btn-resize-chatbot"', false);
         $response->assertSee('id="btn-close-chatbot"', false);
         $response->assertSee('WayFinder AI sedang memproses data...');
@@ -170,6 +178,36 @@ class DestinationPagesTest extends TestCase
         if ($destination->facilities !== []) {
             $response->assertSee($destination->facilities[0]);
         }
+    }
+
+    public function test_detail_page_uses_google_maps_without_weather_widget(): void
+    {
+        $destination = $this->repository()->find('ws-002');
+        $this->assertNotNull($destination);
+        $this->assertTrue($destination->hasCoordinates());
+        config()->set('services.google_maps.key', 'public-test-key');
+        $escapedDirectionsUrl = str_replace('&', '&amp;', $destination->directionsUrl());
+
+        $this->get(route('destination.detail', $destination->id))
+            ->assertOk()
+            ->assertSee('googleMapsKey')
+            ->assertSee('public-test-key')
+            ->assertSee('id="detail-map"', false)
+            ->assertDontSee('destination-weather')
+            ->assertDontSee('weather_url')
+            ->assertDontSee('Cuaca terkini')
+            ->assertSee($escapedDirectionsUrl, false);
+
+        $this->assertArrayNotHasKey('weather_url', $destination->toMapMarker());
+    }
+
+    public function test_weather_endpoints_are_removed(): void
+    {
+        $destination = $this->repository()->find('ws-002');
+        $this->assertNotNull($destination);
+
+        $this->getJson('/weather/current?lat=3.5&lng=98.6')->assertNotFound();
+        $this->getJson('/destinations/'.$destination->id.'/weather')->assertNotFound();
     }
 
     public function test_detail_and_map_show_known_schedule_while_unknown_schedules_stay_unmarked(): void
@@ -516,6 +554,53 @@ class DestinationPagesTest extends TestCase
         $response->assertSee('>SATUAN</button>', false);
         $response->assertDontSee('unpkg.com');
         $response->assertDontSee('Serambi');
+    }
+
+    public function test_map_page_includes_the_in_app_route_planner_and_origin_options(): void
+    {
+        $this->get('/map')
+            ->assertOk()
+            ->assertSee('id="map-route-panel"', false)
+            ->assertSee('id="route-origin-select"', false)
+            ->assertSee('data-route-mode="DRIVE"', false)
+            ->assertSee('data-route-mode="TWO_WHEELER"', false)
+            ->assertSee('data-route-mode="WALK"', false)
+            ->assertSee('data-route-current-location', false)
+            ->assertSee('data-route-swap', false)
+            ->assertSee('data-route-reset', false)
+            ->assertSee('title="Kembali ke daftar destinasi"', false)
+            ->assertSee('M6 6l12 12M18 6L6 18', false)
+            ->assertSee('data-route-destination="', false)
+            ->assertSee('routeComputeUrl', false);
+    }
+
+    public function test_map_legend_starts_at_top_left_and_contains_marker_mode_control(): void
+    {
+        $response = $this->get('/map');
+
+        $response->assertOk()
+            ->assertSeeInOrder([
+                'id="map" role="region"',
+                'data-map-legend',
+                'data-map-legend-handle',
+                'data-map-all',
+                '>SATUAN</button>',
+            ], false)
+            ->assertSee('top-4 left-4 z-[1000]', false)
+            ->assertSee('cursor-grab active:cursor-grabbing select-none touch-none', false)
+            ->assertSee('⋮⋮', false)
+            ->assertDontSee('data-map-fit')
+            ->assertDontSee('title="Buka direktori destinasi"', false);
+    }
+
+    public function test_map_page_passes_the_configured_google_maps_key_to_its_browser_config(): void
+    {
+        config()->set('services.google_maps.key', 'public-test-key');
+
+        $this->get('/map')
+            ->assertOk()
+            ->assertSee('googleMapsKey')
+            ->assertSee('public-test-key');
     }
 
     public function test_pages_never_expose_the_gemini_api_key(): void

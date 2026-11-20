@@ -28,6 +28,8 @@ Jalankan server Laravel, lalu buka:
 - `/destinations/ws-001` — detail, kartu pengayaan yang memiliki data, dan RDFa;
 - `/map` — peta serta daftar hasil.
 
+Pada `/map`, Google Maps JavaScript API digunakan bila `GOOGLE_MAPS_API_KEY` dikonfigurasi; tanpa key atau saat skrip gagal dimuat, peta memakai fallback Leaflet. Key Google Maps terlihat di browser, jadi batasi key dengan HTTP referrer dan API yang diizinkan di Google Cloud. Tautan petunjuk arah tetap membuka Google Maps melalui URL; aplikasi tidak memakai Directions API.
+
 Cari `dnau toba` pada `/destinations?q=dnau+toba`. Hasil yang diharapkan adalah query yang dikoreksi menjadi `danau toba`; pada endpoint live JSON, field `correction` memuat nilai awal dan koreksinya. Coba `exact=1` untuk menonaktifkan koreksi.
 
 Untuk pemeriksaan terminal:

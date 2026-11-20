@@ -17,6 +17,12 @@
 </div>
 
 @forelse ($results as $destination)
+    @php
+        $latitude = $destination->latitude ?? null;
+        $longitude = $destination->longitude ?? null;
+        $hasValidCoordinates = is_numeric($latitude) && (float) $latitude >= -90 && (float) $latitude <= 90
+            && is_numeric($longitude) && (float) $longitude >= -180 && (float) $longitude <= 180;
+    @endphp
     <article class="bg-white rounded-2xl p-4 border border-gray-200 shadow-sm hover:shadow-md hover:border-brand-primary/30 transition cursor-pointer focus:outline-none focus:ring-2 focus:ring-brand-primary" data-marker-focus="{{ $destination->id }}" tabindex="0" aria-label="Fokuskan peta pada {{ $destination->name }}. Tekan Enter atau Spasi untuk memilih.">
         <div class="flex gap-3 mb-3">
             <div class="relative w-20 h-20 rounded-xl overflow-hidden flex-shrink-0 bg-gray-100 skeleton-shimmer">
@@ -35,7 +41,7 @@
             </div>
         </div>
         <div class="flex gap-2">
-            <a href="{{ $destination->mapsUrl() }}" target="_blank" rel="noopener" class="flex-1 bg-brand-dark text-white text-xs font-bold py-2 rounded-lg flex items-center justify-center gap-1 hover:bg-gray-800" aria-label="Buka petunjuk arah menuju {{ $destination->name }} (tab baru)">◈ Petunjuk Arah</a>
+            <a href="{{ $destination->directionsUrl() }}" target="_blank" rel="noopener noreferrer" @if ($hasValidCoordinates) data-route-destination="{{ $destination->id }}" data-route-name="{{ $destination->name }}" data-route-location="{{ $destination->location }}" data-route-latitude="{{ $latitude }}" data-route-longitude="{{ $longitude }}" @endif class="flex-1 bg-brand-dark text-white text-xs font-bold py-2 rounded-lg flex items-center justify-center gap-1 hover:bg-gray-800" aria-label="Hitung petunjuk arah menuju {{ $destination->name }}">◈ Petunjuk Arah</a>
             <a href="{{ route('destination.detail', $destination->id) }}" class="destination-details-link flex-1 bg-brand-light border border-brand-primary/20 text-brand-dark text-xs font-bold rounded-lg py-2 flex items-center justify-center gap-1 hover:bg-gray-100">Lihat Detail</a>
         </div>
     </article>

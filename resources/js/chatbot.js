@@ -5,7 +5,9 @@ const STORAGE_KEY = 'wayfinder.chatbot.v1';
 const MAX_HISTORY = 10;
 const MAX_MESSAGE_LENGTH = 800;
 const MAX_STORED_TURNS = 60;
-const GREETING = 'Sebaiknya kita mulai dari mana?';
+const GREETING = 'Halo! Ada destinasi wisata di Sumatera Utara yang ingin Anda cari atau tanyakan?';
+
+const welcomeTurn = () => ({ role: 'model', text: GREETING, status: 'complete' });
 
 marked.setOptions({
     breaks: true,
@@ -24,7 +26,8 @@ const initialState = () => ({
     isOpen: false,
     mode: 'fullscreen',
     position: null,
-    turns: [],
+    size: null,
+    turns: [welcomeTurn()],
     pending: null,
 });
 
@@ -54,6 +57,10 @@ const readState = () => {
                         : 'complete',
                 }))
             : [];
+
+        if (turns.length === 0) {
+            turns.push(welcomeTurn());
+        }
         const pending = parsed.pending
             && typeof parsed.pending.message === 'string'
             && Array.isArray(parsed.pending.history)
@@ -70,11 +77,19 @@ const readState = () => {
             && Number.isFinite(parsed.position.top)
             ? { left: parsed.position.left, top: parsed.position.top }
             : null;
+        const size = parsed.size
+            && Number.isFinite(parsed.size.width)
+            && parsed.size.width > 0
+            && Number.isFinite(parsed.size.height)
+            && parsed.size.height > 0
+            ? { width: parsed.size.width, height: parsed.size.height }
+            : null;
 
         return {
             isOpen: parsed.isOpen === true,
             mode: parsed.mode === 'popup' ? 'popup' : 'fullscreen',
             position,
+            size,
             turns,
             pending,
         };
@@ -116,22 +131,20 @@ const initChatbot = () => {
     const openButton = document.getElementById('btn-chatbot');
     const closeButton = document.getElementById('btn-close-chatbot');
     const resizeButton = document.getElementById('btn-resize-chatbot');
+    const resizeHandle = document.getElementById('chatbot-resize-handle');
     const header = document.getElementById('chatbot-header');
-    const emptyState = document.getElementById('chatbot-empty-state');
     const conversation = document.getElementById('chatbot-conversation');
     const messages = document.getElementById('chat-messages');
     const messageList = document.getElementById('chat-message-list');
     const loading = document.getElementById('chatbot-loading');
     const form = document.getElementById('chat-form');
     const input = document.getElementById('chat-input');
-    const inputDock = document.getElementById('chat-input-dock');
     const sendButton = document.getElementById('btn-send-chat');
     const status = document.getElementById('chatbot-status');
-    const greeting = document.querySelector('[data-chatbot-greeting]');
     const chatUrl = dialog?.dataset.chatUrl;
 
-    if (! dialog || ! openButton || ! closeButton || ! resizeButton || ! header || ! emptyState || ! conversation
-        || ! messages || ! messageList || ! loading || ! form || ! input || ! inputDock || ! sendButton || ! chatUrl) {
+    if (! dialog || ! openButton || ! closeButton || ! resizeButton || ! resizeHandle || ! header || ! conversation
+        || ! messages || ! messageList || ! loading || ! form || ! input || ! sendButton || ! chatUrl) {
         return;
     }
 
@@ -139,7 +152,11 @@ const initChatbot = () => {
     let activeRequest = false;
     let lastFocusedElement = null;
     let dragState = null;
-    let greetingTimer = null;
+    let dragFrame = 0;
+    let pendingPosition = null;
+    let resizeState = null;
+    let resizeFrame = 0;
+    let pendingSize = null;
 
     const persist = () => {
         try {
@@ -194,6 +211,50 @@ const initChatbot = () => {
         scrollToLatest();
     };
 
+    const clampPosition = (left, top) => ({
+        left: Math.min(Math.max(0, left), Math.max(0, window.innerWidth - dialog.offsetWidth)),
+        top: Math.min(Math.max(0, top), Math.max(0, window.innerHeight - dialog.offsetHeight)),
+    });
+
+    const popupSizeLimits = () => ({
+        width: Math.max(1, window.innerWidth - (state.position ? state.position.left : 32)),
+        height: Math.max(1, window.innerHeight - (state.position ? state.position.top : 32)),
+    });
+
+    const clampSize = (width, height) => {
+        const limits = popupSizeLimits();
+        const minimumWidth = Math.min(280, limits.width);
+        const minimumHeight = Math.min(360, limits.height);
+
+        return {
+            width: Math.min(Math.max(width, minimumWidth), limits.width),
+            height: Math.min(Math.max(height, minimumHeight), limits.height),
+        };
+    };
+
+    const updatePopupSizeConstraints = () => {
+        const limits = popupSizeLimits();
+
+        dialog.style.minWidth = `${Math.min(280, limits.width)}px`;
+        dialog.style.minHeight = `${Math.min(360, limits.height)}px`;
+        dialog.style.maxWidth = `${limits.width}px`;
+        dialog.style.maxHeight = `${limits.height}px`;
+    };
+
+    const applyPopupSize = (width, height) => {
+        state.size = clampSize(width, height);
+        dialog.style.width = `${state.size.width}px`;
+        dialog.style.height = `${state.size.height}px`;
+
+        if (state.position) {
+            state.position = clampPosition(state.position.left, state.position.top);
+            dialog.style.left = `${state.position.left}px`;
+            dialog.style.top = `${state.position.top}px`;
+        }
+
+        updatePopupSizeConstraints();
+    };
+
     const updateShell = () => {
         const isPopup = state.mode === 'popup';
 
@@ -212,44 +273,56 @@ const initChatbot = () => {
         dialog.classList.toggle('border', isPopup);
         dialog.classList.toggle('border-gray-200', isPopup);
         document.body.classList.toggle('overflow-hidden', state.isOpen);
-        header.classList.toggle('cursor-move', isPopup);
+        header.classList.toggle('cursor-grab', isPopup);
+        header.classList.toggle('cursor-grabbing', isPopup && dragState !== null);
+        header.classList.toggle('active:cursor-grabbing', isPopup);
+        header.classList.toggle('select-none', isPopup);
         header.classList.toggle('touch-none', isPopup);
+        resizeHandle.classList.toggle('hidden', ! isPopup);
+        resizeHandle.classList.toggle('flex', isPopup);
         dialog.classList.toggle('hidden', ! state.isOpen);
         dialog.classList.toggle('flex', state.isOpen);
         dialog.setAttribute('aria-hidden', String(! state.isOpen));
         openButton.setAttribute('aria-expanded', String(state.isOpen));
-        resizeButton.setAttribute('aria-label', isPopup ? 'Expand chatbot' : 'Minimize chatbot');
-        resizeButton.setAttribute('title', isPopup ? 'Expand chatbot' : 'Minimize chatbot');
+        resizeButton.setAttribute('aria-label', isPopup ? 'Buka layar penuh' : 'Jadikan jendela mini');
+        resizeButton.setAttribute('title', isPopup ? 'Buka layar penuh' : 'Jadikan jendela mini');
         resizeButton.innerHTML = isPopup
             ? '<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 3H5a2 2 0 00-2 2v3m13-5h3a2 2 0 012 2v3M3 16v3a2 2 0 002 2h3m8 0h3a2 2 0 002-2v-3"/></svg>'
             : '<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14"/></svg>';
 
         if (isPopup && state.position) {
+            state.position = clampPosition(state.position.left, state.position.top);
             dialog.style.left = `${state.position.left}px`;
             dialog.style.top = `${state.position.top}px`;
             dialog.style.right = 'auto';
             dialog.style.bottom = 'auto';
-        } else if (!isPopup) {
+        } else {
             dialog.style.left = '';
             dialog.style.top = '';
             dialog.style.right = '';
             dialog.style.bottom = '';
         }
+
+        if (isPopup) {
+            updatePopupSizeConstraints();
+
+            if (state.size) {
+                applyPopupSize(state.size.width, state.size.height);
+            } else {
+                dialog.style.width = '';
+                dialog.style.height = '';
+            }
+        } else {
+            dialog.style.width = '';
+            dialog.style.height = '';
+            dialog.style.minWidth = '';
+            dialog.style.minHeight = '';
+            dialog.style.maxWidth = '';
+            dialog.style.maxHeight = '';
+        }
     };
 
     const updateLayout = () => {
-        const hasConversation = state.turns.length > 0;
-
-        emptyState.classList.toggle('hidden', hasConversation);
-        conversation.classList.toggle('hidden', ! hasConversation);
-        conversation.classList.toggle('flex', hasConversation);
-
-        if (hasConversation && form.parentElement !== inputDock) {
-            inputDock.appendChild(form);
-        } else if (! hasConversation && form.parentElement !== emptyState.firstElementChild) {
-            emptyState.firstElementChild.appendChild(form);
-        }
-
         loading.classList.toggle('hidden', ! state.pending);
         loading.setAttribute('aria-hidden', String(! state.pending));
         renderTurns();
@@ -272,15 +345,10 @@ const initChatbot = () => {
     const openDialog = () => {
         lastFocusedElement = document.activeElement;
         state.isOpen = true;
-        state.mode = 'fullscreen';
-        state.position = null;
+        state.mode = 'popup';
         updateShell();
         updateLayout();
         persist();
-
-        if (! state.turns.length) {
-            startGreeting();
-        }
 
         window.setTimeout(() => input.focus(), 30);
     };
@@ -297,11 +365,6 @@ const initChatbot = () => {
 
     const toggleMode = () => {
         state.mode = state.mode === 'fullscreen' ? 'popup' : 'fullscreen';
-
-        if (state.mode === 'fullscreen') {
-            state.position = null;
-        }
-
         updateShell();
         persist();
     };
@@ -403,7 +466,6 @@ const initChatbot = () => {
         };
         const userTurn = { role: 'user', text: message, status: 'pending' };
 
-        window.clearInterval(greetingTimer);
         state.turns.push(userTurn);
         state.pending = pending;
         input.value = '';
@@ -415,31 +477,6 @@ const initChatbot = () => {
     const focusableElements = () => Array.from(
         dialog.querySelectorAll('button:not(:disabled), textarea, [href], [tabindex]:not([tabindex="-1"])'),
     ).filter((element) => element.offsetParent !== null);
-
-    const startGreeting = () => {
-        if (! greeting) {
-            return;
-        }
-
-        window.clearInterval(greetingTimer);
-        greeting.textContent = '';
-
-        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-            greeting.textContent = GREETING;
-
-            return;
-        }
-
-        let index = 0;
-        greetingTimer = window.setInterval(() => {
-            greeting.textContent = GREETING.slice(0, index + 1);
-            index += 1;
-
-            if (index >= GREETING.length) {
-                window.clearInterval(greetingTimer);
-            }
-        }, 42);
-    };
 
     form.addEventListener('submit', (event) => {
         event.preventDefault();
@@ -497,7 +534,7 @@ const initChatbot = () => {
     });
 
     header.addEventListener('pointerdown', (event) => {
-        if (state.mode !== 'popup' || event.button !== 0 || event.target.closest('button')) {
+        if (! state.isOpen || state.mode !== 'popup' || event.button !== 0 || event.target.closest('button')) {
             return;
         }
 
@@ -507,22 +544,45 @@ const initChatbot = () => {
             offsetX: event.clientX - rect.left,
             offsetY: event.clientY - rect.top,
         };
+        header.classList.add('cursor-grabbing');
         header.setPointerCapture(event.pointerId);
     });
+
+    const applyDragPosition = () => {
+        dragFrame = 0;
+
+        if (! pendingPosition || state.mode !== 'popup') {
+            pendingPosition = null;
+
+            return;
+        }
+
+        state.position = clampPosition(pendingPosition.left, pendingPosition.top);
+        pendingPosition = null;
+        dialog.style.left = `${state.position.left}px`;
+        dialog.style.top = `${state.position.top}px`;
+        dialog.style.right = 'auto';
+        dialog.style.bottom = 'auto';
+        updatePopupSizeConstraints();
+
+        if (state.size) {
+            applyPopupSize(state.size.width, state.size.height);
+        }
+    };
 
     header.addEventListener('pointermove', (event) => {
         if (! dragState || event.pointerId !== dragState.pointerId) {
             return;
         }
 
-        const left = Math.min(Math.max(0, event.clientX - dragState.offsetX), Math.max(0, window.innerWidth - dialog.offsetWidth));
-        const top = Math.min(Math.max(0, event.clientY - dragState.offsetY), Math.max(0, window.innerHeight - dialog.offsetHeight));
+        pendingPosition = {
+            left: event.clientX - dragState.offsetX,
+            top: event.clientY - dragState.offsetY,
+        };
 
-        dialog.style.left = `${left}px`;
-        dialog.style.top = `${top}px`;
-        dialog.style.right = 'auto';
-        dialog.style.bottom = 'auto';
-        state.position = { left, top };
+        if (! dragFrame) {
+            dragFrame = window.requestAnimationFrame(applyDragPosition);
+        }
     });
 
     const endDrag = (event) => {
@@ -530,34 +590,129 @@ const initChatbot = () => {
             return;
         }
 
+        if (dragFrame) {
+            window.cancelAnimationFrame(dragFrame);
+            applyDragPosition();
+        }
+
         dragState = null;
+        header.classList.remove('cursor-grabbing');
         persist();
-        header.releasePointerCapture?.(event.pointerId);
+
+        if (header.hasPointerCapture(event.pointerId)) {
+            header.releasePointerCapture(event.pointerId);
+        }
     };
 
     header.addEventListener('pointerup', endDrag);
     header.addEventListener('pointercancel', endDrag);
+    header.addEventListener('lostpointercapture', endDrag);
 
-    window.addEventListener('resize', () => {
-        if (state.mode !== 'popup' || ! state.position) {
+    const applyResize = () => {
+        resizeFrame = 0;
+
+        if (! pendingSize || state.mode !== 'popup') {
+            pendingSize = null;
+
             return;
         }
 
-        state.position = {
-            left: Math.min(state.position.left, Math.max(0, window.innerWidth - dialog.offsetWidth)),
-            top: Math.min(state.position.top, Math.max(0, window.innerHeight - dialog.offsetHeight)),
+        applyPopupSize(pendingSize.width, pendingSize.height);
+        pendingSize = null;
+    };
+
+    resizeHandle.addEventListener('pointerdown', (event) => {
+        if (! state.isOpen || state.mode !== 'popup' || event.button !== 0) {
+            return;
+        }
+
+        event.preventDefault();
+        event.stopPropagation();
+        const rect = dialog.getBoundingClientRect();
+        resizeState = {
+            pointerId: event.pointerId,
+            startX: event.clientX,
+            startY: event.clientY,
+            width: rect.width,
+            height: rect.height,
         };
-        dialog.style.left = `${state.position.left}px`;
-        dialog.style.top = `${state.position.top}px`;
+        resizeHandle.setPointerCapture(event.pointerId);
+    });
+
+    resizeHandle.addEventListener('pointermove', (event) => {
+        if (! resizeState || event.pointerId !== resizeState.pointerId) {
+            return;
+        }
+
+        pendingSize = {
+            width: resizeState.width + event.clientX - resizeState.startX,
+            height: resizeState.height + event.clientY - resizeState.startY,
+        };
+
+        if (! resizeFrame) {
+            resizeFrame = window.requestAnimationFrame(applyResize);
+        }
+    });
+
+    const endResize = (event) => {
+        if (! resizeState || event.pointerId !== resizeState.pointerId) {
+            return;
+        }
+
+        if (resizeFrame) {
+            window.cancelAnimationFrame(resizeFrame);
+            applyResize();
+        }
+
+        resizeState = null;
+        persist();
+
+        if (resizeHandle.hasPointerCapture(event.pointerId)) {
+            resizeHandle.releasePointerCapture(event.pointerId);
+        }
+    };
+
+    resizeHandle.addEventListener('pointerup', endResize);
+    resizeHandle.addEventListener('pointercancel', endResize);
+    resizeHandle.addEventListener('lostpointercapture', endResize);
+    resizeHandle.addEventListener('keydown', (event) => {
+        if (state.mode !== 'popup' || ! ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) {
+            return;
+        }
+
+        event.preventDefault();
+        applyPopupSize(
+            dialog.offsetWidth + (event.key === 'ArrowRight' ? 16 : event.key === 'ArrowLeft' ? -16 : 0),
+            dialog.offsetHeight + (event.key === 'ArrowDown' ? 16 : event.key === 'ArrowUp' ? -16 : 0),
+        );
         persist();
     });
 
+    const clampPopupToViewport = () => {
+        if (state.mode !== 'popup') {
+            return;
+        }
+
+        if (state.position) {
+            state.position = clampPosition(state.position.left, state.position.top);
+            dialog.style.left = `${state.position.left}px`;
+            dialog.style.top = `${state.position.top}px`;
+        }
+
+        if (state.size) {
+            applyPopupSize(state.size.width, state.size.height);
+        } else {
+            updatePopupSizeConstraints();
+        }
+
+        persist();
+    };
+
+    window.addEventListener('resize', clampPopupToViewport);
+    window.visualViewport?.addEventListener('resize', clampPopupToViewport);
+
     updateShell();
     updateLayout();
-
-    if (state.isOpen && ! state.turns.length) {
-        startGreeting();
-    }
 
     if (state.pending) {
         const pendingTurn = [...state.turns].reverse().find(

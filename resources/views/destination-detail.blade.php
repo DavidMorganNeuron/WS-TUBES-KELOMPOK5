@@ -89,7 +89,7 @@
                     data-share-title="{{ $destination->name }}"
                     data-share-text="{{ $destination->shortDescription }}"
                 >Bagikan</button>
-                <a href="{{ $destination->mapsUrl() }}" target="_blank" rel="noopener" class="bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-1 shadow-sm">📍 Google Maps</a>
+                <a href="{{ $destination->mapsUrl() }}" target="_blank" rel="noopener noreferrer" class="bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-1 shadow-sm">📍 Google Maps</a>
                 <p id="share-status" class="sr-only" role="status" aria-live="polite"></p>
             </div>
         </div>
@@ -195,7 +195,7 @@
                     <div class="flex justify-between gap-4"><span>Tiket mulai dari</span><span class="font-bold text-gray-900 text-right">{{ $destination->priceLabel() }}</span></div>
                 </div>
 
-                <a href="{{ $destination->mapsUrl() }}" target="_blank" rel="noopener" class="block text-center bg-brand-dark hover:bg-gray-800 text-white font-bold text-sm py-3 rounded-lg transition mb-3">
+                <a href="{{ $destination->mapsUrl() }}" target="_blank" rel="noopener noreferrer" class="block text-center bg-brand-dark hover:bg-gray-800 text-white font-bold text-sm py-3 rounded-lg transition mb-3">
                     📍 Buka di Google Maps
                 </a>
                 <a href="{{ route('destinations', ['jenis' => $destination->primaryType()]) }}" class="block text-center bg-brand-light border border-brand-primary/15 text-brand-dark font-bold text-sm py-3 rounded-lg hover:bg-gray-100 transition">
@@ -293,7 +293,7 @@
                             @endif
                         </p>
                         @if ($destination->openingHours !== '')
-                            <p class="text-[10px] text-gray-500">Jadwal dapat berubah saat hari libur atau cuaca ekstrem.</p>
+                            <p class="text-[10px] text-gray-500">Jadwal dapat berubah saat hari libur atau perubahan operasional.</p>
                         @endif
                     </div>
 
@@ -410,17 +410,24 @@
                             <p class="text-xs text-gray-500">{{ $destination->location }}</p>
                         @endif
                     </div>
-                    <a href="{{ $destination->mapsUrl() }}" target="_blank" rel="noopener" class="text-brand-accent hover:underline text-xs font-bold flex items-center gap-1 whitespace-nowrap">Buka di Google Maps</a>
+                    <div class="flex flex-wrap gap-3">
+                        <a href="{{ $destination->mapsUrl() }}" target="_blank" rel="noopener noreferrer" class="text-brand-accent hover:underline text-xs font-bold flex items-center gap-1 whitespace-nowrap">Buka di Google Maps</a>
+                        <a href="{{ $destination->directionsUrl() }}" target="_blank" rel="noopener noreferrer" class="text-brand-accent hover:underline text-xs font-bold flex items-center gap-1 whitespace-nowrap">Petunjuk arah</a>
+                    </div>
                 </div>
 
                 @if ($destination->hasCoordinates())
                     <div
                         class="rounded-xl overflow-hidden h-64 border border-gray-200 bg-gray-100 relative z-0"
                         id="detail-map"
+                        data-id="{{ $destination->id }}"
                         data-latitude="{{ json_encode($destination->latitude) }}"
                         data-longitude="{{ json_encode($destination->longitude) }}"
                         data-name="{{ $destination->name }}"
                         data-location="{{ $destination->location }}"
+                        data-detail-url="{{ route('destination.detail', $destination->id) }}"
+                        data-google-maps-url="{{ $destination->mapsUrl() }}"
+                        data-directions-url="{{ $destination->directionsUrl() }}"
                         aria-label="Peta lokasi {{ $destination->name }}"
                     ></div>
                 @else
@@ -491,3 +498,11 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+    <script>
+        window.WayFinderMapConfig = {
+            googleMapsKey: @json(config('services.google_maps.key')),
+        };
+    </script>
+@endpush

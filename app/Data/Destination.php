@@ -213,6 +213,15 @@ final readonly class Destination
         return 'https://www.google.com/maps/search/?api=1&query='.rawurlencode(trim($this->name.' '.$this->address));
     }
 
+    public function directionsUrl(): string
+    {
+        $destination = $this->hasCoordinates()
+            ? $this->latitude.','.$this->longitude
+            : trim($this->name.' '.$this->address);
+
+        return 'https://www.google.com/maps/dir/?api=1&destination='.rawurlencode($destination);
+    }
+
     /**
      * @return array<string, mixed>
      */
@@ -233,6 +242,8 @@ final readonly class Destination
             'image_attribution' => $this->imageAttribution(),
             'latitude' => $this->latitude,
             'longitude' => $this->longitude,
+            'google_maps_url' => $this->mapsUrl(),
+            'directions_url' => $this->directionsUrl(),
             'url' => route('destination.detail', $this->id),
         ];
     }

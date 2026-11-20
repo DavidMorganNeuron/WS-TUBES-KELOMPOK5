@@ -9,6 +9,10 @@
     outline-offset: 3px;
 }
 
+#chat-input:focus-visible {
+    outline: none;
+}
+
 @theme {
     /* Warna kustom dari desain Figma */
   --color-brand-dark: #0b2921;
