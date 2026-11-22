@@ -2,11 +2,8 @@
 
 namespace Tests\Feature;
 
-<<<<<<< HEAD
 use App\Data\Destination;
 use App\Services\Ontology\DestinationRepository;
-=======
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
 use Tests\TestCase;
 
 class LiveSearchTest extends TestCase
@@ -16,18 +13,13 @@ class LiveSearchTest extends TestCase
         $response = $this->getJson('/destinations/live?q=Toba');
 
         $response->assertOk();
-<<<<<<< HEAD
         $response->assertJsonStructure(['html', 'total', 'first_item', 'last_item', 'count', 'has_filters', 'correction', 'suggestions']);
-=======
-        $response->assertJsonStructure(['html', 'total', 'first_item', 'last_item', 'count', 'has_filters']);
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
 
         $this->assertTrue($response->json('has_filters'));
         $this->assertGreaterThan(0, $response->json('total'));
         $this->assertStringContainsString('Danau Toba', $response->json('html'));
     }
 
-<<<<<<< HEAD
     public function test_destinations_live_endpoint_matches_single_letter_prefixes_but_not_arbitrary_substrings(): void
     {
         $singleLetter = $this->getJson('/destinations/live?q=D');
@@ -36,15 +28,10 @@ class LiveSearchTest extends TestCase
         $this->assertGreaterThan(0, $singleLetter->json('total'));
         $this->assertStringContainsString('Danau Toba', $singleLetter->json('html'));
 
-=======
-    public function test_destinations_live_endpoint_does_not_match_arbitrary_substrings(): void
-    {
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
         $response = $this->getJson('/destinations/live?q=oba');
 
         $response->assertOk();
         $this->assertSame(0, $response->json('total'));
-<<<<<<< HEAD
         $this->assertStringContainsString('Tidak ada destinasi yang sesuai dengan saringan', $response->json('html'));
     }
 
@@ -71,9 +58,6 @@ class LiveSearchTest extends TestCase
         $response->assertOk();
         $this->assertGreaterThan(0, $response->json('total'));
         $this->assertStringContainsString('Air Terjun Bolon', $response->json('html'));
-=======
-        $this->assertStringContainsString('No destinations match your filters', $response->json('html'));
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
     }
 
     public function test_destinations_live_endpoint_applies_sort_and_kabupaten_filters(): void
@@ -86,7 +70,6 @@ class LiveSearchTest extends TestCase
         $this->assertStringContainsString('Kota Medan', $response->json('html'));
     }
 
-<<<<<<< HEAD
     public function test_destinations_live_endpoint_filters_optional_activities_and_facilities_case_insensitively(): void
     {
         $destination = app(DestinationRepository::class)
@@ -105,8 +88,6 @@ class LiveSearchTest extends TestCase
         $this->assertStringContainsString($destination->name, $response->json('html'));
     }
 
-=======
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
     public function test_map_live_endpoint_returns_results_and_markers(): void
     {
         $response = $this->getJson('/map/live?q=Danau');
@@ -117,11 +98,8 @@ class LiveSearchTest extends TestCase
             'matchCount',
             'resultCount',
             'markerCount',
-<<<<<<< HEAD
             'correction',
             'suggestions',
-=======
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
             'markers' => ['*' => ['id', 'name', 'latitude', 'longitude', 'url']],
         ]);
 
@@ -134,11 +112,7 @@ class LiveSearchTest extends TestCase
         $response = $this->getJson('/destinations/suggest?q=Dan');
 
         $response->assertOk();
-<<<<<<< HEAD
         $response->assertJsonStructure(['html', 'count', 'correction', 'suggestions']);
-=======
-        $response->assertJsonStructure(['html', 'count']);
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
 
         $this->assertGreaterThan(0, $response->json('count'));
         $this->assertStringContainsString('Danau', $response->json('html'));
@@ -146,11 +120,8 @@ class LiveSearchTest extends TestCase
 
     public function test_search_routes_reject_array_valued_query_parameters_without_server_errors(): void
     {
-<<<<<<< HEAD
         config()->set('app.locale', 'id');
 
-=======
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
         foreach ([
             '/destinations?q%5B%5D=Danau',
             '/destinations/live?q%5B%5D=Danau',
@@ -158,13 +129,9 @@ class LiveSearchTest extends TestCase
             '/map?q%5B%5D=Danau',
             '/map/live?q%5B%5D=Danau',
         ] as $url) {
-<<<<<<< HEAD
             $this->getJson($url)
                 ->assertUnprocessable()
                 ->assertJsonPath('errors.q.0', 'kata pencarian harus berupa teks.');
-=======
-            $this->getJson($url)->assertUnprocessable();
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
         }
     }
 }

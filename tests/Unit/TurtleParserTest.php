@@ -22,65 +22,9 @@ class TurtleParserTest extends TestCase
     {
         $rows = $this->parser->parseFile('database/ontology/wisata_sumut_v2.ttl');
 
-<<<<<<< HEAD
         $this->assertNotEmpty($rows);
         $this->assertSame('ws-001', $rows[0]['idDestinasi']);
         $this->assertSame('Air Terjun Bolon', $rows[0]['namaDestinasi']);
-=======
-        $this->assertCount(250, $rows);
-        $this->assertSame('ws-002', $rows[0]['idDestinasi']);
-        $this->assertSame('Air Terjun Lae Mbilulu', $rows[0]['namaDestinasi']);
-    }
-
-    public function test_json_dataset_matches_the_turtle_file(): void
-    {
-        $rows = $this->parser->parseFile('database/ontology/wisata_sumut_v2.ttl');
-        $jsonRows = json_decode(
-            file_get_contents(base_path('wisata_sumut_v2.json')),
-            true,
-            512,
-            JSON_THROW_ON_ERROR,
-        );
-        $jsonRowsById = collect($jsonRows)->keyBy('idDestinasi');
-        $multiValueProperties = [
-            'namaAlternatif',
-            'jenisDestinasi',
-            'kataKunci',
-            'memilikiFasilitas',
-            'dapatMelakukan',
-        ];
-        $numericProperties = ['lintang', 'bujur', 'hargaMasuk', 'ratingPengunjung'];
-
-        $this->assertSame(array_column($rows, 'idDestinasi'), array_column($jsonRows, 'idDestinasi'));
-
-        foreach ($rows as $row) {
-            $jsonRow = $jsonRowsById[$row['idDestinasi']];
-
-            foreach ($row as $property => $value) {
-                if (in_array($property, $multiValueProperties, true)) {
-                    $expected = in_array($value, ['', '-'], true) ? ['-'] : explode(' | ', $value);
-
-                    $this->assertSame($expected, $jsonRow[$property]);
-
-                    continue;
-                }
-
-                if (in_array($property, $numericProperties, true)) {
-                    if (in_array($value, ['', '-'], true)) {
-                        $this->assertSame('-', $jsonRow[$property]);
-
-                        continue;
-                    }
-
-                    $this->assertEqualsWithDelta((float) $value, (float) $jsonRow[$property], 0.0000000001);
-
-                    continue;
-                }
-
-                $this->assertSame($value === '' ? '-' : $value, $jsonRow[$property]);
-            }
-        }
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
     }
 
     public function test_local_turtle_dataset_has_unique_ids_and_required_fields(): void
@@ -102,17 +46,10 @@ class TurtleParserTest extends TestCase
         $rows = $this->parser->parseFile('database/ontology/wisata_sumut_v2.ttl');
         $destination = Destination::fromArray($rows[0]);
 
-<<<<<<< HEAD
         $this->assertStringContainsString('Turunan Bolon', $destination->fullDescription);
         $this->assertEqualsWithDelta(2.713679166994072, $destination->latitude, 0.0000001);
         $this->assertEqualsWithDelta(99.14826959818836, $destination->longitude, 0.0000001);
         $this->assertSame(4.4, $destination->rating);
-=======
-        $this->assertStringContainsString('Si Mbilulu', $destination->fullDescription);
-        $this->assertEqualsWithDelta(2.6119486688740423, $destination->latitude, 0.0000001);
-        $this->assertEqualsWithDelta(98.34891832517512, $destination->longitude, 0.0000001);
-        $this->assertSame(4.5, $destination->rating);
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
         $this->assertSame('Alam', $destination->primaryType());
     }
 
@@ -121,21 +58,12 @@ class TurtleParserTest extends TestCase
         $rows = $this->parser->parseFile('database/ontology/wisata_sumut_v2.ttl');
         $pelaruga = Destination::fromArray(collect($rows)->firstWhere('idDestinasi', 'ws-148'));
 
-<<<<<<< HEAD
         $this->assertSame(['Alam', 'Kuliner'], $pelaruga->types);
-=======
-        $this->assertSame(['Alam'], $pelaruga->types);
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
         $this->assertSame(['10000'], $pelaruga->prices);
         $this->assertSame(10000.0, $pelaruga->lowestPrice());
         $this->assertContains('Tempat Parkir', $pelaruga->facilities);
         $this->assertSame('', $pelaruga->email);
-<<<<<<< HEAD
         $this->assertSame(4.6, $pelaruga->rating);
-=======
-        $this->assertNull($pelaruga->rating);
-        $this->assertStringContainsString('Special:FilePath/Air_terjun_Pelaruga_2.jpg', $pelaruga->imageUrl());
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
     }
 
     public function test_it_adds_a_width_hint_to_wikimedia_file_paths(): void
@@ -157,7 +85,6 @@ class TurtleParserTest extends TestCase
         );
     }
 
-<<<<<<< HEAD
     public function test_it_returns_image_attribution_only_when_media_matches_its_source(): void
     {
         $matchingDestination = Destination::fromArray([
@@ -176,24 +103,6 @@ class TurtleParserTest extends TestCase
             $matchingDestination->imageAttribution()['source_url'] ?? null,
         );
         $this->assertNull($mismatchedDestination->imageAttribution());
-=======
-    public function test_new_wikimedia_images_have_matching_attribution_metadata(): void
-    {
-        $rows = collect($this->parser->parseFile('database/ontology/wisata_sumut_v2.ttl'))->keyBy('idDestinasi');
-        $attributions = require app_path('Data/destination_images.php');
-
-        $this->assertCount(27, $attributions);
-
-        foreach ($attributions as $id => $attribution) {
-            $destination = Destination::fromArray($rows[$id]);
-
-            $this->assertNotSame('', $destination->media, "{$id} must have an image URL in Turtle.");
-            $this->assertSame($attribution, $destination->imageAttribution());
-            $this->assertStringContainsString('Special:FilePath/', $destination->imageUrl());
-            $this->assertStringStartsWith('https://commons.wikimedia.org/wiki/File:', $attribution['source_url']);
-            $this->assertStringStartsWith('https://creativecommons.org/', $attribution['license_url']);
-        }
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
     }
 
     public function test_it_labels_zero_prices_as_free(): void
@@ -206,7 +115,6 @@ class TurtleParserTest extends TestCase
         ]);
 
         $this->assertSame(0.0, $destination->lowestPrice());
-<<<<<<< HEAD
         $this->assertSame('Gratis', $destination->priceLabel());
         $this->assertSame(['Gratis', 'Rp 15.000'], $destination->priceLabels());
     }
@@ -236,10 +144,6 @@ class TurtleParserTest extends TestCase
         $this->assertCount(304, $destinations);
         $this->assertSame(282, $destinations->where('openingHours', '!=', '')->count());
         $this->assertSame(22, $destinations->where('openingHours', '')->count());
-=======
-        $this->assertSame('Free', $destination->priceLabel());
-        $this->assertSame(['Free', 'Rp 15.000'], $destination->priceLabels());
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
     }
 
     public function test_it_handles_a_minimal_inline_turtle_document(): void

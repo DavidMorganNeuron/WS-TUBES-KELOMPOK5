@@ -41,7 +41,6 @@
         <div data-map-browser-header class="p-5 border-b border-gray-100 space-y-4 bg-[#f8faf9]">
             <div class="flex justify-between items-start gap-3">
                 <div>
-<<<<<<< HEAD
                     <p class="text-[10px] font-bold text-brand-accent uppercase tracking-wider">Atlas Destinasi</p>
                     <h1 class="text-xl font-serif font-bold text-gray-900">Sumatera Utara</h1>
                 </div>
@@ -49,55 +48,32 @@
             </div>
 
             <form action="{{ route('map') }}" method="GET" class="relative" data-live-map data-live-url="{{ route('map.live') }}" autocomplete="off" role="search" aria-label="Cari destinasi di peta">
-=======
-                    <p class="text-[10px] font-bold text-brand-accent uppercase tracking-wider">Destination Atlas</p>
-                    <h1 class="text-xl font-serif font-bold text-gray-900">North Sumatra</h1>
-                </div>
-                <button type="button" data-toggle-sidebar="false" class="md:hidden w-8 h-8 rounded-full border border-gray-200 text-gray-500 hover:bg-gray-50" aria-label="Close destination list">✕</button>
-            </div>
-
-            <form action="{{ route('map') }}" method="GET" class="relative" data-live-map data-live-url="{{ route('map.live') }}" autocomplete="off" role="search">
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
                 @if ($activeType !== '')
                     <input type="hidden" name="jenis" value="{{ $activeType }}">
                 @endif
                 <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" aria-hidden="true">🔍</span>
-<<<<<<< HEAD
                 <input type="text" name="q" value="{{ $activeQuery }}" placeholder="Cari destinasi yang ditampilkan..." class="w-full pl-10 pr-20 py-2.5 bg-white border border-gray-200 rounded-xl text-sm font-medium outline-none focus:border-brand-primary" autocomplete="off" aria-label="Cari destinasi yang ditampilkan di peta">
                 <label class="mt-2 inline-flex items-center gap-2 text-xs font-medium text-gray-600">
                     <input type="checkbox" name="exact" value="1" @checked(($filters['exact'] ?? false)) class="rounded border-gray-300 text-brand-primary focus:ring-brand-primary">
                     Tanpa koreksi otomatis
                 </label>
                 <button type="submit" class="absolute right-1.5 top-1/2 -translate-y-1/2 bg-brand-dark hover:bg-gray-800 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg">Cari</button>
-=======
-                <input type="text" name="q" value="{{ $activeQuery }}" placeholder="Search mapped destinations..." class="w-full pl-10 pr-20 py-2.5 bg-white border border-gray-200 rounded-xl text-sm font-medium outline-none focus:border-brand-primary" autocomplete="off" aria-label="Search mapped destinations">
-                <button type="submit" class="absolute right-1.5 top-1/2 -translate-y-1/2 bg-brand-dark hover:bg-gray-800 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg">Find</button>
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
             </form>
             <p id="map-live-status" class="sr-only" role="status" aria-live="polite"></p>
 
             <div class="flex gap-2 overflow-x-auto pb-1" data-map-category-pills>
                 <a href="{{ $urlFor(['jenis' => null]) }}" data-jenis="" class="text-xs font-bold px-4 py-1.5 rounded-full whitespace-nowrap transition {{ $activeType === '' ? 'bg-brand-dark text-white' : 'bg-white border border-gray-200 text-gray-700 hover:border-gray-300' }}">
-<<<<<<< HEAD
                     Semua ({{ \App\Support\IndonesianFormat::number($facets['total']) }})
-=======
-                    All ({{ number_format($facets['total']) }})
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
                 </a>
                 @foreach ($types as $type)
                     <a href="{{ $urlFor(['jenis' => $type]) }}" data-jenis="{{ $type }}" class="text-xs font-bold px-4 py-1.5 rounded-full whitespace-nowrap flex items-center gap-1 transition {{ $activeType === $type ? 'bg-brand-dark text-white' : 'bg-white border border-gray-200 text-gray-700 hover:border-gray-300' }}">
                         <span class="w-2 h-2 rounded-full" style="background-color: {{ $typeColors[$type] }}"></span>
-<<<<<<< HEAD
                         {{ $type }} ({{ \App\Support\IndonesianFormat::number($facets['types'][$type] ?? 0) }})
-=======
-                        {{ $type }} ({{ number_format($facets['types'][$type] ?? 0) }})
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
                     </a>
                 @endforeach
             </div>
         </div>
 
-<<<<<<< HEAD
         <section id="map-route-panel" class="hidden flex-grow min-h-0 flex-col bg-white" aria-label="Petunjuk arah perjalanan">
             <header class="flex items-center justify-between gap-3 p-4 border-b border-gray-200">
                 <div>
@@ -164,21 +140,11 @@
         <div data-map-browser-footer class="p-3 bg-white border-t border-gray-200 flex justify-between items-center text-xs font-bold">
             <span class="text-green-600 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-green-500 animate-pulse" aria-hidden="true"></span> <span id="map-marker-count">{{ \App\Support\IndonesianFormat::number(count($markers)) }}</span> titik pada peta</span>
             <a href="{{ route('map') }}" class="text-gray-500 hover:text-gray-900">Hapus saringan</a>
-=======
-        <div id="map-results" class="flex-grow overflow-y-auto p-4 space-y-4 bg-[#f8faf9]" aria-busy="false">
-            @include('partials.map-results', ['results' => $results, 'matchCount' => $matchCount])
-        </div>
-
-        <div class="p-3 bg-white border-t border-gray-200 flex justify-between items-center text-xs font-bold">
-            <span class="text-green-600 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span> <span id="map-marker-count">{{ number_format(count($markers)) }}</span> mapped points</span>
-            <a href="{{ route('map') }}" class="text-gray-500 hover:text-gray-900">Clear Filters</a>
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
         </div>
     </div>
 
     <!-- MAP AREA -->
     <div class="flex-grow relative bg-[#e5e9e2] overflow-hidden">
-<<<<<<< HEAD
         <button type="button" data-toggle-sidebar="true" class="md:hidden absolute top-6 left-6 z-[1000] bg-white text-brand-dark px-4 py-2 rounded-lg shadow-md text-xs font-bold border border-gray-200" aria-label="Buka daftar destinasi">
             ☰ Destinasi (<span id="map-sidebar-count">{{ \App\Support\IndonesianFormat::number($matchCount) }}</span>)
         </button>
@@ -215,46 +181,6 @@
             <div class="flex gap-4 items-center">
                 <span><span id="map-footer-marker-count">{{ \App\Support\IndonesianFormat::number(count($markers)) }}</span> penanda</span>
                 <span class="hidden sm:inline"><span id="map-footer-match-count">{{ \App\Support\IndonesianFormat::number($matchCount) }}</span> destinasi ditemukan</span>
-=======
-        <button type="button" data-toggle-sidebar="true" class="md:hidden absolute top-6 left-6 z-[1000] bg-white text-brand-dark px-4 py-2 rounded-lg shadow-md text-xs font-bold border border-gray-200">
-            ☰ Destinations (<span id="map-sidebar-count">{{ number_format($matchCount) }}</span>)
-        </button>
-
-        <div class="absolute top-6 right-6 z-[1000] bg-white rounded-xl shadow-lg border border-gray-100 p-4 w-64 hidden lg:block">
-            <div class="flex justify-between items-center mb-4">
-                <h4 class="font-bold text-xs text-gray-800 flex items-center gap-1">◈ ATLAS LEGEND</h4>
-                <span class="w-2 h-2 rounded-full bg-green-500"></span>
-            </div>
-            <div class="space-y-2">
-                @foreach ($types as $type)
-                    <a href="{{ $urlFor(['jenis' => $type]) }}" class="flex items-center justify-between text-xs font-medium text-gray-600 hover:text-brand-primary">
-                        <span class="flex items-center gap-2">
-                            <span class="w-3 h-3 rounded-full" style="background-color: {{ $typeColors[$type] }}"></span>
-                            {{ $type }}
-                        </span>
-                        <span class="text-[10px] font-bold text-gray-400">{{ number_format($facets['types'][$type] ?? 0) }}</span>
-                    </a>
-                @endforeach
-            </div>
-            <div class="border-t border-gray-100 mt-3 pt-3 text-[10px] text-gray-500">
-                {{ number_format($facets['with_coordinates']) }} destinations have coordinates in the ontology.
-            </div>
-        </div>
-
-        <div class="w-full h-full z-0" id="map" role="application" aria-label="Interactive map of destinations in North Sumatra"></div>
-
-        <div class="absolute bottom-12 right-6 z-[1000] flex flex-col gap-2">
-            <button type="button" data-map-fit class="w-10 h-10 bg-white rounded-lg shadow-md flex items-center justify-center text-gray-600 hover:bg-gray-50" title="Fit all markers" aria-label="Fit all markers on the map">🎯</button>
-            <button type="button" data-map-all class="w-10 h-10 bg-white rounded-lg shadow-md flex items-center justify-center text-xs font-bold text-gray-700 hover:bg-gray-50" title="Show markers individually" aria-label="Show markers individually" aria-pressed="false">ALL</button>
-            <a href="{{ route('destinations') }}" class="w-10 h-10 bg-brand-accent text-white rounded-lg shadow-md flex items-center justify-center hover:bg-orange-800" title="Open destination directory" aria-label="Open destination directory">👥</a>
-        </div>
-
-        <div class="absolute bottom-0 left-0 w-full bg-white/90 backdrop-blur border-t border-gray-200 px-6 py-2 flex justify-between items-center text-xs text-gray-600 z-[1000]">
-            <span>Lake Toba Caldera &amp; North Sumatra</span>
-            <div class="flex gap-4 items-center">
-                <span><span id="map-footer-marker-count">{{ number_format(count($markers)) }}</span> markers</span>
-                <span class="hidden sm:inline"><span id="map-footer-match-count">{{ number_format($matchCount) }}</span> destinations match</span>
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
             </div>
         </div>
     </div>
@@ -263,13 +189,6 @@
 
 @push('scripts')
 <script>
-<<<<<<< HEAD
     window.WayFinderMapConfig = @json($mapConfig);
-=======
-    window.WayFinderMapConfig = @json([
-        'markers' => $markers,
-        'colors' => $typeColors,
-    ]);
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
 </script>
 @endpush

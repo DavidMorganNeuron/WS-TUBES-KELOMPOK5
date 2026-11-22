@@ -11,7 +11,6 @@ use Illuminate\View\View;
 
 class HomeController extends Controller
 {
-<<<<<<< HEAD
     public function index(
         DestinationRepository $repository,
         DestinationLinkedDataProvider $linkedDataProvider,
@@ -28,29 +27,11 @@ class HomeController extends Controller
             ? null
             : $linkedDataProvider->forDestination($regionDestination->id);
         unset($dashboard['top_rated'], $dashboard['top_region']);
-=======
-    public function index(DestinationRepository $repository): View
-    {
-        $facets = $repository->facets();
-        $facets['types'] = array_filter($facets['types'], static fn (int $count): bool => $count > 0);
-        $facets['provinces'] = array_filter($facets['provinces'], static fn (int $count): bool => $count > 0);
-
-        $candidates = $repository->topRated(12);
-        $featured = $candidates->first(
-            static fn (Destination $destination): bool => $destination->media !== '' && $destination->shortDescription !== '',
-        ) ?? $candidates->first();
-
-        $highlights = $candidates
-            ->reject(static fn (Destination $destination): bool => $destination->id === $featured?->id)
-            ->take(4)
-            ->values();
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
 
         $facets = $dashboard;
         $facets['types'] = array_filter($facets['types'], static fn (int $count): bool => $count > 0);
         $facets['provinces'] = array_filter($facets['provinces'], static fn (int $count): bool => $count > 0);
 
-<<<<<<< HEAD
         $featured = $candidates->first(
             static fn (Destination $destination): bool => $destination->media !== '' && $destination->shortDescription !== '',
         ) ?? $candidates->first();
@@ -59,17 +40,6 @@ class HomeController extends Controller
             ->reject(static fn (Destination $destination): bool => $destination->id === $featured?->id)
             ->take(4)
             ->values();
-=======
-                return [
-                    'type' => $type,
-                    'count' => $facets['types'][$type] ?? 0,
-                    'destination' => $topDestination,
-                ];
-            })
-            ->filter(static fn (array $category): bool => $category['count'] > 0)
-            ->values()
-            ->all();
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
 
         return view('home', [
             'facets' => $facets,

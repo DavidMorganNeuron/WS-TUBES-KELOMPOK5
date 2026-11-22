@@ -1,32 +1,21 @@
 <div align="center">
 
-<<<<<<< HEAD
 # WayFinder
 
 Jelajahi destinasi wisata Sumatera Utara melalui pencarian, peta interaktif, dan data semantik.
-=======
-# Sumatera Heritage &amp; Trails
-
-Jelajahi destinasi wisata Sumatera melalui pencarian, peta interaktif, dan panduan AI berbasis data semantik.
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
 
 [![PHP](https://img.shields.io/badge/PHP-8.4-777BB4?style=for-the-badge&logo=php&logoColor=white)](https://www.php.net/)
 [![Laravel](https://img.shields.io/badge/Laravel-13-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)](https://laravel.com/)
 [![JavaScript](https://img.shields.io/badge/JavaScript-ES_Modules-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/docs/Web/JavaScript)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
 [![Vite](https://img.shields.io/badge/Vite-8-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vite.dev/)
-<<<<<<< HEAD
 [![MySQL](https://img.shields.io/badge/MySQL-Database-4479A1?style=for-the-badge&logo=mysql&logoColor=white)](https://www.mysql.com/)
-=======
-[![SQLite](https://img.shields.io/badge/SQLite-Database-003B57?style=for-the-badge&logo=sqlite&logoColor=white)](https://www.sqlite.org/)
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
 [![Leaflet](https://img.shields.io/badge/Leaflet-Maps-199900?style=for-the-badge&logo=leaflet&logoColor=white)](https://leafletjs.com/)
 
 </div>
 
 ## Tentang proyek
 
-<<<<<<< HEAD
 **WayFinder** adalah aplikasi web panduan wisata Sumatera Utara. Data destinasi dikelola sebagai graph RDF dan dapat disajikan melalui Apache Jena Fuseki atau berkas Turtle lokal. Chatbot berbasis Gemini tersedia secara opsional dan tidak diperlukan untuk fitur pencarian, detail, maupun peta.
 
 ## Fitur
@@ -39,17 +28,6 @@ Jelajahi destinasi wisata Sumatera melalui pencarian, peta interaktif, dan pandu
 - Temukan destinasi melalui peta interaktif Google Maps jika `GOOGLE_MAPS_API_KEY` tersedia; Leaflet menjadi fallback.
 - Gunakan chatbot Gemini opsional jika kunci API tersedia; kunci hanya digunakan di sisi server.
 - Sajikan data destinasi dari Apache Jena Fuseki; mode file Turtle tersedia untuk pengembangan atau pengujian.
-=======
-**Sumatera Heritage & Trails** adalah aplikasi web panduan wisata yang menyajikan informasi destinasi dari data berbasis ontologi. Pengunjung dapat menelusuri destinasi, melihat detail dan lokasinya, serta bertanya kepada **WayFinder AI** tentang informasi wisata.
-
-## Fitur
-
-- Jelajahi dan cari destinasi, dengan saran pencarian langsung.
-- Lihat detail destinasi, kategori, informasi, dan atribusi gambar.
-- Temukan destinasi melalui peta interaktif berbasis Leaflet.
-- Tanyakan informasi destinasi melalui WayFinder AI.
-- Sajikan data dari Apache Jena Fuseki atau gunakan file Turtle lokal sebagai fallback.
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
 - Validasi data ontologi dan kelola cache melalui perintah Artisan.
 
 ## Teknologi
@@ -59,30 +37,19 @@ Jelajahi destinasi wisata Sumatera melalui pencarian, peta interaktif, dan pandu
 | Backend | PHP 8.4, Laravel 13 |
 | Frontend | JavaScript, Blade, Tailwind CSS 4 |
 | Build frontend | Vite 8 |
-<<<<<<< HEAD
 | Peta | Google Maps JavaScript API (opsional), Leaflet, MarkerCluster |
 | Data semantik | RDF/Turtle, SPARQL, Apache Jena Fuseki |
 | Penyimpanan aplikasi | MySQL (session, cache, dan queue) |
-=======
-| Peta | Leaflet, MarkerCluster |
-| Data semantik | RDF/Turtle, SPARQL, Apache Jena Fuseki (opsional) |
-| Penyimpanan aplikasi | SQLite secara default |
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
 | Chatbot | Google Gemini API (opsional) |
 
 ## Persyaratan
 
 - PHP 8.4 dan Composer
 - Node.js `^20.19` atau `>=22.12`, beserta npm
-<<<<<<< HEAD
 - Ekstensi PHP PDO MySQL
 - Apache Jena Fuseki untuk driver bawaan; driver Turtle lokal dapat digunakan tanpa Fuseki
 - Kunci Gemini hanya jika ingin menggunakan chatbot
 - Kunci Google Maps hanya jika ingin memakai Google Maps JavaScript API pada peta
-=======
-- Ekstensi PHP SQLite/PDO SQLite
-- Apache Jena Fuseki dan kunci Gemini hanya jika ingin menggunakan layanan tersebut
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
 
 ## Menjalankan secara lokal
 
@@ -95,16 +62,10 @@ Jelajahi destinasi wisata Sumatera melalui pencarian, peta interaktif, dan pandu
 
    Skrip ini memasang dependensi, menyiapkan `.env`, membuat application key, menjalankan migrasi, memasang dependensi frontend, dan membangun aset.
 
-<<<<<<< HEAD
 3. Sesuaikan `.env` bila diperlukan. Konfigurasi contoh memakai MySQL untuk session, cache, dan queue, serta Fuseki dengan dataset `WayFinder` untuk data destinasi. Pastikan MySQL dan Fuseki berjalan dan sesuaikan `DB_*` serta `FUSEKI_URL`/kredensialnya dengan lingkungan lokal. Jangan pernah meng-commit `.env`, kunci API, atau kredensial.
 4. Driver data destinasi default adalah Fuseki. Untuk memakai file ontologi v3 lokal pada pengembangan atau pengujian, atur `ONTOLOGY_DRIVER=ttl`. `ONTOLOGY_V3_TTL_PATH` adalah satu-satunya path graph v3 untuk runtime dan pemuatan Fuseki; `ONTOLOGY_V2_TTL_PATH` hanya dipakai sebagai sumber migrasi v2. Untuk mengaktifkan chatbot, isi `GEMINI_API_KEY` di `.env`. Jangan pernah membagikan atau meng-commit kunci API.
 5. Untuk memakai Google Maps JavaScript API pada halaman `/map`, isi `GOOGLE_MAPS_API_KEY`. Key ini dikirim ke browser dan bukan rahasia; batasi dengan HTTP referrer dan API yang diizinkan pada Google Cloud. Jika key tidak tersedia atau skrip Maps gagal dimuat, peta tetap memakai Leaflet.
 6. Jalankan aplikasi:
-=======
-3. Sesuaikan `.env` bila diperlukan. Secara default aplikasi menggunakan SQLite dan driver ontologi `auto`: mencoba Fuseki terlebih dahulu, lalu memakai file Turtle lokal jika Fuseki tidak tersedia.
-4. Untuk mengaktifkan chatbot, isi `GEMINI_API_KEY` di `.env`. Untuk menggunakan Fuseki, sesuaikan `FUSEKI_URL`, `FUSEKI_DATASET`, dan kredensialnya bila diperlukan. Jangan pernah membagikan atau meng-commit kunci API.
-5. Jalankan aplikasi:
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
 
    ```bash
    php artisan serve
@@ -118,7 +79,6 @@ Untuk pengembangan frontend dengan hot reload, jalankan di terminal terpisah:
 npm run dev
 ```
 
-<<<<<<< HEAD
 Untuk deployment, gunakan `APP_ENV=production` dan `APP_DEBUG=false`, pasang dependensi Composer tanpa paket pengembangan, lalu jalankan `npm run build`. Jangan menyalin `public/hot` dari lingkungan pengembangan; berkas tersebut diabaikan Git, dan provider production menggunakan manifest build tanpa membaca marker HMR publik.
 
 ## Perintah data ontologi
@@ -180,48 +140,18 @@ Dokumentasi implementasi dan serah-terima:
 
 Jalankan pengujian aplikasi dengan:
 
-=======
-## Perintah data ontologi
-
-```bash
-# Memvalidasi data destinasi pada file Turtle
-php artisan ontology:validate
-
-# Memanaskan cache ontologi
-php artisan ontology:warm
-
-# Mendiagnosis konsistensi data antara file Turtle, Fuseki, dan aplikasi
-php artisan ontology:doctor
-```
-
-Jika Fuseki sudah berjalan dan dikonfigurasi, unggah file Turtle dengan:
-
-```bash
-php artisan fuseki:load
-```
-
-## Pengujian
-
-Jalankan pengujian aplikasi dengan:
-
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
 ```bash
 php artisan test
 ```
 
 ## Struktur data utama
 
-<<<<<<< HEAD
 - `database/ontology/wisata_sumut_v2.ttl` — sumber migrasi v2 dalam format Turtle; tidak ditimpa oleh proses pemuatan.
 - `database/ontology/wisata_sumut_v3.ttl` — graph v3 untuk runtime lokal dan Fuseki, ditentukan oleh `ONTOLOGY_V3_TTL_PATH`.
 - `database/ontology/external/wikidata-wilayah.json` — snapshot QID dan pasangan batas wilayah yang disetujui.
 - `database/ontology/external/wikidata-wilayah-detail.json` — snapshot detail wilayah terakhir yang diverifikasi dari Wikidata.
 - `database/ontology/external/wikidata-destinasi-tautan.json` — daftar tautan destinasi yang disetujui/ditolak serta hasil kandidat.
 - `database/ontology/external/wikidata-destinasi-detail.json` — snapshot detail hanya untuk QID destinasi yang disetujui.
-=======
-- `database/ontology/wisata_sumut_v2.ttl` — sumber data ontologi dalam format Turtle.
-- `wisata_sumut_v2.json` — berkas data destinasi JSON.
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
 - `config/ontology.php` — konfigurasi driver, file Turtle, cache, dan koneksi Fuseki.
 
 ## Lisensi

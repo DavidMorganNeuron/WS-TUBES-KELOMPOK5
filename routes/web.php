@@ -38,7 +38,6 @@ Route::get('/destinations/{id}', [DestinationController::class, 'show'])
     ->middleware('throttle:60,1')
     ->name('destination.detail');
 
-<<<<<<< HEAD
 Route::get('/map', [MapController::class, 'index'])
     ->middleware('throttle:60,1')
     ->name('map');
@@ -50,11 +49,6 @@ Route::get('/map/live', [MapController::class, 'live'])
 Route::post('/routes/compute', [RouteController::class, 'compute'])
     ->middleware('throttle:20,1')
     ->name('routes.compute');
-=======
-Route::get('/map', [MapController::class, 'index'])->name('map');
-
-Route::get('/map/live', [MapController::class, 'live'])->name('map.live');
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
 
 Route::post('/chatbot/send', [ChatbotController::class, 'chat'])
     ->middleware('throttle:10,1')

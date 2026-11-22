@@ -113,13 +113,10 @@ html.dark {
     --color-brand-muted: #9ca3af;
 }
 
-<<<<<<< HEAD
 html.dark :focus-visible {
     outline-color: #fbbf24;
 }
 
-=======
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
 html.dark body {
     background-color: #111827;
     color: #e5e7eb;
@@ -307,7 +304,6 @@ html.dark .prose {
 }
 
 @media (prefers-reduced-motion: reduce) {
-<<<<<<< HEAD
     *,
     *::before,
     *::after {
@@ -317,8 +313,6 @@ html.dark .prose {
         transition-duration: 0.01ms !important;
     }
 
-=======
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
     .skeleton-shimmer::after {
         animation: none;
     }

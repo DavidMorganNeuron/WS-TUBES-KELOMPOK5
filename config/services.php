@@ -35,7 +35,6 @@ return [
         ],
     ],
 
-<<<<<<< HEAD
     'google_maps' => [
         'key' => env('GOOGLE_MAPS_API_KEY'),
     ],
@@ -43,11 +42,6 @@ return [
     'gemini' => [
         'key' => env('GEMINI_API_KEY'),
         'model' => env('GEMINI_MODEL', 'gemini-3.5-flash-lite'),
-=======
-    'gemini' => [
-        'key' => env('GEMINI_API_KEY'),
-        'model' => env('GEMINI_MODEL', 'gemini-2.5-flash-lite'),
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
         'endpoint' => rtrim((string) env('GEMINI_ENDPOINT', 'https://generativelanguage.googleapis.com/v1beta'), '/'),
         'timeout' => (int) env('GEMINI_TIMEOUT', 30),
     ],

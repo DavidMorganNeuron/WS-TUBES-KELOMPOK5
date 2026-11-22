@@ -1,18 +1,10 @@
 <!DOCTYPE html>
-<<<<<<< HEAD
 <html lang="id">
-=======
-<html lang="en">
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex">
-<<<<<<< HEAD
     <title>@yield('title', 'Terjadi kesalahan') | WayFinder</title>
-=======
-    <title>@yield('title', 'Something went wrong') · Sumatera Heritage &amp; Trails</title>
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
     <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
     <link rel="alternate icon" href="{{ asset('favicon.ico') }}">
     <script>
@@ -64,7 +56,6 @@
             text-decoration: none;
         }
 
-<<<<<<< HEAD
         a:focus-visible,
         button:focus-visible {
             outline: 3px solid var(--brand-accent);
@@ -88,8 +79,6 @@
             transform: translateY(0);
         }
 
-=======
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
         .site-header {
             position: sticky;
             top: 0;
@@ -326,7 +315,6 @@
             border-color: #374151;
         }
 
-<<<<<<< HEAD
         @media (prefers-reduced-motion: reduce) {
             *,
             *::before,
@@ -338,8 +326,6 @@
             }
         }
 
-=======
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
         @media (max-width: 640px) {
             .site-nav a:not(.nav-cta) {
                 display: none;
@@ -355,7 +341,6 @@
     </style>
 </head>
 <body>
-<<<<<<< HEAD
     <a class="skip-link" href="#main-content">Lewati ke konten utama</a>
     <header class="site-header">
         <div class="site-header__inner">
@@ -373,41 +358,15 @@
                     <svg data-theme-icon="sun" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4" stroke-width="2"/><path stroke-linecap="round" stroke-width="2" d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg>
                 </button>
                 <a href="{{ url('/destinations') }}" class="nav-cta">Jelajahi</a>
-=======
-    <header class="site-header">
-        <div class="site-header__inner">
-            <a href="{{ url('/') }}" class="brand" aria-label="Sumatera Heritage and Trails home">
-                <svg fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2L2 22h20L12 2zm0 4.5l6.5 13.5h-13L12 6.5z"/></svg>
-                <span>Sumatera Heritage &amp; Trails</span>
-            </a>
-
-            <nav class="site-nav" aria-label="Error page navigation">
-                <a href="{{ url('/') }}">Dashboard</a>
-                <a href="{{ url('/destinations') }}">Destinations</a>
-                <a href="{{ url('/map') }}">Map View</a>
-                <button id="btn-theme-toggle" class="theme-toggle" type="button" aria-label="Switch to dark mode" aria-pressed="false" title="Switch to dark mode">
-                    <svg data-theme-icon="moon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
-                    <svg data-theme-icon="sun" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4" stroke-width="2"/><path stroke-linecap="round" stroke-width="2" d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg>
-                </button>
-                <a href="{{ url('/destinations') }}" class="nav-cta">Explore</a>
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
             </nav>
         </div>
     </header>
 
-<<<<<<< HEAD
     <main id="main-content" tabindex="-1">
         <section class="error-card" aria-labelledby="error-title">
             <span class="error-code">@yield('code', 'Kesalahan')</span>
             <h1 id="error-title">@yield('title', 'Terjadi kesalahan')</h1>
             <p>@yield('message', 'Silakan coba lagi. Jika masalah berlanjut, kembali ke beranda atau buka halaman lain.')</p>
-=======
-    <main>
-        <section class="error-card" aria-labelledby="error-title">
-            <span class="error-code">@yield('code', 'Error')</span>
-            <h1 id="error-title">@yield('title', 'Something went wrong')</h1>
-            <p>@yield('message', 'Please try again. If the problem continues, return to the dashboard and explore another page.')</p>
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
             <div class="error-actions">
                 @yield('actions')
             </div>
@@ -416,13 +375,8 @@
 
     <footer class="site-footer">
         <div class="site-footer__inner">
-<<<<<<< HEAD
             <span>&copy; {{ \App\Support\IndonesianFormat::year((int) date('Y')) }} WayFinder</span>
             <span>Proyek ontologi pariwisata · Sumatera Utara</span>
-=======
-            <span>&copy; {{ date('Y') }} Sumatera Heritage &amp; Trails</span>
-            <span>Tourism ontology project · North Sumatra</span>
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
         </div>
     </footer>
     <script>
@@ -436,11 +390,7 @@
 
             const syncThemeControl = () => {
                 const isDark = root.classList.contains('dark');
-<<<<<<< HEAD
                 const label = isDark ? 'Aktifkan mode terang' : 'Aktifkan mode gelap';
-=======
-                const label = isDark ? 'Switch to light mode' : 'Switch to dark mode';
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
 
                 button.setAttribute('aria-label', label);
                 button.setAttribute('title', label);

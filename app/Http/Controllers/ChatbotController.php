@@ -5,10 +5,7 @@ namespace App\Http\Controllers;
 use App\Data\Destination;
 use App\Services\Ontology\DestinationRepository;
 use Illuminate\Http\Client\ConnectionException;
-<<<<<<< HEAD
 use Illuminate\Http\Client\RequestException;
-=======
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -48,7 +45,6 @@ class ChatbotController extends Controller
         'hiburan' => 'Buatan',
     ];
 
-<<<<<<< HEAD
     /**
      * @var list<string>
      */
@@ -92,13 +88,10 @@ class ChatbotController extends Controller
         'renang' => ['berenang', 'renang'],
     ];
 
-=======
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
     public function chat(Request $request, DestinationRepository $repository): JsonResponse
     {
         $validated = $request->validate([
             'message' => ['required', 'string', 'max:800'],
-<<<<<<< HEAD
             'history' => ['sometimes', 'array', 'max:20'],
             'history.*.role' => ['required_with:history', 'string', 'in:user,model'],
             'history.*.text' => ['required_with:history', 'string', 'max:4000'],
@@ -129,31 +122,6 @@ class ChatbotController extends Controller
                 ->withHeaders(['x-goog-api-key' => $apiKey])
                 ->post($this->endpoint(), [
                     'systemInstruction' => [
-=======
-            'history' => ['sometimes', 'array', 'max:10'],
-            'history.*.role' => ['required_with:history', 'string', 'in:user,model'],
-            'history.*.text' => ['required_with:history', 'string', 'max:800'],
-        ]);
-
-        $apiKey = (string) config('services.gemini.key');
-
-        if ($apiKey === '') {
-            Log::warning('Permintaan chatbot ditolak karena GEMINI_API_KEY belum dikonfigurasi.');
-
-            return response()->json([
-                'reply' => 'WayFinder AI belum siap digunakan. Silakan hubungi pengelola situs.',
-            ], 503);
-        }
-
-        $message = trim($validated['message']);
-
-        try {
-            $response = Http::acceptJson()
-                ->timeout((int) config('services.gemini.timeout', 30))
-                ->withHeaders(['x-goog-api-key' => $apiKey])
-                ->post($this->endpoint(), [
-                    'system_instruction' => [
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
                         'parts' => [
                             ['text' => $this->systemInstruction($message, $repository)],
                         ],
@@ -165,7 +133,6 @@ class ChatbotController extends Controller
                     ],
                 ]);
         } catch (ConnectionException $exception) {
-<<<<<<< HEAD
             Log::warning('Koneksi Gemini gagal; chatbot menggunakan pencarian lokal.', [
                 'message' => $exception->getMessage(),
             ]);
@@ -181,37 +148,11 @@ class ChatbotController extends Controller
 
         if ($response->failed()) {
             Log::warning('Gemini mengembalikan respons gagal; chatbot menggunakan pencarian lokal.', [
-=======
-            Log::error('Koneksi ke Gemini gagal.', ['message' => $exception->getMessage()]);
-
-            return response()->json([
-                'reply' => 'WayFinder AI sedang tidak dapat dihubungi. Coba lagi beberapa saat lagi.',
-            ], 502);
-        } catch (Throwable $exception) {
-            Log::error('Permintaan chatbot gagal.', [
-                'class' => $exception::class,
-                'message' => $exception->getMessage(),
-            ]);
-
-            return response()->json([
-                'reply' => 'Terjadi kesalahan saat memproses pesan Anda. Silakan coba lagi.',
-            ], 500);
-        }
-
-        if ($response->failed()) {
-            Log::error('Gemini mengembalikan respons gagal.', [
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
                 'status' => $response->status(),
                 'body' => Str::limit($response->body(), 500),
             ]);
 
-<<<<<<< HEAD
             return response()->json($this->fallbackSearchReply($message, $repository));
-=======
-            return response()->json([
-                'reply' => 'WayFinder AI sedang sibuk. Silakan coba lagi sebentar lagi.',
-            ], 502);
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
         }
 
         $reply = collect($response->json('candidates.0.content.parts', []))
@@ -219,7 +160,6 @@ class ChatbotController extends Controller
             ->filter(fn (mixed $text): bool => is_string($text) && trim($text) !== '')
             ->implode("\n");
 
-<<<<<<< HEAD
         if (trim($reply) === '') {
             return response()->json($this->fallbackSearchReply($message, $repository));
         }
@@ -723,15 +663,6 @@ class ChatbotController extends Controller
         }
 
         return ($destination->lowestPrice() ?? null) === 0.0;
-=======
-        if ($reply === '') {
-            return response()->json([
-                'reply' => 'Maaf, WayFinder AI belum dapat menyusun jawaban. Coba ajukan pertanyaan lain.',
-            ]);
-        }
-
-        return response()->json(['reply' => $reply]);
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
     }
 
     private function endpoint(): string
@@ -748,11 +679,7 @@ class ChatbotController extends Controller
      */
     private function contents(string $message, array $history): array
     {
-<<<<<<< HEAD
         $contents = collect(array_slice($history, -6))
-=======
-        $contents = collect($history)
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
             ->map(fn (array $item): array => [
                 'role' => $item['role'],
                 'parts' => [['text' => $item['text']]],
@@ -778,13 +705,9 @@ bahwa informasinya belum tercatat dan jangan mengarang angka, alamat, atau nomor
 Jawab dalam bahasa yang digunakan pengguna. Jangan menampilkan data pribadi atau kredensial.
 
 KONTEKS ONTOLOGI (ringkas):
-<<<<<<< HEAD
 <ontology_context>
 {$this->context($message, $repository)}
 </ontology_context>
-=======
-{$this->context($message, $repository)}
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
 PROMPT;
     }
 
@@ -797,21 +720,12 @@ PROMPT;
 
         $lines = [
             'Total destinasi: '.$destinations->count(),
-<<<<<<< HEAD
             'Jumlah per kategori: '.collect($facets['types'] ?? [])
                 ->map(fn (int $count, string $type): string => $type.'='.$count)
                 ->implode(', '),
             'Kabupaten/kota tercatat: '.count($facets['kabupaten'] ?? []),
             'Rata-rata rating: '.($facets['average_rating'] ?? 'tidak tersedia')
                 .' dari '.($facets['rated_count'] ?? 0).' destinasi berating.',
-=======
-            'Jumlah per kategori: '.collect($facets['types'])
-                ->map(fn (int $count, string $type): string => $type.'='.$count)
-                ->implode(', '),
-            'Kabupaten/kota tercatat: '.count($facets['kabupaten']),
-            'Rata-rata rating: '.($facets['average_rating'] ?? 'tidak tersedia')
-                .' dari '.$facets['rated_count'].' destinasi berating.',
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
             '',
             'Destinasi dengan rating tertinggi:',
         ];
@@ -839,13 +753,8 @@ PROMPT;
     private function matchingDestinations(string $lower, Collection $destinations, DestinationRepository $repository): Collection
     {
         $matched = $destinations->filter(function (Destination $destination) use ($lower): bool {
-<<<<<<< HEAD
             $name = Str::lower($destination->name ?? '');
             $alternative = Str::lower($destination->alternativeName ?? '');
-=======
-            $name = Str::lower($destination->name);
-            $alternative = Str::lower($destination->alternativeName);
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
 
             return ($name !== '' && str_contains($lower, $name))
                 || (mb_strlen($alternative) >= 4 && str_contains($lower, $alternative));
@@ -868,7 +777,6 @@ PROMPT;
             }
         }
 
-<<<<<<< HEAD
         $attributeTerms = $this->extractAttributeTerms($lower, $repository);
         if ($attributeTerms !== []) {
             $matched = $matched->merge(
@@ -878,14 +786,11 @@ PROMPT;
             );
         }
 
-=======
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
         return $matched->unique('id')->take(10)->values();
     }
 
     private function describe(Destination $destination): string
     {
-<<<<<<< HEAD
         $facilities = ($destination->facilities ?? []) !== []
             ? implode(', ', $destination->facilities ?? [])
             : 'tidak tercatat';
@@ -906,16 +811,6 @@ PROMPT;
                 ($destination->shortDescription ?? '') !== '' ? $destination->shortDescription : 'deskripsi belum tercatat',
                 180,
             ),
-=======
-        return sprintf(
-            '- %s | kategori: %s | lokasi: %s | rating: %s | tiket: %s | %s',
-            $destination->name,
-            $destination->types === [] ? 'tidak tercatat' : implode(', ', $destination->types),
-            $destination->location !== '' ? $destination->location : $destination->province(),
-            $destination->ratingLabel(),
-            $destination->priceLabel(),
-            Str::limit($destination->shortDescription !== '' ? $destination->shortDescription : 'deskripsi belum tercatat', 180),
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
         );
     }
 }

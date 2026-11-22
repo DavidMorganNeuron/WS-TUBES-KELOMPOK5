@@ -131,7 +131,7 @@ final class WikidataIntegrationTest extends TestCase
     public function test_client_uses_get_for_small_queries_and_posts_long_queries_with_user_agent(): void
     {
         Http::fake([
-            WikidataClient::ENDPOINT => Http::response($this->sparqlResponse([]), 200, [
+            WikidataClient::ENDPOINT.'*' => Http::response($this->sparqlResponse([]), 200, [
                 'Content-Type' => 'application/sparql-results+json',
             ]),
         ]);
@@ -143,7 +143,7 @@ final class WikidataIntegrationTest extends TestCase
             && str_contains($request->url(), 'query='));
 
         Http::fake([
-            WikidataClient::ENDPOINT => Http::response($this->sparqlResponse([]), 200, [
+            WikidataClient::ENDPOINT.'*' => Http::response($this->sparqlResponse([]), 200, [
                 'Content-Type' => 'application/sparql-results+json',
             ]),
         ]);

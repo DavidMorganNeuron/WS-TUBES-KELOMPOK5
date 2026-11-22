@@ -32,13 +32,8 @@ class DestinationPagesTest extends TestCase
         $response = $this->get('/');
 
         $response->assertOk();
-<<<<<<< HEAD
         $response->assertSee('Dasbor ontologi langsung');
         $response->assertSee(number_format($this->repository()->facets()['total']));
-=======
-        $response->assertSee('Live Ontology Dashboard');
-        $response->assertSee('250');
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
         $response->assertDontSee('Acehnese');
         $response->assertDontSee('Serambi');
     }
@@ -53,18 +48,12 @@ class DestinationPagesTest extends TestCase
         $response->assertSee('data-theme-icon="sun"', false);
         $response->assertSee('skeleton-shimmer');
         $response->assertSee('wayfinder.theme');
-<<<<<<< HEAD
         $response->assertSee('Lewati ke konten utama');
         $response->assertSee('WayFinder');
         $response->assertDontSee('Sumatera Heritage &amp; Trails');
     }
 
     public function test_chatbot_opens_as_a_resizable_popup_from_the_navigation(): void
-=======
-    }
-
-    public function test_chatbot_is_available_as_a_fullscreen_ready_dialog_from_the_navigation(): void
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
     {
         $response = $this->get('/');
 
@@ -72,7 +61,6 @@ class DestinationPagesTest extends TestCase
         $response->assertSee('id="btn-chatbot"', false);
         $response->assertSee('id="wayfinder-chatbot"', false);
         $response->assertSee('aria-modal="true"', false);
-<<<<<<< HEAD
         $response->assertSee('Halo! Ada destinasi wisata di Sumatera Utara yang ingin Anda cari atau tanyakan?');
         $response->assertDontSee('Sebaiknya kita mulai dari mana?');
         $response->assertDontSee('id="chatbot-empty-state"', false);
@@ -83,10 +71,6 @@ class DestinationPagesTest extends TestCase
         $response->assertSee('overflow-y-auto', false);
         $response->assertSee('cursor-grab active:cursor-grabbing select-none', false);
         $response->assertSee('Jawaban AI merujuk pada informasi yang tersedia di dataset destinasi.');
-=======
-        $response->assertSee('data-chatbot-greeting', false);
-        $response->assertSee('id="chat-input"', false);
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
         $response->assertSee('id="btn-resize-chatbot"', false);
         $response->assertSee('id="btn-close-chatbot"', false);
         $response->assertSee('WayFinder AI sedang memproses data...');
@@ -97,7 +81,6 @@ class DestinationPagesTest extends TestCase
         $response = $this->get('/destinations');
 
         $response->assertOk();
-<<<<<<< HEAD
         $response->assertSee('Jelajahi Destinasi Sumatera Utara');
         $filterOptions = $this->repository()->filterOptions();
         $response->assertSee('<select name="dapatMelakukan"', false);
@@ -112,12 +95,6 @@ class DestinationPagesTest extends TestCase
         $response->assertDontSee('Menampilkan 1');
         $destinations = $this->repository()->search(['sort' => 'name']);
         $response->assertSeeInOrder($destinations->take(2)->pluck('name')->all());
-=======
-        $response->assertSee('Explore North Sumatra');
-        $response->assertSee('Showing 1');
-        $response->assertSee('of 250');
-        $response->assertSeeInOrder(['Aek Sijorni', 'Agrowisata Kebun Jeruk Pearung']);
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
         $response->assertDontSee('name="provinsi"', false);
     }
 
@@ -132,7 +109,6 @@ class DestinationPagesTest extends TestCase
             ->assertOk()
             ->assertSee('Danau Toba')
             ->assertDontSee('Aek Sijorni');
-<<<<<<< HEAD
     }
 
     public function test_search_uses_relevance_by_default_without_a_manual_sort(): void
@@ -143,8 +119,6 @@ class DestinationPagesTest extends TestCase
         $this->get('/destinations?q=toba')
             ->assertOk()
             ->assertSeeInOrder($expectedNames);
-=======
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
     }
 
     public function test_destinations_page_can_be_filtered_by_kabupaten(): void
@@ -157,7 +131,6 @@ class DestinationPagesTest extends TestCase
 
     public function test_destinations_page_can_be_sorted_by_rating_and_price(): void
     {
-<<<<<<< HEAD
         $repository = $this->repository();
 
         foreach (['rating', 'price_desc', 'price_asc'] as $sort) {
@@ -168,37 +141,17 @@ class DestinationPagesTest extends TestCase
                 ->assertOk()
                 ->assertSeeInOrder($expectedNames);
         }
-=======
-        $this->get('/destinations?sort=rating')
-            ->assertOk()
-            ->assertSeeInOrder(['Air Terjun Mbulayan', 'Candi Bara']);
-
-        $this->get('/destinations?sort=price_desc')
-            ->assertOk()
-            ->assertSeeInOrder(['Pulau Kalimantung', 'Pulau Pandang']);
-
-        $this->get('/destinations?sort=price_asc')
-            ->assertOk()
-            ->assertSee('Free');
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
     }
 
     public function test_destinations_page_clamps_an_out_of_range_page_to_the_last_page(): void
     {
         $response = $this->get('/destinations?page=9999');
-<<<<<<< HEAD
         $destinations = $this->repository()->search(['sort' => 'name']);
         $lastPageFirstItem = ((int) ceil($destinations->count() / 9) - 1) * 9;
         $lastPageNames = $destinations->slice($lastPageFirstItem, 2)->pluck('name')->all();
 
         $response->assertOk();
         $response->assertSeeInOrder($lastPageNames);
-=======
-
-        $response->assertOk();
-        $response->assertSee('Showing 244');
-        $response->assertSee('of 250');
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
     }
 
     public function test_destinations_page_shows_an_empty_state_for_unmatched_search(): void
@@ -210,7 +163,6 @@ class DestinationPagesTest extends TestCase
 
     public function test_detail_page_renders_destination_data(): void
     {
-<<<<<<< HEAD
         $destination = $this->repository()->find('ws-148');
         $this->assertNotNull($destination);
 
@@ -555,20 +507,10 @@ class DestinationPagesTest extends TestCase
         $this->assertStringNotContainsString('<script', $unsafe);
         $this->assertStringNotContainsString('<img', $unsafe);
         $this->assertStringNotContainsString('rel="owl:sameAs"', $unsafe);
-=======
-        $response = $this->get('/destinations/ws-148');
-
-        $response->assertOk();
-        $response->assertSee('Air Terjun Pelaruga');
-        $response->assertSee('Rp 10.000');
-        $response->assertSee('Area Parkir');
-        $response->assertSee('ID ws-148');
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
     }
 
     public function test_detail_page_handles_sparse_destination_data(): void
     {
-<<<<<<< HEAD
         $destination = $this->repository()->all()->first(
             static fn (Destination $destination): bool => $destination->prices === []
                 && $destination->rating === null
@@ -588,15 +530,6 @@ class DestinationPagesTest extends TestCase
         $response->assertSee('⭐ -');
         $response->assertDontSee('N/A');
         $response->assertSee('data-latitude="'.json_encode($destination->latitude).'"', false);
-=======
-        $response = $this->get('/destinations/ws-002');
-
-        $response->assertOk();
-        $response->assertSee('Air Terjun Lae Mbilulu');
-        $response->assertSee('No ticket information recorded.');
-        $response->assertDontSee('No official contact recorded.');
-        $response->assertSee('data-latitude="2.6119486688740423"', false);
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
     }
 
     public function test_unknown_destination_returns_the_custom_not_found_page(): void
@@ -604,11 +537,7 @@ class DestinationPagesTest extends TestCase
         $response = $this->get('/destinations/DST-9999');
 
         $response->assertNotFound();
-<<<<<<< HEAD
         $response->assertSee('Halaman tidak ditemukan');
-=======
-        $response->assertSee('Page not found');
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
         $response->assertSee(url('/destinations'));
         $response->assertSee('id="btn-theme-toggle"', false);
     }
@@ -620,20 +549,13 @@ class DestinationPagesTest extends TestCase
         $response->assertOk();
         $response->assertSee('WayFinderMapConfig');
         $response->assertSee('ws-002');
-<<<<<<< HEAD
         $response->assertSee('titik pada peta');
         $response->assertSee('data-map-all');
         $response->assertSee('>SATUAN</button>', false);
-=======
-        $response->assertSee('mapped points');
-        $response->assertSee('data-map-all');
-        $response->assertSee('>ALL</button>', false);
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
         $response->assertDontSee('unpkg.com');
         $response->assertDontSee('Serambi');
     }
 
-<<<<<<< HEAD
     public function test_map_page_includes_the_in_app_route_planner_and_origin_options(): void
     {
         $this->get('/map')
@@ -681,8 +603,6 @@ class DestinationPagesTest extends TestCase
             ->assertSee('public-test-key');
     }
 
-=======
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
     public function test_pages_never_expose_the_gemini_api_key(): void
     {
         config()->set('services.gemini.key', 'super-secret-test-key');
@@ -690,13 +610,10 @@ class DestinationPagesTest extends TestCase
         $this->get('/')
             ->assertOk()
             ->assertDontSee('super-secret-test-key');
-<<<<<<< HEAD
     }
 
     private function repository(): DestinationRepository
     {
         return app(DestinationRepository::class);
-=======
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
     }
 }

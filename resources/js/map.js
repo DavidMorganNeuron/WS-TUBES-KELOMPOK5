@@ -17,7 +17,6 @@ const escapeHtml = (value) => String(value ?? '').replace(/[&<>"']/g, (character
     "'": '&#039;',
 }[character]));
 
-<<<<<<< HEAD
 const markerInfoContent = (destination) => `
     <article style="box-sizing:border-box;width:min(320px,calc(100vw - 72px));min-width:250px;max-width:320px;padding:2px;font-family:Arial,sans-serif;font-size:13px;line-height:1.45;color:#111827;opacity:1">
         ${destination.image ? `<img src="${escapeHtml(destination.image)}" alt="${escapeHtml(destination.name)}" style="display:block;width:100%;height:140px;object-fit:cover;border-radius:8px;margin:0 0 9px">` : ''}
@@ -80,8 +79,6 @@ const loadGoogleMapsApi = (apiKey) => {
     return googleMapsPromise;
 };
 
-=======
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
 const toggleSidebar = (show) => {
     const sidebar = document.getElementById('map-sidebar');
 
@@ -91,7 +88,6 @@ const toggleSidebar = (show) => {
 
     sidebar.classList.toggle('hidden', ! show);
     sidebar.classList.toggle('flex', show);
-<<<<<<< HEAD
     document.querySelector('[data-toggle-sidebar="true"]')?.setAttribute('aria-expanded', String(show));
 };
 
@@ -241,18 +237,6 @@ const initMapLegendDrag = (mapContainer) => {
 };
 
 const initLeafletMapPage = (container, config) => {
-=======
-};
-
-const initMapPage = () => {
-    const container = document.getElementById('map');
-
-    if (! container) {
-        return;
-    }
-
-    const config = window.WayFinderMapConfig ?? {};
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
     const markerColors = config.colors ?? {};
     const map = L.map(container).setView([2.8, 98.6], 8);
     const clusterGroup = L.markerClusterGroup({
@@ -293,21 +277,8 @@ const initMapPage = () => {
                 iconAnchor: [9, 9],
             });
 
-<<<<<<< HEAD
             const marker = L.marker([latitude, longitude], { icon })
                 .bindPopup(markerInfoContent(destination));
-=======
-            const marker = L.marker([latitude, longitude], { icon }).bindPopup(`
-                <div style="min-width:180px">
-                    <img src="${escapeHtml(destination.image)}" alt="${escapeHtml(destination.name)}" style="width:100%;height:90px;object-fit:cover;border-radius:8px;margin-bottom:8px">
-                    ${destination.image_attribution ? `<span style="display:block;font-size:9px;color:#4b5563">Photo: ${escapeHtml(destination.image_attribution.artist)} · ${escapeHtml(destination.image_attribution.license)} — <a href="${escapeHtml(destination.image_attribution.source_url)}" target="_blank" rel="noopener noreferrer">source</a> · <a href="${escapeHtml(destination.image_attribution.license_url)}" target="_blank" rel="noopener noreferrer">license</a></span>` : ''}
-                    <strong style="display:block;font-size:13px">${escapeHtml(destination.name)}</strong>
-                    <span style="font-size:11px;color:#4b5563">${escapeHtml(destination.province)} • ${escapeHtml(destination.type)}</span><br>
-                    <span style="font-size:11px;color:#4b5563">⭐ ${escapeHtml(destination.rating_label)} • ${escapeHtml(destination.price)}</span><br>
-                    <a href="${escapeHtml(destination.url)}" style="display:inline-block;margin-top:6px;font-size:11px;font-weight:700;color:#b74a1c">View details</a>
-                </div>
-            `);
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
 
             (showAllIndividually ? individualGroup : clusterGroup).addLayer(marker);
             markers.set(destination.id, marker);
@@ -332,15 +303,10 @@ const initMapPage = () => {
         map.addLayer(nextGroup);
 
         button.setAttribute('aria-pressed', String(showAllIndividually));
-<<<<<<< HEAD
         const label = showAllIndividually ? 'Tampilkan penanda berkelompok' : 'Tampilkan penanda satu per satu';
         button.textContent = showAllIndividually ? 'KELOMPOK' : 'SATUAN';
         button.setAttribute('aria-label', label);
         button.setAttribute('title', label);
-=======
-        button.setAttribute('aria-label', showAllIndividually ? 'Show marker clusters' : 'Show markers individually');
-        button.setAttribute('title', showAllIndividually ? 'Show marker clusters' : 'Show markers individually');
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
         button.classList.toggle('bg-brand-accent', showAllIndividually);
         button.classList.toggle('text-white', showAllIndividually);
         button.classList.toggle('bg-white', ! showAllIndividually);
@@ -399,7 +365,6 @@ const initMapPage = () => {
             return;
         }
 
-<<<<<<< HEAD
         if (event.target.closest('[data-map-all]')) {
             toggleAllMarkers();
 
@@ -1367,10 +1332,6 @@ const initGoogleMapPage = (container, config, maps) => {
 
         if (toggle) {
             toggleSidebar(toggle.dataset.toggleSidebar === 'true');
-=======
-        if (event.target.closest('[data-map-fit]')) {
-            fitMap();
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
 
             return;
         }
@@ -1403,7 +1364,6 @@ const initGoogleMapPage = (container, config, maps) => {
     fitMap();
 };
 
-<<<<<<< HEAD
 const initGoogleDetailMap = (container, maps, latitude, longitude) => {
     const position = { lat: latitude, lng: longitude };
     const map = new maps.Map(container, {
@@ -1471,8 +1431,6 @@ const initLeafletDetailMap = (container, latitude, longitude) => {
     marker.openPopup();
 };
 
-=======
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
 const initDetailMap = () => {
     const container = document.getElementById('detail-map');
 
@@ -1483,7 +1441,6 @@ const initDetailMap = () => {
     const latitude = Number(container.dataset.latitude);
     const longitude = Number(container.dataset.longitude);
 
-<<<<<<< HEAD
     if (! Number.isFinite(latitude) || latitude < -90 || latitude > 90
         || ! Number.isFinite(longitude) || longitude < -180 || longitude > 180) {
         return;
@@ -1530,29 +1487,5 @@ export const initMaps = () => {
         initLeafletMapPage(container, config);
     }
 
-=======
-    if (! Number.isFinite(latitude) || ! Number.isFinite(longitude)) {
-        return;
-    }
-
-    const map = L.map(container, { scrollWheelZoom: false }).setView([latitude, longitude], 13);
-    tileLayer().addTo(map);
-
-    const icon = L.divIcon({
-        className: '',
-        html: '<div style="width:22px;height:22px;border-radius:9999px;background:#b74a1c;border:3px solid #ffffff;box-shadow:0 1px 5px rgba(0,0,0,.4)"></div>',
-        iconSize: [22, 22],
-        iconAnchor: [11, 11],
-    });
-
-    L.marker([latitude, longitude], { icon })
-        .addTo(map)
-        .bindPopup(`<strong>${escapeHtml(container.dataset.name)}</strong><br>${escapeHtml(container.dataset.location)}`)
-        .openPopup();
-};
-
-export const initMaps = () => {
-    initMapPage();
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
     initDetailMap();
 };

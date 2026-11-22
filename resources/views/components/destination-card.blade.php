@@ -25,7 +25,6 @@
     $detailUrl = route('destination.detail', $destination->id);
 @endphp
 
-<<<<<<< HEAD
 <article
     @if (is_string($rdfaResource) && $rdfaResource !== '' && is_string($rdfaRelation) && $rdfaRelation !== '')
         rel="{{ $rdfaRelation }}"
@@ -34,9 +33,6 @@
     @endif
     class="bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100 flex flex-col hover:shadow-md transition"
 >
-=======
-<article class="bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100 flex flex-col hover:shadow-md transition">
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
     <div class="relative h-56 bg-gray-100 skeleton-shimmer overflow-hidden">
         <a href="{{ $detailUrl }}" class="block h-full">
             <img src="{{ $destination->imageUrl() }}" alt="{{ $destination->name }}" class="w-full h-full object-cover transition-opacity duration-300" loading="lazy" onload="this.closest('.skeleton-shimmer')?.classList.remove('skeleton-shimmer')" onerror="this.closest('.skeleton-shimmer')?.classList.remove('skeleton-shimmer')">
@@ -91,11 +87,7 @@
                 <p class="font-bold text-sm text-gray-900 truncate">{{ $destination->priceLabel() }}</p>
             </div>
             <a href="{{ $detailUrl }}" class="destination-details-link bg-brand-light text-brand-dark text-xs font-bold px-4 py-2 rounded-full hover:bg-gray-100 transition whitespace-nowrap">
-<<<<<<< HEAD
                 Lihat Detail
-=======
-                View Details
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
             </a>
         </div>
     </div>

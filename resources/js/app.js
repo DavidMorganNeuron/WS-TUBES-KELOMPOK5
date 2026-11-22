@@ -10,11 +10,7 @@ const debounce = (callback, delay = 250) => {
     };
 };
 
-<<<<<<< HEAD
 const numberFormatter = new Intl.NumberFormat('id-ID');
-=======
-const numberFormatter = new Intl.NumberFormat('en-US');
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
 
 const initThemeToggle = () => {
     const button = document.getElementById('btn-theme-toggle');
@@ -29,11 +25,7 @@ const initThemeToggle = () => {
 
     const syncThemeControl = () => {
         const isDark = root.classList.contains('dark');
-<<<<<<< HEAD
         const label = isDark ? 'Aktifkan mode terang' : 'Aktifkan mode gelap';
-=======
-        const label = isDark ? 'Switch to light mode' : 'Switch to dark mode';
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
 
         button.setAttribute('aria-label', label);
         button.setAttribute('title', label);
@@ -197,11 +189,7 @@ const renderLiveError = (container, message, retry) => {
 
     const heading = document.createElement('p');
     heading.className = 'mb-2 text-sm font-bold text-red-800';
-<<<<<<< HEAD
     heading.textContent = 'Hasil tidak dapat dimuat.';
-=======
-    heading.textContent = 'We could not load these results.';
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
 
     const detail = document.createElement('p');
     detail.className = 'mb-4 text-xs text-red-700';
@@ -210,11 +198,7 @@ const renderLiveError = (container, message, retry) => {
     const button = document.createElement('button');
     button.type = 'button';
     button.className = 'rounded-full bg-brand-accent px-5 py-2 text-xs font-bold text-white transition hover:bg-orange-800';
-<<<<<<< HEAD
     button.textContent = 'Coba lagi';
-=======
-    button.textContent = 'Try again';
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
     button.addEventListener('click', retry);
 
     panel.append(heading, detail, button);
@@ -230,10 +214,6 @@ const initLiveDestinations = () => {
 
     const input = form.querySelector('input[name="q"]');
     const results = document.getElementById('destination-results');
-<<<<<<< HEAD
-=======
-    const showing = document.getElementById('destination-showing');
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
     const reset = document.getElementById('destination-reset');
     const pillContainer = document.querySelector('[data-category-pills]');
     const liveUrl = form.dataset.liveUrl;
@@ -256,11 +236,7 @@ const initLiveDestinations = () => {
         controller = new AbortController();
         results.setAttribute('aria-busy', 'true');
         renderCardSkeleton(results);
-<<<<<<< HEAD
         announce('destination-live-status', 'Memuat destinasi.');
-=======
-        announce('destination-live-status', 'Loading destinations.');
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
 
         if (scrollToTop) {
             results.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -275,30 +251,17 @@ const initLiveDestinations = () => {
 
             results.innerHTML = payload.html;
 
-<<<<<<< HEAD
-=======
-            if (showing) {
-                showing.textContent = `Showing ${payload.first_item}–${payload.last_item} of ${numberFormatter.format(payload.total)}`;
-            }
-
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
             if (reset) {
                 reset.classList.toggle('hidden', ! payload.has_filters);
             }
 
             announce(
                 'destination-live-status',
-<<<<<<< HEAD
                 payload.correction
                     ? `Kata kunci dikoreksi menjadi ${payload.correction.corrected}. ${numberFormatter.format(payload.total)} destinasi ditemukan.`
                     : payload.total === 0
                         ? 'Tidak ada destinasi yang sesuai dengan saringan saat ini.'
                         : `${numberFormatter.format(payload.total)} destinasi ditemukan.`,
-=======
-                payload.total === 0
-                    ? 'No destinations match the current filters.'
-                    : `Showing ${payload.first_item} to ${payload.last_item} of ${payload.total} destinations.`,
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
             );
 
             window.history.replaceState({}, '', urlWithParams(form.action, params).toString());
@@ -309,17 +272,10 @@ const initLiveDestinations = () => {
 
             renderLiveError(
                 results,
-<<<<<<< HEAD
                 'Periksa koneksi Anda, lalu coba gunakan saringan kembali.',
                 () => update(overrideParams, scrollToTop),
             );
             announce('destination-live-status', 'Hasil destinasi gagal dimuat.');
-=======
-                'Check your connection and try the filters again.',
-                () => update(overrideParams, scrollToTop),
-            );
-            announce('destination-live-status', 'Destination results failed to load.');
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
         } finally {
             if (currentRequest === requestId) {
                 results.removeAttribute('aria-busy');
@@ -422,11 +378,7 @@ const initLiveMap = () => {
         controller = new AbortController();
         results.setAttribute('aria-busy', 'true');
         renderMapSkeleton(results);
-<<<<<<< HEAD
         announce('map-live-status', 'Memuat destinasi pada peta.');
-=======
-        announce('map-live-status', 'Loading mapped destinations.');
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
 
         try {
             const payload = await requestJson(urlWithParams(liveUrl, params), controller.signal);
@@ -446,16 +398,12 @@ const initLiveMap = () => {
                 window.LiveMap.update(payload.markers);
             }
 
-<<<<<<< HEAD
             announce(
                 'map-live-status',
                 payload.correction
                     ? `Kata kunci dikoreksi menjadi ${payload.correction.corrected}. ${numberFormatter.format(payload.matchCount)} destinasi ditemukan; ${numberFormatter.format(payload.markerCount)} memiliki koordinat.`
                     : `${numberFormatter.format(payload.matchCount)} destinasi ditemukan; ${numberFormatter.format(payload.markerCount)} memiliki koordinat.`,
             );
-=======
-            announce('map-live-status', `${payload.matchCount} destinations match; ${payload.markerCount} have coordinates.`);
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
 
             window.history.replaceState({}, '', urlWithParams(form.action, params).toString());
         } catch (error) {
@@ -465,17 +413,10 @@ const initLiveMap = () => {
 
             renderLiveError(
                 results,
-<<<<<<< HEAD
                 'Daftar peta gagal diperbarui. Periksa koneksi Anda, lalu coba lagi.',
                 update,
             );
             announce('map-live-status', 'Destinasi pada peta gagal dimuat.');
-=======
-                'The map list could not be refreshed. Check your connection and try again.',
-                update,
-            );
-            announce('map-live-status', 'Mapped destinations failed to load.');
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
         } finally {
             if (currentRequest === requestId) {
                 results.removeAttribute('aria-busy');
@@ -486,10 +427,7 @@ const initLiveMap = () => {
     const debouncedUpdate = debounce(update);
 
     input?.addEventListener('input', debouncedUpdate);
-<<<<<<< HEAD
     form.querySelector('input[name="exact"]')?.addEventListener('change', update);
-=======
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
     form.addEventListener('submit', (event) => {
         event.preventDefault();
         update();
@@ -608,11 +546,7 @@ const initDashboardSuggestions = () => {
         }
 
         controller = new AbortController();
-<<<<<<< HEAD
         setSuggestionStatus('Memuat saran pencarian.');
-=======
-        setSuggestionStatus('Loading suggestions.');
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
         panel.innerHTML = suggestionSkeleton();
         panel.classList.remove('hidden');
         input.setAttribute('aria-expanded', 'true');
@@ -638,19 +572,11 @@ const initDashboardSuggestions = () => {
 
             if (items.length === 0) {
                 closePanel();
-<<<<<<< HEAD
                 setSuggestionStatus('Saran tidak ditemukan.');
             } else {
                 panel.classList.remove('hidden');
                 input.setAttribute('aria-expanded', 'true');
                 setSuggestionStatus(`${numberFormatter.format(items.length)} saran tersedia. Gunakan tombol panah untuk menelusuri.`);
-=======
-                setSuggestionStatus('No suggestions found.');
-            } else {
-                panel.classList.remove('hidden');
-                input.setAttribute('aria-expanded', 'true');
-                setSuggestionStatus(`${items.length} suggestions available. Use the arrow keys to browse.`);
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
             }
         } catch (error) {
             if (error.name === 'AbortError' || currentRequest !== requestId) {
@@ -658,11 +584,7 @@ const initDashboardSuggestions = () => {
             }
 
             closePanel();
-<<<<<<< HEAD
             setSuggestionStatus('Saran pencarian gagal dimuat.');
-=======
-            setSuggestionStatus('Suggestions could not be loaded.');
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
         }
     };
 
@@ -716,11 +638,7 @@ const initMobileNavigation = () => {
         menu.classList.toggle('hidden', ! open);
         menu.setAttribute('aria-hidden', open ? 'false' : 'true');
         button.setAttribute('aria-expanded', open ? 'true' : 'false');
-<<<<<<< HEAD
         button.setAttribute('aria-label', open ? 'Tutup menu navigasi' : 'Buka menu navigasi');
-=======
-        button.setAttribute('aria-label', open ? 'Close navigation menu' : 'Open navigation menu');
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
     };
 
     button.addEventListener('click', () => {
@@ -786,15 +704,9 @@ const initShareButton = () => {
         if (navigator.share) {
             try {
                 await navigator.share(shareData);
-<<<<<<< HEAD
                 announceShare('Destinasi berhasil dibagikan.');
             } catch {
                 announceShare('Berbagi dibatalkan.');
-=======
-                announceShare('Destination shared.');
-            } catch {
-                announceShare('Sharing was cancelled.');
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
             }
 
             return;
@@ -802,15 +714,9 @@ const initShareButton = () => {
 
         try {
             await navigator.clipboard.writeText(window.location.href);
-<<<<<<< HEAD
             announceShare('Tautan disalin ke papan klip.');
         } catch {
             announceShare('Salin alamat URL dari bilah alamat untuk membagikan destinasi ini.');
-=======
-            announceShare('Link copied to clipboard.');
-        } catch {
-            announceShare('Copy the address bar URL to share this destination.');
->>>>>>> ee7c4b41627891394572865c2960230988e32b45
         }
     });
 };
