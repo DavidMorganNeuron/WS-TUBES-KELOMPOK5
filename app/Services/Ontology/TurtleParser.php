@@ -26,6 +26,27 @@ class TurtleParser
     }
 
     /**
+     * @return list<array{subject: string, predicate: string, object: array{kind: string, value: string, datatype: ?string, language: ?string}}>
+     */
+    public function parseTriplesFile(string $path): array
+    {
+        $resolvedPath = preg_match('/^[A-Za-z]:[\\\\\\/]/', $path) === 1 || str_starts_with($path, DIRECTORY_SEPARATOR)
+            ? $path
+            : base_path($path);
+
+        if (! is_file($resolvedPath)) {
+            throw new InvalidArgumentException("File Turtle tidak ditemukan: {$resolvedPath}");
+        }
+
+        $contents = file_get_contents($resolvedPath);
+        if ($contents === false) {
+            throw new InvalidArgumentException("File Turtle tidak dapat dibaca: {$resolvedPath}");
+        }
+
+        return $this->parseTriples($contents);
+    }
+
+    /**
      * @return list<array<string, string>>
      */
     public function parse(string $turtle): array
@@ -65,6 +86,69 @@ class TurtleParser
     }
 
     /**
+     * Parse the project Turtle subset, including grouped predicates and objects.
+     *
+     * @return list<array{
+     *     subject: string,
+     *     predicate: string,
+     *     object: array{kind: string, value: string, datatype: ?string, language: ?string}
+     * }>
+     */
+    public function parseTriples(string $turtle): array
+    {
+        $this->prefixes = [];
+        $turtle = $this->removePrefixDirectives($turtle);
+        $triples = [];
+
+        foreach ($this->splitTopLevel($turtle, '.') as $statement) {
+            $statement = trim($statement);
+            if ($statement === '' || str_starts_with($statement, '#')) {
+                continue;
+            }
+
+            $subject = null;
+            foreach ($this->splitTopLevel($statement, ';') as $pair) {
+                $pair = trim($pair);
+                if ($pair === '') {
+                    continue;
+                }
+
+                $tokens = preg_split('/\s+/', $pair, $subject === null ? 3 : 2);
+                if (! is_array($tokens) || count($tokens) !== ($subject === null ? 3 : 2)) {
+                    throw new InvalidArgumentException('Pernyataan Turtle tidak valid.');
+                }
+
+                if ($subject === null) {
+                    $parsedSubject = $this->parseRdfTerm($tokens[0]);
+                    if ($parsedSubject['kind'] !== 'iri') {
+                        throw new InvalidArgumentException('Subjek Turtle harus berupa IRI.');
+                    }
+                    $subject = $parsedSubject['value'];
+                    $predicateToken = $tokens[1];
+                    $objectList = $tokens[2];
+                } else {
+                    $predicateToken = $tokens[0];
+                    $objectList = $tokens[1];
+                }
+
+                $predicate = $predicateToken === 'a'
+                    ? 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'
+                    : $this->expandName($predicateToken);
+
+                foreach ($this->splitTopLevel($objectList, ',') as $objectToken) {
+                    $triples[] = [
+                        'subject' => $subject,
+                        'predicate' => $predicate,
+                        'object' => $this->parseRdfTerm($objectToken),
+                    ];
+                }
+            }
+        }
+
+        return $triples;
+    }
+
+    /**
      * @return array<string, string>|null
      */
     private function parseDestinationStatement(string $statement): ?array
@@ -99,14 +183,9 @@ class TurtleParser
             }
 
             $property = $this->localName($predicateToken);
-            $value = $this->parseValue($valueToken);
 
-            if ($value !== '' && ! array_key_exists($property, $record)) {
-                $record[$property] = $value;
-            } elseif ($value !== '' && $record[$property] !== $value && ! str_contains($record[$property], $value)) {
-                $record[$property] .= ' | '.$value;
-            } elseif ($value === '' && ! array_key_exists($property, $record)) {
-                $record[$property] = '';
+            foreach ($this->splitTopLevel($valueToken, ',') as $valueToken) {
+                $this->addValue($record, $property, $this->parseValue($valueToken));
             }
         }
 
@@ -117,6 +196,36 @@ class TurtleParser
         $record['idDestinasi'] ??= $this->localName($subject);
 
         return $record;
+    }
+
+    /**
+     * @param  array<string, string>  $record
+     */
+    private function addValue(array &$record, string $property, string $value): void
+    {
+        if (! array_key_exists($property, $record)) {
+            $record[$property] = $value;
+
+            return;
+        }
+
+        if ($value === '') {
+            return;
+        }
+
+        if ($record[$property] === '') {
+            $record[$property] = $value;
+
+            return;
+        }
+
+        $values = explode(' | ', $record[$property]);
+
+        if (in_array($value, $values, true)) {
+            return;
+        }
+
+        $record[$property] .= ' | '.$value;
     }
 
     private function isOntologyPredicate(string $token): bool
@@ -179,6 +288,124 @@ class TurtleParser
         }
 
         return $token;
+    }
+
+    /**
+     * @return array{kind: string, value: string, datatype: ?string, language: ?string}
+     */
+    private function parseRdfTerm(string $token): array
+    {
+        $token = trim($token);
+        if ($token === '') {
+            throw new InvalidArgumentException('Term Turtle kosong.');
+        }
+
+        if ($token[0] === '<' && str_ends_with($token, '>')) {
+            return ['kind' => 'iri', 'value' => substr($token, 1, -1), 'datatype' => null, 'language' => null];
+        }
+
+        if ($token[0] === '"' || $token[0] === "'") {
+            $quote = $token[0];
+            $end = null;
+            for ($index = 1, $length = strlen($token); $index < $length; $index++) {
+                if ($token[$index] === '\\') {
+                    $index++;
+
+                    continue;
+                }
+
+                if ($token[$index] === $quote) {
+                    $end = $index;
+                    break;
+                }
+            }
+
+            if ($end === null) {
+                throw new InvalidArgumentException('Literal Turtle tidak ditutup.');
+            }
+
+            $value = $this->unescape(substr($token, 1, $end - 1));
+            $suffix = substr($token, $end + 1);
+            if ($suffix === '') {
+                return [
+                    'kind' => 'literal',
+                    'value' => $value,
+                    'datatype' => 'http://www.w3.org/2001/XMLSchema#string',
+                    'language' => null,
+                ];
+            }
+
+            if (preg_match('/^@([A-Za-z]+(?:-[A-Za-z0-9]+)*)$/', $suffix, $language) === 1) {
+                return [
+                    'kind' => 'literal',
+                    'value' => $value,
+                    'datatype' => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#langString',
+                    'language' => $language[1],
+                ];
+            }
+
+            if (str_starts_with($suffix, '^^')) {
+                return [
+                    'kind' => 'literal',
+                    'value' => $value,
+                    'datatype' => $this->expandName(substr($suffix, 2)),
+                    'language' => null,
+                ];
+            }
+
+            throw new InvalidArgumentException('Datatype atau bahasa literal Turtle tidak valid.');
+        }
+
+        if (preg_match('/^(?:[A-Za-z][A-Za-z0-9_-]*|):[A-Za-z_][A-Za-z0-9._-]*$/', $token) === 1) {
+            return ['kind' => 'iri', 'value' => $this->expandName($token), 'datatype' => null, 'language' => null];
+        }
+
+        if ($token === 'true' || $token === 'false') {
+            return [
+                'kind' => 'literal',
+                'value' => $token,
+                'datatype' => 'http://www.w3.org/2001/XMLSchema#boolean',
+                'language' => null,
+            ];
+        }
+
+        if (preg_match('/^[+-]?\d+$/', $token) === 1) {
+            return [
+                'kind' => 'literal',
+                'value' => $token,
+                'datatype' => 'http://www.w3.org/2001/XMLSchema#integer',
+                'language' => null,
+            ];
+        }
+
+        if (preg_match('/^[+-]?\d+\.\d+$/', $token) === 1) {
+            return [
+                'kind' => 'literal',
+                'value' => $token,
+                'datatype' => 'http://www.w3.org/2001/XMLSchema#decimal',
+                'language' => null,
+            ];
+        }
+
+        throw new InvalidArgumentException("Term Turtle tidak dikenali: {$token}");
+    }
+
+    private function expandName(string $token): string
+    {
+        if (str_starts_with($token, '<') && str_ends_with($token, '>')) {
+            return substr($token, 1, -1);
+        }
+
+        if (preg_match('/^([A-Za-z][A-Za-z0-9_-]*|):([A-Za-z_][A-Za-z0-9._-]*)$/', $token, $matches) !== 1) {
+            throw new InvalidArgumentException("Nama prefiks Turtle tidak valid: {$token}");
+        }
+
+        $prefix = $matches[1];
+        if (! isset($this->prefixes[$prefix])) {
+            throw new InvalidArgumentException("Prefiks Turtle tidak didefinisikan: {$prefix}");
+        }
+
+        return $this->prefixes[$prefix].$matches[2];
     }
 
     private function quotedContent(string $token): string
@@ -304,6 +531,14 @@ class TurtleParser
 
                 if ($character === '>') {
                     $insideIri = false;
+                }
+
+                continue;
+            }
+
+            if ($character === '#') {
+                while ($index + 1 < $length && ! in_array($input[$index + 1], ["\r", "\n"], true)) {
+                    $index++;
                 }
 
                 continue;

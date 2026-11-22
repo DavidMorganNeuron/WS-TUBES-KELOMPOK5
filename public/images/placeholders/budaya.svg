@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" role="img" aria-label="Heritage destination placeholder">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f4e4cc"/>
+      <stop offset="1" stop-color="#d8a86c"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#sky)"/>
+  <path d="M0 570 L200 500 L380 545 L560 470 L760 550 L980 500 L1200 560 L1200 800 L0 800 Z" fill="#8a4b22" opacity=".45"/>
+  <path d="M360 330 L600 190 L840 330 L840 650 L360 650 Z" fill="#f8f0e3" stroke="#6b3410" stroke-width="14"/>
+  <path d="M300 340 L600 160 L900 340 L840 380 L600 225 L360 380 Z" fill="#6b3410"/>
+  <rect x="545" y="450" width="110" height="200" fill="#6b3410"/>
+  <path d="M300 650 L900 650 L960 710 L240 710 Z" fill="#4a240c"/>
+  <text x="70" y="130" fill="#3f1e08" font-family="Georgia, serif" font-size="54" font-weight="700">Heritage</text>
+  <text x="70" y="185" fill="#6b3410" font-family="Arial, sans-serif" font-size="26" letter-spacing="4">BATAK &amp; MUSEUMS</text>
+</svg>

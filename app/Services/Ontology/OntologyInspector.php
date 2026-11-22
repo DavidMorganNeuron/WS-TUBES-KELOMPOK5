@@ -4,24 +4,35 @@ namespace App\Services\Ontology;
 
 use InvalidArgumentException;
 
-/**
- * Pemeriksa integritas data di Fuseki: mendeteksi duplikasi subjek, pelanggaran
- * kardinalitas, dan data "sisa" pada graph bernama yang tidak ikut terhapus saat PUT.
- */
 final class OntologyInspector
 {
     private const NAMESPACE_IRI = 'http://pariwisatasumut.org/ontology/v2#';
 
-    /** Properti yang secara desain hanya boleh punya satu nilai per destinasi. */
     public const SINGLE_VALUED = [
-        'idDestinasi', 'namaDestinasi', 'deskripsiSingkat', 'deskripsiLengkap',
-        'beradaDi', 'alamat', 'lintang', 'bujur', 'petunjukLokasi', 'jamOperasional',
-        'hargaMasuk', 'noHpResmi', 'emailResmi', 'instagramResmi',
-        'memilikiMedia', 'ratingPengunjung',
+        'idDestinasi', 'berlokasiDi', 'memilikiKontak', 'memilikiJadwal',
+        'lintang', 'bujur', 'ratingPengunjung',
     ];
 
-    private const MULTI_VALUED = [
-        'jenisDestinasi', 'namaAlternatif', 'kataKunci', 'memilikiFasilitas', 'dapatMelakukan',
+    private const RELATED_PROPERTIES = [
+        'urlMedia' => 'memilikiMedia',
+        'nomorHp' => 'memilikiKontak',
+        'email' => 'memilikiKontak',
+        'urlInstagram' => 'memilikiKontak',
+        'jamBuka' => 'memilikiJadwal',
+        'jamTutup' => 'memilikiJadwal',
+        'bukaSepanjangWaktu' => 'memilikiJadwal',
+        'keteranganJadwal' => 'memilikiJadwal',
+        'hargaMasuk' => 'memilikiTarif',
+        'keteranganTarif' => 'memilikiTarif',
+    ];
+
+    private const INSPECTABLE_PROPERTIES = [
+        'idDestinasi', 'namaDestinasi', 'namaAlternatif', 'deskripsiSingkat', 'deskripsiLengkap',
+        'kataKunci', 'alamat', 'petunjukLokasi', 'lintang', 'bujur', 'ratingPengunjung',
+        'berkategori', 'berlokasiDi', 'menyediakanFasilitas', 'menawarkanAktivitas',
+        'memilikiMedia', 'memilikiKontak', 'memilikiJadwal', 'memilikiTarif', 'dekatDengan',
+        'berbatasanDengan', 'urlMedia', 'nomorHp', 'email', 'urlInstagram', 'jamBuka',
+        'jamTutup', 'bukaSepanjangWaktu', 'keteranganJadwal', 'hargaMasuk', 'keteranganTarif',
     ];
 
     public function __construct(private FusekiClient $fuseki) {}
@@ -52,25 +63,29 @@ SPARQL);
             throw new InvalidArgumentException('Format ID destinasi tidak valid.');
         }
 
-        if (! in_array($property, [...self::SINGLE_VALUED, ...self::MULTI_VALUED], true)) {
+        if (! in_array($property, self::INSPECTABLE_PROPERTIES, true)) {
             throw new InvalidArgumentException("Properti tidak dikenal: {$property}");
         }
 
         $namespace = self::NAMESPACE_IRI;
+        $relation = self::RELATED_PROPERTIES[$property] ?? null;
+        $propertyPattern = $relation === null
+            ? "{ ?destination ws:{$property} ?o . BIND(\"\" AS ?g) } UNION { GRAPH ?g { ?destination ws:{$property} ?o } }"
+            : "{ ?destination ws:{$relation} ?resource . ?resource ws:{$property} ?o . BIND(\"\" AS ?g) } UNION { GRAPH ?g { ?destination ws:{$relation} ?resource . ?resource ws:{$property} ?o } }";
 
         $rows = $this->fuseki->select(<<<SPARQL
 PREFIX ws: <{$namespace}>
-SELECT DISTINCT ?g ?s ?o
+SELECT DISTINCT ?g ?destination ?o
 WHERE {
-    { ?s ws:idDestinasi ?id } UNION { GRAPH ?gid { ?s ws:idDestinasi ?id } }
+    { ?destination ws:idDestinasi ?id } UNION { GRAPH ?gid { ?destination ws:idDestinasi ?id } }
     FILTER(STR(?id) = "{$id}")
-    { ?s ws:{$property} ?o } UNION { GRAPH ?g { ?s ws:{$property} ?o } }
+    {$propertyPattern}
 }
 SPARQL);
 
         return array_map(static fn (array $row): array => [
             'graph' => ($row['g'] ?? '') !== '' ? $row['g'] : '(default)',
-            'subject' => $row['s'] ?? '',
+            'subject' => $row['destination'] ?? '',
             'value' => $row['o'] ?? '',
         ], $rows);
     }

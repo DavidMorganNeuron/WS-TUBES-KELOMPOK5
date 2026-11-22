@@ -1,0 +1,1528 @@
+{
+    "schema_version": 2,
+    "source": "Wikidata Query Service",
+    "query_url": "https://query.wikidata.org/sparql",
+    "retrieved_at": "2026-11-15T12:21:40+07:00",
+    "verification": {
+        "regions": 30,
+        "boundary_pairs": 51,
+        "directed_boundary_edges": 98,
+        "country_qid": "Q252",
+        "province_qid": "Q2140"
+    },
+    "regions": {
+        "Kabupaten Asahan": {
+            "qid": "Q1795",
+            "type": "Kabupaten",
+            "wikidata_label": "Asahan",
+            "wikidata_url": "http://www.wikidata.org/entity/Q1795",
+            "latitude": 3,
+            "longitude": 99.1667,
+            "image_filename": null,
+            "image_url": null,
+            "image_page_url": null,
+            "website_url": "http://www.asahankab.go.id/",
+            "population": {
+                "amount": "1038554",
+                "rank": "NormalRank",
+                "as_of": null,
+                "unit_qid": null,
+                "normalized": null
+            },
+            "area": {
+                "amount": "4624.41",
+                "rank": "NormalRank",
+                "as_of": null,
+                "unit_qid": "Q712226",
+                "normalized": {
+                    "amount": "4624410000",
+                    "rank": "NormalRank",
+                    "as_of": null,
+                    "unit_qid": "Q25343",
+                    "normalized": null
+                }
+            },
+            "wikipedia_url": "https://id.wikipedia.org/wiki/Kabupaten_Asahan",
+            "wikivoyage_url": null,
+            "wikivoyage_language": null,
+            "labels": {
+                "id": "Asahan",
+                "en": "Asahan"
+            },
+            "aliases": {
+                "id": [
+                    "Kab. Asahan",
+                    "Kabupaten Asahan",
+                    "Kabupaten Daerah Tingkat II Asahan"
+                ],
+                "en": [
+                    "Asahan Regency"
+                ]
+            }
+        },
+        "Kabupaten Batu Bara": {
+            "qid": "Q5797",
+            "type": "Kabupaten",
+            "wikidata_label": "Batu Bara",
+            "wikidata_url": "http://www.wikidata.org/entity/Q5797",
+            "latitude": 3.16166,
+            "longitude": 99.52652,
+            "image_filename": null,
+            "image_url": null,
+            "image_page_url": null,
+            "website_url": "http://www.batubarakab.go.id/",
+            "population": {
+                "amount": "346764",
+                "rank": "NormalRank",
+                "as_of": null,
+                "unit_qid": null,
+                "normalized": null
+            },
+            "area": {
+                "amount": "904.96",
+                "rank": "NormalRank",
+                "as_of": null,
+                "unit_qid": "Q712226",
+                "normalized": {
+                    "amount": "904960000",
+                    "rank": "NormalRank",
+                    "as_of": null,
+                    "unit_qid": "Q25343",
+                    "normalized": null
+                }
+            },
+            "wikipedia_url": "https://id.wikipedia.org/wiki/Kabupaten_Batu_Bara",
+            "wikivoyage_url": null,
+            "wikivoyage_language": null,
+            "labels": {
+                "id": "Batu Bara",
+                "en": "Batu Bara"
+            },
+            "aliases": {
+                "id": [
+                    "Batubara",
+                    "Kab. Batu Bara",
+                    "Kab. Batubara",
+                    "Kabupaten Batu Bara",
+                    "Kabupaten Batubara"
+                ],
+                "en": [
+                    "Batu Bara Regency",
+                    "Batubara"
+                ]
+            }
+        },
+        "Kabupaten Dairi": {
+            "qid": "Q5801",
+            "type": "Kabupaten",
+            "wikidata_label": "Dairi",
+            "wikidata_url": "http://www.wikidata.org/entity/Q5801",
+            "latitude": 2.86667,
+            "longitude": 98.23333,
+            "image_filename": null,
+            "image_url": null,
+            "image_page_url": null,
+            "website_url": "http://www.batubarakab.go.id/",
+            "population": {
+                "amount": "272000",
+                "rank": "NormalRank",
+                "as_of": null,
+                "unit_qid": null,
+                "normalized": null
+            },
+            "area": {
+                "amount": "1927.8",
+                "rank": "NormalRank",
+                "as_of": null,
+                "unit_qid": "Q712226",
+                "normalized": {
+                    "amount": "1927800000",
+                    "rank": "NormalRank",
+                    "as_of": null,
+                    "unit_qid": "Q25343",
+                    "normalized": null
+                }
+            },
+            "wikipedia_url": "https://id.wikipedia.org/wiki/Kabupaten_Dairi",
+            "wikivoyage_url": null,
+            "wikivoyage_language": null,
+            "labels": {
+                "id": "Dairi",
+                "en": "Dairi"
+            },
+            "aliases": {
+                "id": [
+                    "Daerah Tingkat II Dairi",
+                    "Kab. Dairi",
+                    "Kabupaten Dairi"
+                ],
+                "en": [
+                    "Dairi Regency"
+                ]
+            }
+        },
+        "Kabupaten Deli Serdang": {
+            "qid": "Q5804",
+            "type": "Kabupaten",
+            "wikidata_label": "Deli Serdang",
+            "wikidata_url": "http://www.wikidata.org/entity/Q5804",
+            "latitude": 3.55,
+            "longitude": 98.85,
+            "image_filename": "DSCN3003.JPG",
+            "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/DSCN3003.JPG",
+            "image_page_url": "https://commons.wikimedia.org/wiki/File:DSCN3003.JPG",
+            "website_url": "http://www.deliserdang.go.id/",
+            "population": {
+                "amount": "2114627",
+                "rank": "NormalRank",
+                "as_of": "2017-01-01T00:00:00Z",
+                "unit_qid": null,
+                "normalized": null
+            },
+            "area": {
+                "amount": "2497.72",
+                "rank": "NormalRank",
+                "as_of": null,
+                "unit_qid": "Q712226",
+                "normalized": {
+                    "amount": "2497720000",
+                    "rank": "NormalRank",
+                    "as_of": null,
+                    "unit_qid": "Q25343",
+                    "normalized": null
+                }
+            },
+            "wikipedia_url": "https://id.wikipedia.org/wiki/Kabupaten_Deli_Serdang",
+            "wikivoyage_url": null,
+            "wikivoyage_language": null,
+            "labels": {
+                "id": "Deli Serdang",
+                "en": "Deli Serdang"
+            },
+            "aliases": {
+                "id": [
+                    "Kab. Deli Serdang",
+                    "Kabupaten Daerah Tingkat II Deli Serdang",
+                    "Kabupaten Deli Serdang",
+                    "Kabupaten Deli-Serdang"
+                ],
+                "en": [
+                    "Deli Serdang Regency"
+                ]
+            }
+        },
+        "Kabupaten Humbang Hasundutan": {
+            "qid": "Q5808",
+            "type": "Kabupaten",
+            "wikidata_label": "Humbang Hasundutan",
+            "wikidata_url": "http://www.wikidata.org/entity/Q5808",
+            "latitude": 2.26551,
+            "longitude": 98.50376,
+            "image_filename": null,
+            "image_url": null,
+            "image_page_url": null,
+            "website_url": "https://www.humbanghasundutankab.go.id/",
+            "population": {
+                "amount": "191856",
+                "rank": "NormalRank",
+                "as_of": null,
+                "unit_qid": null,
+                "normalized": null
+            },
+            "area": {
+                "amount": "2297",
+                "rank": "NormalRank",
+                "as_of": null,
+                "unit_qid": "Q712226",
+                "normalized": {
+                    "amount": "2297000000",
+                    "rank": "NormalRank",
+                    "as_of": null,
+                    "unit_qid": "Q25343",
+                    "normalized": null
+                }
+            },
+            "wikipedia_url": "https://id.wikipedia.org/wiki/Kabupaten_Humbang_Hasundutan",
+            "wikivoyage_url": null,
+            "wikivoyage_language": null,
+            "labels": {
+                "id": "Humbang Hasundutan",
+                "en": "Humbang Hasundutan"
+            },
+            "aliases": {
+                "id": [
+                    "Humbahas",
+                    "Kab. Humbang Hasundutan",
+                    "Kab.Humbang Hasundutan",
+                    "Kabupaten Humbang Hasundutan"
+                ],
+                "en": [
+                    "Humbang Hasundutan Regency"
+                ]
+            }
+        },
+        "Kabupaten Karo": {
+            "qid": "Q5810",
+            "type": "Kabupaten",
+            "wikidata_label": "Karo",
+            "wikidata_url": "http://www.wikidata.org/entity/Q5810",
+            "latitude": 3.11667,
+            "longitude": 98.3,
+            "image_filename": "Sipisopiso waterfall North Sumatra Indonesia.jpg",
+            "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Sipisopiso%20waterfall%20North%20Sumatra%20Indonesia.jpg",
+            "image_page_url": "https://commons.wikimedia.org/wiki/File:Sipisopiso%20waterfall%20North%20Sumatra%20Indonesia.jpg",
+            "website_url": "http://www.karokab.go.id/",
+            "population": {
+                "amount": "279470",
+                "rank": "NormalRank",
+                "as_of": null,
+                "unit_qid": null,
+                "normalized": null
+            },
+            "area": {
+                "amount": "2127.25",
+                "rank": "NormalRank",
+                "as_of": null,
+                "unit_qid": "Q712226",
+                "normalized": {
+                    "amount": "2127250000",
+                    "rank": "NormalRank",
+                    "as_of": null,
+                    "unit_qid": "Q25343",
+                    "normalized": null
+                }
+            },
+            "wikipedia_url": "https://id.wikipedia.org/wiki/Kabupaten_Karo",
+            "wikivoyage_url": null,
+            "wikivoyage_language": null,
+            "labels": {
+                "id": "Karo",
+                "en": "Karo"
+            },
+            "aliases": {
+                "id": [
+                    "Kab. Karo",
+                    "Kabupaten Karo"
+                ],
+                "en": [
+                    "Karo Regency"
+                ]
+            }
+        },
+        "Kabupaten Labuhanbatu": {
+            "qid": "Q5814",
+            "type": "Kabupaten",
+            "wikidata_label": "Labuhanbatu",
+            "wikidata_url": "http://www.wikidata.org/entity/Q5814",
+            "latitude": 2.26667,
+            "longitude": 100.1,
+            "image_filename": null,
+            "image_url": null,
+            "image_page_url": null,
+            "website_url": "http://www.labuhanbatukab.go.id/",
+            "population": {
+                "amount": "414417",
+                "rank": "NormalRank",
+                "as_of": null,
+                "unit_qid": null,
+                "normalized": null
+            },
+            "area": {
+                "amount": "2562",
+                "rank": "NormalRank",
+                "as_of": null,
+                "unit_qid": "Q712226",
+                "normalized": {
+                    "amount": "2562000000",
+                    "rank": "NormalRank",
+                    "as_of": null,
+                    "unit_qid": "Q25343",
+                    "normalized": null
+                }
+            },
+            "wikipedia_url": "https://id.wikipedia.org/wiki/Kabupaten_Labuhanbatu",
+            "wikivoyage_url": null,
+            "wikivoyage_language": null,
+            "labels": {
+                "id": "Labuhanbatu",
+                "en": "Labuhanbatu"
+            },
+            "aliases": {
+                "id": [
+                    "Kab. Labuhan Batu",
+                    "Kab. Labuhanbatu",
+                    "Kabupaten Daerah Tingkat II Labuhan Batu",
+                    "Kabupaten Labuhan Batu",
+                    "Kabupaten Labuhanbatu",
+                    "Labuhan Batu"
+                ],
+                "en": [
+                    "Labuhan Batu",
+                    "Labuhan Batu Regency",
+                    "Labuhanbatu Regency"
+                ]
+            }
+        },
+        "Kabupaten Labuhanbatu Selatan": {
+            "qid": "Q5905",
+            "type": "Kabupaten",
+            "wikidata_label": "Labuhanbatu Selatan",
+            "wikidata_url": "http://www.wikidata.org/entity/Q5905",
+            "latitude": 1.982777777,
+            "longitude": 100.0975,
+            "image_filename": null,
+            "image_url": null,
+            "image_page_url": null,
+            "website_url": "http://labuhanbatuselatankab.go.id/",
+            "population": {
+                "amount": "314856",
+                "rank": "NormalRank",
+                "as_of": null,
+                "unit_qid": null,
+                "normalized": null
+            },
+            "area": {
+                "amount": "3596",
+                "rank": "NormalRank",
+                "as_of": null,
+                "unit_qid": "Q712226",
+                "normalized": {
+                    "amount": "3596000000",
+                    "rank": "NormalRank",
+                    "as_of": null,
+                    "unit_qid": "Q25343",
+                    "normalized": null
+                }
+            },
+            "wikipedia_url": "https://id.wikipedia.org/wiki/Kabupaten_Labuhanbatu_Selatan",
+            "wikivoyage_url": null,
+            "wikivoyage_language": null,
+            "labels": {
+                "id": "Labuhanbatu Selatan",
+                "en": "South Labuhanbatu"
+            },
+            "aliases": {
+                "id": [
+                    "Kab. Labuhan Batu Selatan",
+                    "Kab. Labuhanbatu Selatan",
+                    "Kabupaten Labuhanbatu Selatan",
+                    "Labusel"
+                ],
+                "en": [
+                    "Labusel",
+                    "South Labuhanbatu Regency"
+                ]
+            }
+        },
+        "Kabupaten Labuhanbatu Utara": {
+            "qid": "Q5842",
+            "type": "Kabupaten",
+            "wikidata_label": "Labuhanbatu Utara",
+            "wikidata_url": "http://www.wikidata.org/entity/Q5842",
+            "latitude": 2.333333333,
+            "longitude": 99.6375,
+            "image_filename": null,
+            "image_url": null,
+            "image_page_url": null,
+            "website_url": "http://www.labuhanbatuutarakab.go.id/",
+            "population": {
+                "amount": "384982",
+                "rank": "NormalRank",
+                "as_of": null,
+                "unit_qid": null,
+                "normalized": null
+            },
+            "area": {
+                "amount": "3571",
+                "rank": "NormalRank",
+                "as_of": null,
+                "unit_qid": "Q712226",
+                "normalized": {
+                    "amount": "3571000000",
+                    "rank": "NormalRank",
+                    "as_of": null,
+                    "unit_qid": "Q25343",
+                    "normalized": null
+                }
+            },
+            "wikipedia_url": "https://id.wikipedia.org/wiki/Kabupaten_Labuhanbatu_Utara",
+            "wikivoyage_url": null,
+            "wikivoyage_language": null,
+            "labels": {
+                "id": "Labuhanbatu Utara",
+                "en": "North Labuhanbatu"
+            },
+            "aliases": {
+                "id": [
+                    "Kab. Labuhan Batu Utara",
+                    "Kab. Labuhanbatu Utara",
+                    "Kabupaten Labuhan Batu Utara",
+                    "Kabupaten Labuhanbatu Utara",
+                    "Labuhan Batu Utara",
+                    "Labura"
+                ],
+                "en": [
+                    "Labura",
+                    "North Labuhanbatu Regency"
+                ]
+            }
+        },
+        "Kabupaten Langkat": {
+            "qid": "Q5833",
+            "type": "Kabupaten",
+            "wikidata_label": "Langkat",
+            "wikidata_url": "http://www.wikidata.org/entity/Q5833",
+            "latitude": 3.766666666,
+            "longitude": 98.216666666,
+            "image_filename": "KantorBupatiLangkat.jpg",
+            "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/KantorBupatiLangkat.jpg",
+            "image_page_url": "https://commons.wikimedia.org/wiki/File:KantorBupatiLangkat.jpg",
+            "website_url": "http://www.langkatkab.go.id/",
+            "population": {
+                "amount": "1027414",
+                "rank": "NormalRank",
+                "as_of": null,
+                "unit_qid": null,
+                "normalized": null
+            },
+            "area": {
+                "amount": "6263.29",
+                "rank": "NormalRank",
+                "as_of": null,
+                "unit_qid": "Q712226",
+                "normalized": {
+                    "amount": "6263290000",
+                    "rank": "NormalRank",
+                    "as_of": null,
+                    "unit_qid": "Q25343",
+                    "normalized": null
+                }
+            },
+            "wikipedia_url": "https://id.wikipedia.org/wiki/Kabupaten_Langkat",
+            "wikivoyage_url": null,
+            "wikivoyage_language": null,
+            "labels": {
+                "id": "Langkat",
+                "en": "Langkat"
+            },
+            "aliases": {
+                "id": [
+                    "Kab. Langkat",
+                    "Kabupaten Daerah Tingkat II Langkat",
+                    "Kabupaten Langkat"
+                ],
+                "en": [
+                    "Langkat Regency"
+                ]
+            }
+        },
+        "Kabupaten Mandailing Natal": {
+            "qid": "Q5837",
+            "type": "Kabupaten",
+            "wikidata_label": "Mandailing Natal",
+            "wikidata_url": "http://www.wikidata.org/entity/Q5837",
+            "latitude": 0.78378,
+            "longitude": 99.25495,
+            "image_filename": null,
+            "image_url": null,
+            "image_page_url": null,
+            "website_url": "http://www.madina.go.id/",
+            "population": {
+                "amount": "403894",
+                "rank": "NormalRank",
+                "as_of": null,
+                "unit_qid": null,
+                "normalized": null
+            },
+            "area": {
+                "amount": "6620.7",
+                "rank": "NormalRank",
+                "as_of": null,
+                "unit_qid": "Q712226",
+                "normalized": {
+                    "amount": "6620700000",
+                    "rank": "NormalRank",
+                    "as_of": null,
+                    "unit_qid": "Q25343",
+                    "normalized": null
+                }
+            },
+            "wikipedia_url": "https://id.wikipedia.org/wiki/Kabupaten_Mandailing_Natal",
+            "wikivoyage_url": null,
+            "wikivoyage_language": null,
+            "labels": {
+                "id": "Mandailing Natal",
+                "en": "Mandailing Natal"
+            },
+            "aliases": {
+                "id": [
+                    "Kab. Mandailing Natal",
+                    "Kabupaten Daerah Tingkat II Mandailing Natal",
+                    "Kabupaten Mandailing Natal",
+                    "Madina"
+                ],
+                "en": [
+                    "Madina",
+                    "Mandailing Natal Regency"
+                ]
+            }
+        },
+        "Kabupaten Nias Barat": {
+            "qid": "Q5909",
+            "type": "Kabupaten",
+            "wikidata_label": "Nias Barat",
+            "wikidata_url": "http://www.wikidata.org/entity/Q5909",
+            "latitude": 1.05966,
+            "longitude": 97.58606,
+            "image_filename": null,
+            "image_url": null,
+            "image_page_url": null,
+            "website_url": null,
+            "population": {
+                "amount": "90395",
+                "rank": "NormalRank",
+                "as_of": null,
+                "unit_qid": null,
+                "normalized": null
+            },
+            "area": {
+                "amount": "473.7",
+                "rank": "NormalRank",
+                "as_of": null,
+                "unit_qid": "Q712226",
+                "normalized": {
+                    "amount": "473700000",
+                    "rank": "NormalRank",
+                    "as_of": null,
+                    "unit_qid": "Q25343",
+                    "normalized": null
+                }
+            },
+            "wikipedia_url": "https://id.wikipedia.org/wiki/Kabupaten_Nias_Barat",
+            "wikivoyage_url": null,
+            "wikivoyage_language": null,
+            "labels": {
+                "id": "Nias Barat",
+                "en": "West Nias"
+            },
+            "aliases": {
+                "id": [
+                    "Kab. Nias Barat",
+                    "Kabupaten Nias Barat",
+                    "Nias Barat, Indonesia"
+                ],
+                "en": [
+                    "West Nias Regency",
+                    "West Nias, Indonesia"
+                ]
+            }
+        },
+        "Kabupaten Nias Selatan": {
+            "qid": "Q5918",
+            "type": "Kabupaten",
+            "wikidata_label": "Nias Selatan",
+            "wikidata_url": "http://www.wikidata.org/entity/Q5918",
+            "latitude": 0.583352913,
+            "longitude": 97.77766689,
+            "image_filename": null,
+            "image_url": null,
+            "image_page_url": null,
+            "website_url": "https://niasselatankab.go.id/",
+            "population": {
+                "amount": "289876",
+                "rank": "NormalRank",
+                "as_of": null,
+                "unit_qid": null,
+                "normalized": null
+            },
+            "area": {
+                "amount": "1825.5",
+                "rank": "NormalRank",
+                "as_of": null,
+                "unit_qid": "Q712226",
+                "normalized": {
+                    "amount": "1825500000",
+                    "rank": "NormalRank",
+                    "as_of": null,
+                    "unit_qid": "Q25343",
+                    "normalized": null
+                }
+            },
+            "wikipedia_url": "https://id.wikipedia.org/wiki/Kabupaten_Nias_Selatan",
+            "wikivoyage_url": null,
+            "wikivoyage_language": null,
+            "labels": {
+                "id": "Nias Selatan",
+                "en": "South Nias"
+            },
+            "aliases": {
+                "id": [
+                    "Kab. Nias Selatan",
+                    "Kabupaten Nias Selatan"
+                ],
+                "en": [
+                    "South Nias Regency"
+                ]
+            }
+        },
+        "Kabupaten Nias Utara": {
+            "qid": "Q5853",
+            "type": "Kabupaten",
+            "wikidata_label": "Nias Utara",
+            "wikidata_url": "http://www.wikidata.org/entity/Q5853",
+            "latitude": 1.3875,
+            "longitude": 97.36,
+            "image_filename": null,
+            "image_url": null,
+            "image_page_url": null,
+            "website_url": "http://www.niasutarakab.go.id/",
+            "population": {
+                "amount": "144011",
+                "rank": "NormalRank",
+                "as_of": null,
+                "unit_qid": null,
+                "normalized": null
+            },
+            "area": {
+                "amount": "1202.78",
+                "rank": "NormalRank",
+                "as_of": null,
+                "unit_qid": "Q712226",
+                "normalized": {
+                    "amount": "1202780000",
+                    "rank": "NormalRank",
+                    "as_of": null,
+                    "unit_qid": "Q25343",
+                    "normalized": null
+                }
+            },
+            "wikipedia_url": "https://id.wikipedia.org/wiki/Kabupaten_Nias_Utara",
+            "wikivoyage_url": null,
+            "wikivoyage_language": null,
+            "labels": {
+                "id": "Nias Utara",
+                "en": "North Nias"
+            },
+            "aliases": {
+                "id": [
+                    "Kab. Nias Utara",
+                    "Kabupaten Nias Utara"
+                ],
+                "en": [
+                    "North Nias Regency",
+                    "North Nias, Indonesia"
+                ]
+            }
+        },
+        "Kabupaten Padang Lawas": {
+            "qid": "Q5866",
+            "type": "Kabupaten",
+            "wikidata_label": "Padang Lawas",
+            "wikidata_url": "http://www.wikidata.org/entity/Q5866",
+            "latitude": 1.126026,
+            "longitude": 99.813309,
+            "image_filename": null,
+            "image_url": null,
+            "image_page_url": null,
+            "website_url": null,
+            "population": {
+                "amount": "233933",
+                "rank": "NormalRank",
+                "as_of": null,
+                "unit_qid": null,
+                "normalized": null
+            },
+            "area": {
+                "amount": "3893",
+                "rank": "NormalRank",
+                "as_of": null,
+                "unit_qid": "Q712226",
+                "normalized": {
+                    "amount": "3893000000",
+                    "rank": "NormalRank",
+                    "as_of": null,
+                    "unit_qid": "Q25343",
+                    "normalized": null
+                }
+            },
+            "wikipedia_url": "https://id.wikipedia.org/wiki/Kabupaten_Padang_Lawas",
+            "wikivoyage_url": "https://id.wikivoyage.org/wiki/Padang_Lawas",
+            "wikivoyage_language": "id",
+            "labels": {
+                "id": "Padang Lawas",
+                "en": "Padang Lawas"
+            },
+            "aliases": {
+                "id": [
+                    "Kab. Padang Lawas",
+                    "Kabupaten Padang Lawas",
+                    "Palas"
+                ],
+                "en": [
+                    "Padang Lawas Regency"
+                ]
+            }
+        },
+        "Kabupaten Padang Lawas Utara": {
+            "qid": "Q5857",
+            "type": "Kabupaten",
+            "wikidata_label": "Padang Lawas Utara",
+            "wikidata_url": "http://www.wikidata.org/entity/Q5857",
+            "latitude": 1.46011,
+            "longitude": 99.67346,
+            "image_filename": null,
+            "image_url": null,
+            "image_page_url": null,
+            "website_url": null,
+            "population": {
+                "amount": "263062",
+                "rank": "NormalRank",
+                "as_of": null,
+                "unit_qid": null,
+                "normalized": null
+            },
+            "area": {
+                "amount": "3918.05",
+                "rank": "NormalRank",
+                "as_of": null,
+                "unit_qid": "Q712226",
+                "normalized": {
+                    "amount": "3918050000",
+                    "rank": "NormalRank",
+                    "as_of": null,
+                    "unit_qid": "Q25343",
+                    "normalized": null
+                }
+            },
+            "wikipedia_url": "https://id.wikipedia.org/wiki/Kabupaten_Padang_Lawas_Utara",
+            "wikivoyage_url": null,
+            "wikivoyage_language": null,
+            "labels": {
+                "id": "Padang Lawas Utara",
+                "en": "North Padang Lawas"
+            },
+            "aliases": {
+                "id": [
+                    "Kab. Padang Lawas Utara",
+                    "Kabupaten Padang Lawas Utara",
+                    "Paluta"
+                ],
+                "en": [
+                    "North Padang Lawas Regency",
+                    "Paluta"
+                ]
+            }
+        },
+        "Kabupaten Pakpak Bharat": {
+            "qid": "Q5872",
+            "type": "Kabupaten",
+            "wikidata_label": "Pakpak Bharat",
+            "wikidata_url": "http://www.wikidata.org/entity/Q5872",
+            "latitude": 2.56667,
+            "longitude": 98.28333,
+            "image_filename": null,
+            "image_url": null,
+            "image_page_url": null,
+            "website_url": "http://www.pakpakbharatkab.go.id/",
+            "population": {
+                "amount": "35378",
+                "rank": "NormalRank",
+                "as_of": null,
+                "unit_qid": null,
+                "normalized": null
+            },
+            "area": {
+                "amount": "1218.3",
+                "rank": "NormalRank",
+                "as_of": null,
+                "unit_qid": "Q712226",
+                "normalized": {
+                    "amount": "1218300000",
+                    "rank": "NormalRank",
+                    "as_of": null,
+                    "unit_qid": "Q25343",
+                    "normalized": null
+                }
+            },
+            "wikipedia_url": "https://id.wikipedia.org/wiki/Kabupaten_Pakpak_Bharat",
+            "wikivoyage_url": null,
+            "wikivoyage_language": null,
+            "labels": {
+                "id": "Pakpak Bharat",
+                "en": "Pakpak Bharat"
+            },
+            "aliases": {
+                "id": [
+                    "Kab. Pakpak Bharat",
+                    "Kabupaten Pakpak Bharat"
+                ],
+                "en": [
+                    "Pakpak Bharat Regency"
+                ]
+            }
+        },
+        "Kabupaten Samosir": {
+            "qid": "Q5888",
+            "type": "Kabupaten",
+            "wikidata_label": "Samosir",
+            "wikidata_url": "http://www.wikidata.org/entity/Q5888",
+            "latitude": 2.64025,
+            "longitude": 98.71525,
+            "image_filename": null,
+            "image_url": null,
+            "image_page_url": null,
+            "website_url": "https://samosirkab.go.id/",
+            "population": {
+                "amount": "141780",
+                "rank": "NormalRank",
+                "as_of": null,
+                "unit_qid": null,
+                "normalized": null
+            },
+            "area": {
+                "amount": "2433.5",
+                "rank": "NormalRank",
+                "as_of": null,
+                "unit_qid": "Q712226",
+                "normalized": {
+                    "amount": "2433500000",
+                    "rank": "NormalRank",
+                    "as_of": null,
+                    "unit_qid": "Q25343",
+                    "normalized": null
+                }
+            },
+            "wikipedia_url": "https://id.wikipedia.org/wiki/Kabupaten_Samosir",
+            "wikivoyage_url": null,
+            "wikivoyage_language": null,
+            "labels": {
+                "id": "Samosir",
+                "en": "Samosir"
+            },
+            "aliases": {
+                "id": [
+                    "Kab. Samosir",
+                    "Kabupaten Samosir"
+                ],
+                "en": [
+                    "Samosir Regency"
+                ]
+            }
+        },
+        "Kabupaten Serdang Bedagai": {
+            "qid": "Q5899",
+            "type": "Kabupaten",
+            "wikidata_label": "Serdang Bedagai",
+            "wikidata_url": "http://www.wikidata.org/entity/Q5899",
+            "latitude": 3.36667,
+            "longitude": 99.03333,
+            "image_filename": null,
+            "image_url": null,
+            "image_page_url": null,
+            "website_url": "http://www.serdangbedagaikab.go.id/english/",
+            "population": {
+                "amount": "635362",
+                "rank": "NormalRank",
+                "as_of": null,
+                "unit_qid": null,
+                "normalized": null
+            },
+            "area": {
+                "amount": "1913.33",
+                "rank": "NormalRank",
+                "as_of": null,
+                "unit_qid": "Q712226",
+                "normalized": {
+                    "amount": "1913330000",
+                    "rank": "NormalRank",
+                    "as_of": null,
+                    "unit_qid": "Q25343",
+                    "normalized": null
+                }
+            },
+            "wikipedia_url": "https://id.wikipedia.org/wiki/Kabupaten_Serdang_Bedagai",
+            "wikivoyage_url": null,
+            "wikivoyage_language": null,
+            "labels": {
+                "id": "Serdang Bedagai",
+                "en": "Serdang Bedagai"
+            },
+            "aliases": {
+                "id": [
+                    "Kab. Serdang Bedagai",
+                    "Kabupaten Serdang Bedagai"
+                ],
+                "en": [
+                    "Serdang Bedagai Regency"
+                ]
+            }
+        },
+        "Kabupaten Simalungun": {
+            "qid": "Q5903",
+            "type": "Kabupaten",
+            "wikidata_label": "Simalungun",
+            "wikidata_url": "http://www.wikidata.org/entity/Q5903",
+            "latitude": 2.9,
+            "longitude": 99,
+            "image_filename": "Welcome Gate To Simalungun Regency 02.JPG",
+            "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Welcome%20Gate%20To%20Simalungun%20Regency%2002.JPG",
+            "image_page_url": "https://commons.wikimedia.org/wiki/File:Welcome%20Gate%20To%20Simalungun%20Regency%2002.JPG",
+            "website_url": "http://www.simalungunkab.go.id/",
+            "population": {
+                "amount": "855591",
+                "rank": "NormalRank",
+                "as_of": null,
+                "unit_qid": null,
+                "normalized": null
+            },
+            "area": {
+                "amount": "4386.6",
+                "rank": "NormalRank",
+                "as_of": null,
+                "unit_qid": "Q712226",
+                "normalized": {
+                    "amount": "4386600000",
+                    "rank": "NormalRank",
+                    "as_of": null,
+                    "unit_qid": "Q25343",
+                    "normalized": null
+                }
+            },
+            "wikipedia_url": "https://id.wikipedia.org/wiki/Kabupaten_Simalungun",
+            "wikivoyage_url": null,
+            "wikivoyage_language": null,
+            "labels": {
+                "id": "Simalungun",
+                "en": "Simalungun"
+            },
+            "aliases": {
+                "id": [
+                    "Kab. Simalungun",
+                    "Kabupaten Simalungun",
+                    "Kabupaten Simelungun"
+                ],
+                "en": [
+                    "Simalungun Regency"
+                ]
+            }
+        },
+        "Kabupaten Tapanuli Selatan": {
+            "qid": "Q5914",
+            "type": "Kabupaten",
+            "wikidata_label": "Tapanuli Selatan",
+            "wikidata_url": "http://www.wikidata.org/entity/Q5914",
+            "latitude": 1.517652,
+            "longitude": 99.30107,
+            "image_filename": "Welcome gate to South Tapanuli Regency - Gapura Kabupaten Tapanuli Selatan (Tapsel-Tapteng) (01).jpg",
+            "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Welcome%20gate%20to%20South%20Tapanuli%20Regency%20-%20Gapura%20Kabupaten%20Tapanuli%20Selatan%20%28Tapsel-Tapteng%29%20%2801%29.jpg",
+            "image_page_url": "https://commons.wikimedia.org/wiki/File:Welcome%20gate%20to%20South%20Tapanuli%20Regency%20-%20Gapura%20Kabupaten%20Tapanuli%20Selatan%20%28Tapsel-Tapteng%29%20%2801%29.jpg",
+            "website_url": "http://www.tapselkab.go.id/",
+            "population": {
+                "amount": "264108",
+                "rank": "NormalRank",
+                "as_of": null,
+                "unit_qid": null,
+                "normalized": null
+            },
+            "area": {
+                "amount": "4367",
+                "rank": "NormalRank",
+                "as_of": null,
+                "unit_qid": "Q712226",
+                "normalized": {
+                    "amount": "4367000000",
+                    "rank": "NormalRank",
+                    "as_of": null,
+                    "unit_qid": "Q25343",
+                    "normalized": null
+                }
+            },
+            "wikipedia_url": "https://id.wikipedia.org/wiki/Kabupaten_Tapanuli_Selatan",
+            "wikivoyage_url": null,
+            "wikivoyage_language": null,
+            "labels": {
+                "id": "Tapanuli Selatan",
+                "en": "South Tapanuli"
+            },
+            "aliases": {
+                "id": [
+                    "Kab. Tapanuli Selatan",
+                    "Kabupaten Daerah Tingkat II Tapanuli Selatan",
+                    "Kabupaten Tapanuli Selatan",
+                    "Tapsel"
+                ],
+                "en": [
+                    "South Tapanuli Regency"
+                ]
+            }
+        },
+        "Kabupaten Tapanuli Tengah": {
+            "qid": "Q5800",
+            "type": "Kabupaten",
+            "wikidata_label": "Tapanuli Tengah",
+            "wikidata_url": "http://www.wikidata.org/entity/Q5800",
+            "latitude": 1.9,
+            "longitude": 98.66667,
+            "image_filename": null,
+            "image_url": null,
+            "image_page_url": null,
+            "website_url": "http://www.tapteng.go.id/",
+            "population": {
+                "amount": "310962",
+                "rank": "NormalRank",
+                "as_of": null,
+                "unit_qid": null,
+                "normalized": null
+            },
+            "area": {
+                "amount": "2158",
+                "rank": "NormalRank",
+                "as_of": null,
+                "unit_qid": "Q712226",
+                "normalized": {
+                    "amount": "2158000000",
+                    "rank": "NormalRank",
+                    "as_of": null,
+                    "unit_qid": "Q25343",
+                    "normalized": null
+                }
+            },
+            "wikipedia_url": "https://id.wikipedia.org/wiki/Kabupaten_Tapanuli_Tengah",
+            "wikivoyage_url": null,
+            "wikivoyage_language": null,
+            "labels": {
+                "id": "Tapanuli Tengah",
+                "en": "Central Tapanuli"
+            },
+            "aliases": {
+                "id": [
+                    "Kab. Tapanuli Tengah",
+                    "Kabupaten Daerah Tingkat II Tapanuli Tengah",
+                    "Kabupaten Tapanuli Tengah"
+                ],
+                "en": [
+                    "Central Tapanuli Regency"
+                ]
+            }
+        },
+        "Kabupaten Tapanuli Utara": {
+            "qid": "Q5863",
+            "type": "Kabupaten",
+            "wikidata_label": "Tapanuli Utara",
+            "wikidata_url": "http://www.wikidata.org/entity/Q5863",
+            "latitude": 2.0028,
+            "longitude": 99.0707,
+            "image_filename": "Welcome gate to Tapanuli Utara, Sumatra Utara (Taput-Tobasa).jpg",
+            "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Welcome%20gate%20to%20Tapanuli%20Utara%2C%20Sumatra%20Utara%20%28Taput-Tobasa%29.jpg",
+            "image_page_url": "https://commons.wikimedia.org/wiki/File:Welcome%20gate%20to%20Tapanuli%20Utara%2C%20Sumatra%20Utara%20%28Taput-Tobasa%29.jpg",
+            "website_url": "http://www.taputkab.go.id/",
+            "population": {
+                "amount": "278897",
+                "rank": "NormalRank",
+                "as_of": null,
+                "unit_qid": null,
+                "normalized": null
+            },
+            "area": {
+                "amount": "3764.65",
+                "rank": "NormalRank",
+                "as_of": null,
+                "unit_qid": "Q712226",
+                "normalized": {
+                    "amount": "3764650000",
+                    "rank": "NormalRank",
+                    "as_of": null,
+                    "unit_qid": "Q25343",
+                    "normalized": null
+                }
+            },
+            "wikipedia_url": "https://id.wikipedia.org/wiki/Kabupaten_Tapanuli_Utara",
+            "wikivoyage_url": null,
+            "wikivoyage_language": null,
+            "labels": {
+                "id": "Tapanuli Utara",
+                "en": "North Tapanuli"
+            },
+            "aliases": {
+                "id": [
+                    "Daerah Tingkat II Tapanuli Utara",
+                    "Kab. Tapanuli Utara",
+                    "Kabupaten Daerah Tingkat II Tapanuli Utara",
+                    "Kabupaten Tapanuli Utara",
+                    "Taput"
+                ],
+                "en": [
+                    "North Tapanuli Regency",
+                    "Taput"
+                ]
+            }
+        },
+        "Kabupaten Toba": {
+            "qid": "Q5911",
+            "type": "Kabupaten",
+            "wikidata_label": "Toba",
+            "wikidata_url": "http://www.wikidata.org/entity/Q5911",
+            "latitude": 2.39793,
+            "longitude": 99.21678,
+            "image_filename": null,
+            "image_url": null,
+            "image_page_url": null,
+            "website_url": "http://www.tobasamosirkab.go.id/",
+            "population": {
+                "amount": "168596",
+                "rank": "NormalRank",
+                "as_of": null,
+                "unit_qid": null,
+                "normalized": null
+            },
+            "area": {
+                "amount": "2352.35",
+                "rank": "NormalRank",
+                "as_of": null,
+                "unit_qid": "Q712226",
+                "normalized": {
+                    "amount": "2352350000",
+                    "rank": "NormalRank",
+                    "as_of": null,
+                    "unit_qid": "Q25343",
+                    "normalized": null
+                }
+            },
+            "wikipedia_url": "https://id.wikipedia.org/wiki/Kabupaten_Toba",
+            "wikivoyage_url": null,
+            "wikivoyage_language": null,
+            "labels": {
+                "id": "Toba",
+                "en": "Toba"
+            },
+            "aliases": {
+                "id": [
+                    "Kab. Toba",
+                    "Kab. Toba Samosir",
+                    "Kabupaten Daerah Tingkat II Toba Samosir",
+                    "Kabupaten Toba",
+                    "Kabupaten Toba Samosir",
+                    "Toba Samosir",
+                    "Tobasa"
+                ],
+                "en": [
+                    "Toba Regency",
+                    "Toba Samosir",
+                    "Toba Samosir Regency"
+                ]
+            }
+        },
+        "Kota Binjai": {
+            "qid": "Q5954",
+            "type": "Kota",
+            "wikidata_label": "Binjai",
+            "wikidata_url": "http://www.wikidata.org/entity/Q5954",
+            "latitude": 3.6,
+            "longitude": 98.485277777,
+            "image_filename": "Welcome gate to city of Binjai (Binjai-Deli Serdang).jpg",
+            "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Welcome%20gate%20to%20city%20of%20Binjai%20%28Binjai-Deli%20Serdang%29.jpg",
+            "image_page_url": "https://commons.wikimedia.org/wiki/File:Welcome%20gate%20to%20city%20of%20Binjai%20%28Binjai-Deli%20Serdang%29.jpg",
+            "website_url": "http://www.binjaikota.go.id/",
+            "population": {
+                "amount": "269053",
+                "rank": "NormalRank",
+                "as_of": "2015-01-01T00:00:00Z",
+                "unit_qid": null,
+                "normalized": null
+            },
+            "area": {
+                "amount": "90.236",
+                "rank": "NormalRank",
+                "as_of": null,
+                "unit_qid": "Q712226",
+                "normalized": {
+                    "amount": "90236000",
+                    "rank": "NormalRank",
+                    "as_of": null,
+                    "unit_qid": "Q25343",
+                    "normalized": null
+                }
+            },
+            "wikipedia_url": "https://id.wikipedia.org/wiki/Kota_Binjai",
+            "wikivoyage_url": "https://en.wikivoyage.org/wiki/Binjai",
+            "wikivoyage_language": "en",
+            "labels": {
+                "id": "Binjai",
+                "en": "Binjai"
+            },
+            "aliases": {
+                "id": [
+                    "Binjai",
+                    "Kota Binjai",
+                    "Kota Kecil Binjai",
+                    "Kotamadya Daerah Tingkat II Binjai",
+                    "Kotapraja Binjai"
+                ],
+                "en": [
+                    "Binjai City"
+                ]
+            }
+        },
+        "Kota Gunungsitoli": {
+            "qid": "Q5967",
+            "type": "Kota",
+            "wikidata_label": "Gunungsitoli",
+            "wikidata_url": "http://www.wikidata.org/entity/Q5967",
+            "latitude": 1.116666666,
+            "longitude": 97.566666666,
+            "image_filename": "Durian Monument, Gunungsitoli.jpg",
+            "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Durian%20Monument%2C%20Gunungsitoli.jpg",
+            "image_page_url": "https://commons.wikimedia.org/wiki/File:Durian%20Monument%2C%20Gunungsitoli.jpg",
+            "website_url": null,
+            "population": {
+                "amount": "137104",
+                "rank": "NormalRank",
+                "as_of": "2015-01-01T00:00:00Z",
+                "unit_qid": null,
+                "normalized": null
+            },
+            "area": {
+                "amount": "280.8",
+                "rank": "NormalRank",
+                "as_of": null,
+                "unit_qid": "Q712226",
+                "normalized": {
+                    "amount": "280800000",
+                    "rank": "NormalRank",
+                    "as_of": null,
+                    "unit_qid": "Q25343",
+                    "normalized": null
+                }
+            },
+            "wikipedia_url": "https://id.wikipedia.org/wiki/Kota_Gunungsitoli",
+            "wikivoyage_url": null,
+            "wikivoyage_language": null,
+            "labels": {
+                "id": "Gunungsitoli",
+                "en": "Gunungsitoli"
+            },
+            "aliases": {
+                "id": [
+                    "Gunung Sitoli",
+                    "Kota Gunung Sitoli",
+                    "Kota Gunungsitoli"
+                ],
+                "en": [
+                    "Gunung Sitoli",
+                    "Gunung Sitoli City",
+                    "Gunungsitoli City"
+                ]
+            }
+        },
+        "Kota Medan": {
+            "qid": "Q5972",
+            "type": "Kota",
+            "wikidata_label": "Medan",
+            "wikidata_url": "http://www.wikidata.org/entity/Q5972",
+            "latitude": 3.589444444,
+            "longitude": 98.673888888,
+            "image_filename": "Medan city 2019 (cropped).jpg",
+            "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Medan%20city%202019%20%28cropped%29.jpg",
+            "image_page_url": "https://commons.wikimedia.org/wiki/File:Medan%20city%202019%20%28cropped%29.jpg",
+            "website_url": "https://portal.medan.go.id/",
+            "population": {
+                "amount": "2109330",
+                "rank": "NormalRank",
+                "as_of": "2010-01-01T00:00:00Z",
+                "unit_qid": null,
+                "normalized": null
+            },
+            "area": {
+                "amount": "265100000",
+                "rank": "NormalRank",
+                "as_of": null,
+                "unit_qid": "Q25343",
+                "normalized": {
+                    "amount": "265100000",
+                    "rank": "NormalRank",
+                    "as_of": null,
+                    "unit_qid": "Q25343",
+                    "normalized": null
+                }
+            },
+            "wikipedia_url": "https://id.wikipedia.org/wiki/Kota_Medan",
+            "wikivoyage_url": "https://id.wikivoyage.org/wiki/Medan",
+            "wikivoyage_language": "id",
+            "labels": {
+                "id": "Medan",
+                "en": "Medan"
+            },
+            "aliases": {
+                "id": [
+                    "Kota Besar Medan",
+                    "Kotamadya Daerah Tingkat II Medan",
+                    "Kotapraja Medan"
+                ],
+                "en": [
+                    "Medan City"
+                ]
+            }
+        },
+        "Kota Pematang Siantar": {
+            "qid": "Q5979",
+            "type": "Kota",
+            "wikidata_label": "Pematang Siantar",
+            "wikidata_url": "http://www.wikidata.org/entity/Q5979",
+            "latitude": 2.96,
+            "longitude": 99.06,
+            "image_filename": "Balai Kota Pematangsiantar 02.jpg",
+            "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Balai%20Kota%20Pematangsiantar%2002.jpg",
+            "image_page_url": "https://commons.wikimedia.org/wiki/File:Balai%20Kota%20Pematangsiantar%2002.jpg",
+            "website_url": "https://pematangsiantar.go.id/",
+            "population": {
+                "amount": "278055",
+                "rank": "NormalRank",
+                "as_of": "2015-01-01T00:00:00Z",
+                "unit_qid": null,
+                "normalized": null
+            },
+            "area": {
+                "amount": "79.97",
+                "rank": "NormalRank",
+                "as_of": null,
+                "unit_qid": "Q712226",
+                "normalized": {
+                    "amount": "79970000",
+                    "rank": "NormalRank",
+                    "as_of": null,
+                    "unit_qid": "Q25343",
+                    "normalized": null
+                }
+            },
+            "wikipedia_url": "https://id.wikipedia.org/wiki/Kota_Pematangsiantar",
+            "wikivoyage_url": "https://id.wikivoyage.org/wiki/Pematangsiantar",
+            "wikivoyage_language": "id",
+            "labels": {
+                "id": "Pematang Siantar",
+                "en": "Pematangsiantar"
+            },
+            "aliases": {
+                "id": [
+                    "Kota Besar Pematang Siantar",
+                    "Kota Pematang Siantar",
+                    "Kota Pematang Siantar, Sumatera Utara",
+                    "Kota Pematangsiantar",
+                    "Kota Pematangsiantar, Sumatera Utara",
+                    "Kotapraja Pematang Siantar",
+                    "Pematang Siantar",
+                    "Pematang-Siantar",
+                    "siantar"
+                ],
+                "en": [
+                    "Pematang Siantar",
+                    "Pematangsiantar City"
+                ]
+            }
+        },
+        "Kota Sibolga": {
+            "qid": "Q5984",
+            "type": "Kota",
+            "wikidata_label": "Sibolga",
+            "wikidata_url": "http://www.wikidata.org/entity/Q5984",
+            "latitude": 1.7425,
+            "longitude": 98.779166666,
+            "image_filename": "Sibolga-pasar-2013-10-18.jpg",
+            "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Sibolga-pasar-2013-10-18.jpg",
+            "image_page_url": "https://commons.wikimedia.org/wiki/File:Sibolga-pasar-2013-10-18.jpg",
+            "website_url": null,
+            "population": {
+                "amount": "94971",
+                "rank": "NormalRank",
+                "as_of": "2015-01-01T00:00:00Z",
+                "unit_qid": null,
+                "normalized": null
+            },
+            "area": {
+                "amount": "10.77",
+                "rank": "NormalRank",
+                "as_of": null,
+                "unit_qid": "Q712226",
+                "normalized": {
+                    "amount": "10770000",
+                    "rank": "NormalRank",
+                    "as_of": null,
+                    "unit_qid": "Q25343",
+                    "normalized": null
+                }
+            },
+            "wikipedia_url": "https://id.wikipedia.org/wiki/Kota_Sibolga",
+            "wikivoyage_url": "https://id.wikivoyage.org/wiki/Sibolga",
+            "wikivoyage_language": "id",
+            "labels": {
+                "id": "Sibolga",
+                "en": "Sibolga"
+            },
+            "aliases": {
+                "id": [
+                    "Kota Besar Sibolga",
+                    "Kota Sibolga",
+                    "Kotamadya Daerah Tingkat II Sibolga",
+                    "Kotapraja Sibolga",
+                    "Negeri Berbilang Kaum",
+                    "Siboga",
+                    "Sibolga",
+                    "Sibolga Nauli"
+                ],
+                "en": [
+                    "Siboga",
+                    "Sibolga City"
+                ]
+            }
+        },
+        "Kota Tebing Tinggi": {
+            "qid": "Q5989",
+            "type": "Kota",
+            "wikidata_label": "Tebing Tinggi",
+            "wikidata_url": "http://www.wikidata.org/entity/Q5989",
+            "latitude": 3.328333333,
+            "longitude": 99.1625,
+            "image_filename": "TebingTinggi.JPG",
+            "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/TebingTinggi.JPG",
+            "image_page_url": "https://commons.wikimedia.org/wiki/File:TebingTinggi.JPG",
+            "website_url": null,
+            "population": {
+                "amount": "169786",
+                "rank": "NormalRank",
+                "as_of": "2015-01-01T00:00:00Z",
+                "unit_qid": null,
+                "normalized": null
+            },
+            "area": {
+                "amount": "31",
+                "rank": "NormalRank",
+                "as_of": null,
+                "unit_qid": "Q712226",
+                "normalized": {
+                    "amount": "31000000",
+                    "rank": "NormalRank",
+                    "as_of": null,
+                    "unit_qid": "Q25343",
+                    "normalized": null
+                }
+            },
+            "wikipedia_url": "https://id.wikipedia.org/wiki/Kota_Tebing_Tinggi",
+            "wikivoyage_url": null,
+            "wikivoyage_language": null,
+            "labels": {
+                "id": "Tebing Tinggi",
+                "en": "Tebing Tinggi"
+            },
+            "aliases": {
+                "id": [
+                    "Kota Kecil Tebing Tinggi",
+                    "Kota Tebing Tinggi",
+                    "Kota Tebing Tinggi, Sumatera Utara",
+                    "Kotapraja Tebing Tinggi"
+                ],
+                "en": [
+                    "Tebing Tinggi City"
+                ]
+            }
+        }
+    }
+}

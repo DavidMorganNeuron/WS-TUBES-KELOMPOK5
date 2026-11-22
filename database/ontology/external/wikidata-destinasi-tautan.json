@@ -1,0 +1,41 @@
+{
+    "schema_version": 1,
+    "retrieved_at": "2026-11-15T11:57:42+07:00",
+    "tourism_class": {
+        "qid": "Q570116",
+        "label": "tourist attraction",
+        "label_language": "en"
+    },
+    "search": {
+        "south_west": [
+            0.5,
+            97
+        ],
+        "north_east": [
+            4.5,
+            100.5
+        ]
+    },
+    "setuju": [
+        {
+            "id": "ws-049",
+            "qid": "Q136687552",
+            "reason": "Nama ternormalisasi sama persis, jarak paling banyak 0,5 km, dan tautan satu-ke-satu."
+        }
+    ],
+    "tolak": [],
+    "ditolak_otomatis": [
+        {
+            "id": "ws-195",
+            "qid": "Q12490160",
+            "reason": "Kemiripan nama kurang dari 90%; jarak saja tidak cukup untuk menyetujui identitas."
+        }
+    ],
+    "ambigu": [
+        {
+            "id": "ws-108",
+            "qid": "Q107339315",
+            "reason": "Nama sangat mirip, tetapi jarak melebihi ambang persetujuan otomatis 0,5 km."
+        }
+    ]
+}

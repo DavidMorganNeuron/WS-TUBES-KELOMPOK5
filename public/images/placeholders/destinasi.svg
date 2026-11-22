@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" role="img" aria-label="Destination placeholder">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#e6f2e8"/>
+      <stop offset="1" stop-color="#9cc7ab"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#sky)"/>
+  <path d="M0 640 L240 420 L420 580 L620 350 L860 600 L1040 460 L1200 640 L1200 800 L0 800 Z" fill="#0f5132" opacity=".85"/>
+  <circle cx="600" cy="330" r="120" fill="#f8f4e6" opacity=".75"/>
+  <text x="70" y="130" fill="#0b2921" font-family="Georgia, serif" font-size="54" font-weight="700">Destination</text>
+  <text x="70" y="185" fill="#255b43" font-family="Arial, sans-serif" font-size="26" letter-spacing="4">NORTH SUMATRA</text>
+</svg>

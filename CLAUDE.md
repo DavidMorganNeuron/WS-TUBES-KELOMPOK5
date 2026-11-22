@@ -1,3 +1,14 @@
+## Aturan proyek WayFinder
+
+- Gunakan bahasa Indonesia untuk dokumentasi dan teks antarmuka baru.
+- Jangan membaca, menyalin, atau mengubah `.env`; gunakan `.env.example` sebagai contoh konfigurasi.
+- Jangan mengubah berkas chatbot atau peta milik rekan tanpa persetujuan. Pertahankan `ChatbotTest` dan jalankan tes tersebut sebagai gerbang integrasi.
+- Jangan mengedit graph v3 secara manual. Ubah sumber/generator yang relevan, jalankan `php artisan ontology:migrate-v3`, lalu `php artisan ontology:validate`.
+- QID destinasi hanya boleh masuk ke graph melalui daftar persetujuan `database/ontology/external/wikidata-destinasi-tautan.json`; jangan membangun query Wikidata dari input HTTP.
+- Jangan mengubah dependensi tanpa persetujuan. Audit Composer/npm bersifat pelaporan, bukan perintah untuk memperbarui paket otomatis.
+- Sebelum menyelesaikan perubahan, jalankan tes terfokus, pemeriksaan format yang sesuai, dan `git diff --check`. Jangan push kecuali diminta.
+- Ikuti dokumentasi proyek di `README.md` dan `docs/`, khususnya [arsitektur](docs/ARSITEKTUR.md), [pencarian](docs/fitur-pencarian.md), serta [smoke test](docs/SMOKE-TEST.md).
+
 <laravel-boost-guidelines>
 === foundation rules ===
 

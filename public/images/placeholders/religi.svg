@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" role="img" aria-label="Religious destination placeholder">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#e7e8f0"/>
+      <stop offset="1" stop-color="#aeb4c8"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#sky)"/>
+  <circle cx="600" cy="380" r="250" fill="#f7f4ea" opacity=".55"/>
+  <rect x="470" y="430" width="260" height="250" fill="#4b5563"/>
+  <path d="M430 440 L600 250 L770 440 Z" fill="#374151"/>
+  <rect x="575" y="300" width="50" height="140" fill="#e5e7eb"/>
+  <circle cx="600" cy="250" r="24" fill="#e5e7eb"/>
+  <rect x="520" y="560" width="160" height="120" fill="#1f2937"/>
+  <path d="M0 700 L1200 700 L1200 800 L0 800 Z" fill="#374151" opacity=".35"/>
+  <text x="70" y="130" fill="#1f2937" font-family="Georgia, serif" font-size="54" font-weight="700">Religious</text>
+  <text x="70" y="185" fill="#4b5563" font-family="Arial, sans-serif" font-size="26" letter-spacing="4">PLACES OF WORSHIP</text>
+</svg>

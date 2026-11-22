@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" role="img" aria-label="Culinary destination placeholder">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff2cf"/>
+      <stop offset="1" stop-color="#f0c96d"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#sky)"/>
+  <circle cx="600" cy="470" r="235" fill="#fffaf0" stroke="#b45309" stroke-width="16"/>
+  <circle cx="600" cy="470" r="160" fill="#fef3c7"/>
+  <path d="M480 470 Q600 360 720 470 Q600 580 480 470 Z" fill="#65a30d"/>
+  <circle cx="560" cy="450" r="34" fill="#c2410c"/>
+  <circle cx="645" cy="500" r="28" fill="#dc2626"/>
+  <path d="M420 300 L480 250 L500 330 Z" fill="#92400e"/>
+  <path d="M780 300 L720 250 L700 330 Z" fill="#92400e"/>
+  <text x="70" y="130" fill="#5b2c06" font-family="Georgia, serif" font-size="54" font-weight="700">Culinary</text>
+  <text x="70" y="185" fill="#92400e" font-family="Arial, sans-serif" font-size="26" letter-spacing="4">FARMS &amp; MARKETS</text>
+</svg>

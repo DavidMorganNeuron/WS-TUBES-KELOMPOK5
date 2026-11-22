@@ -1,0 +1,37 @@
+{
+    "schema_version": 1,
+    "source": "Wikidata Query Service",
+    "query_url": "https://query.wikidata.org/sparql",
+    "retrieved_at": "2026-11-15T12:21:51+07:00",
+    "verification": {
+        "approved_destinations": 1,
+        "with_image": 1,
+        "with_wikipedia": 0,
+        "with_wikivoyage": 0,
+        "with_heritage_status": 0,
+        "with_elevation": 0,
+        "with_establishment_year": 0
+    },
+    "destinations": {
+        "ws-049": {
+            "qid": "Q136687552",
+            "labels": {
+                "id": null,
+                "en": "Medan Zoo"
+            },
+            "aliases": {
+                "id": null,
+                "en": null
+            },
+            "image_filename": "LailanAmelia-13Mei2020.jpg",
+            "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/LailanAmelia-13Mei2020.jpg",
+            "image_page_url": "https://commons.wikimedia.org/wiki/File:LailanAmelia-13Mei2020.jpg",
+            "wikipedia_url": null,
+            "wikivoyage_url": null,
+            "wikivoyage_language": null,
+            "heritage_statuses": [],
+            "elevation_m": null,
+            "establishment_year": null
+        }
+    }
+}

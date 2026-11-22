@@ -1,0 +1,190 @@
+{
+  "source": "Wikidata Query Service",
+  "retrieved_at": "2026-11-14",
+  "query_url": "https://query.wikidata.org/sparql",
+  "verification": {
+    "province_qid": "Q2140",
+    "country_qid": "Q252",
+    "required_parent": "Q2140",
+    "required_country_label": "Indonesia",
+    "accepted_type_labels": [
+      "city of Indonesia",
+      "regency of Indonesia"
+    ]
+  },
+  "regions": {
+    "Kabupaten Asahan": {
+      "qid": "Q1795",
+      "type": "Kabupaten"
+    },
+    "Kabupaten Batu Bara": {
+      "qid": "Q5797",
+      "type": "Kabupaten"
+    },
+    "Kabupaten Dairi": {
+      "qid": "Q5801",
+      "type": "Kabupaten"
+    },
+    "Kabupaten Deli Serdang": {
+      "qid": "Q5804",
+      "type": "Kabupaten"
+    },
+    "Kabupaten Humbang Hasundutan": {
+      "qid": "Q5808",
+      "type": "Kabupaten"
+    },
+    "Kabupaten Karo": {
+      "qid": "Q5810",
+      "type": "Kabupaten"
+    },
+    "Kabupaten Labuhanbatu": {
+      "qid": "Q5814",
+      "type": "Kabupaten"
+    },
+    "Kabupaten Labuhanbatu Selatan": {
+      "qid": "Q5905",
+      "type": "Kabupaten"
+    },
+    "Kabupaten Labuhanbatu Utara": {
+      "qid": "Q5842",
+      "type": "Kabupaten"
+    },
+    "Kabupaten Langkat": {
+      "qid": "Q5833",
+      "type": "Kabupaten"
+    },
+    "Kabupaten Mandailing Natal": {
+      "qid": "Q5837",
+      "type": "Kabupaten"
+    },
+    "Kabupaten Nias Barat": {
+      "qid": "Q5909",
+      "type": "Kabupaten"
+    },
+    "Kabupaten Nias Selatan": {
+      "qid": "Q5918",
+      "type": "Kabupaten"
+    },
+    "Kabupaten Nias Utara": {
+      "qid": "Q5853",
+      "type": "Kabupaten"
+    },
+    "Kabupaten Padang Lawas": {
+      "qid": "Q5866",
+      "type": "Kabupaten"
+    },
+    "Kabupaten Padang Lawas Utara": {
+      "qid": "Q5857",
+      "type": "Kabupaten"
+    },
+    "Kabupaten Pakpak Bharat": {
+      "qid": "Q5872",
+      "type": "Kabupaten"
+    },
+    "Kabupaten Samosir": {
+      "qid": "Q5888",
+      "type": "Kabupaten"
+    },
+    "Kabupaten Serdang Bedagai": {
+      "qid": "Q5899",
+      "type": "Kabupaten"
+    },
+    "Kabupaten Simalungun": {
+      "qid": "Q5903",
+      "type": "Kabupaten"
+    },
+    "Kabupaten Tapanuli Selatan": {
+      "qid": "Q5914",
+      "type": "Kabupaten"
+    },
+    "Kabupaten Tapanuli Tengah": {
+      "qid": "Q5800",
+      "type": "Kabupaten"
+    },
+    "Kabupaten Tapanuli Utara": {
+      "qid": "Q5863",
+      "type": "Kabupaten"
+    },
+    "Kabupaten Toba": {
+      "qid": "Q5911",
+      "type": "Kabupaten"
+    },
+    "Kota Binjai": {
+      "qid": "Q5954",
+      "type": "Kota"
+    },
+    "Kota Gunungsitoli": {
+      "qid": "Q5967",
+      "type": "Kota"
+    },
+    "Kota Medan": {
+      "qid": "Q5972",
+      "type": "Kota"
+    },
+    "Kota Pematang Siantar": {
+      "qid": "Q5979",
+      "type": "Kota"
+    },
+    "Kota Sibolga": {
+      "qid": "Q5984",
+      "type": "Kota"
+    },
+    "Kota Tebing Tinggi": {
+      "qid": "Q5989",
+      "type": "Kota"
+    }
+  },
+  "boundaries": [
+    ["Q1795", "Q5797"],
+    ["Q1795", "Q5842"],
+    ["Q1795", "Q5903"],
+    ["Q1795", "Q5911"],
+    ["Q5797", "Q5899"],
+    ["Q5797", "Q5903"],
+    ["Q5801", "Q5810"],
+    ["Q5801", "Q5872"],
+    ["Q5801", "Q5888"],
+    ["Q5804", "Q5954"],
+    ["Q5804", "Q5810"],
+    ["Q5804", "Q5833"],
+    ["Q5804", "Q5972"],
+    ["Q5804", "Q5888"],
+    ["Q5804", "Q5899"],
+    ["Q5804", "Q5903"],
+    ["Q5808", "Q5872"],
+    ["Q5808", "Q5888"],
+    ["Q5808", "Q5863"],
+    ["Q5810", "Q5833"],
+    ["Q5810", "Q5903"],
+    ["Q5814", "Q5905"],
+    ["Q5814", "Q5842"],
+    ["Q5814", "Q5857"],
+    ["Q5842", "Q5857"],
+    ["Q5842", "Q5914"],
+    ["Q5842", "Q5863"],
+    ["Q5842", "Q5911"],
+    ["Q5833", "Q5954"],
+    ["Q5837", "Q5866"],
+    ["Q5837", "Q5914"],
+    ["Q5909", "Q5967"],
+    ["Q5909", "Q5918"],
+    ["Q5853", "Q5967"],
+    ["Q5853", "Q5909"],
+    ["Q5866", "Q5914"],
+    ["Q5857", "Q5905"],
+    ["Q5857", "Q5866"],
+    ["Q5857", "Q5914"],
+    ["Q5872", "Q5888"],
+    ["Q5899", "Q5903"],
+    ["Q5899", "Q5989"],
+    ["Q5903", "Q5979"],
+    ["Q5903", "Q5911"],
+    ["Q5800", "Q5808"],
+    ["Q5800", "Q5872"],
+    ["Q5800", "Q5984"],
+    ["Q5800", "Q5914"],
+    ["Q5800", "Q5863"],
+    ["Q5863", "Q5914"],
+    ["Q5863", "Q5911"]
+  ]
+}
