@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Services\Ontology\DestinationLinkedDataProvider;
 use App\Services\Ontology\DestinationRepository;
+<<<<<<< HEAD
 use App\Services\Ontology\WikidataRegionRepository;
 use App\Services\Seo\SeoDataFactory;
+=======
+>>>>>>> ee7c4b41627891394572865c2960230988e32b45
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -47,6 +50,53 @@ class DestinationController extends Controller
     }
 
     public function live(Request $request, DestinationRepository $repository): JsonResponse
+<<<<<<< HEAD
+=======
+    {
+        $this->validateFilterInputs($request);
+        $sorts = $this->sorts();
+
+        $facets = $repository->facets();
+        $filters = $this->filters($request, array_keys($sorts), array_keys($facets['kabupaten']));
+        $filters['sort'] ??= 'name';
+
+        $destinations = $repository->paginate($filters)->withQueryString();
+        $destinations->setPath(route('destinations'));
+
+        return response()->json([
+            'html' => view('partials.destination-results', [
+                'destinations' => $destinations,
+            ])->render(),
+            'total' => $destinations->total(),
+            'first_item' => $destinations->firstItem() ?? 0,
+            'last_item' => $destinations->lastItem() ?? 0,
+            'count' => $destinations->count(),
+            'has_filters' => $this->hasActiveFilters($filters),
+        ]);
+    }
+
+    public function suggest(Request $request, DestinationRepository $repository): JsonResponse
+    {
+        $request->validate([
+            'q' => ['sometimes', 'nullable', 'string', 'max:200'],
+        ]);
+
+        $query = $request->string('q')->trim()->toString();
+
+        $destinations = $query === ''
+            ? collect()
+            : $repository->search(['q' => $query, 'sort' => 'rating'])->take(8);
+
+        return response()->json([
+            'html' => view('partials.destination-suggestions', [
+                'destinations' => $destinations,
+            ])->render(),
+            'count' => $destinations->count(),
+        ]);
+    }
+
+    public function show(string $id, DestinationRepository $repository): View
+>>>>>>> ee7c4b41627891394572865c2960230988e32b45
     {
         $this->validateFilterInputs($request);
         $sorts = $this->sorts();
@@ -161,8 +211,11 @@ class DestinationController extends Controller
             'jenis' => ['sometimes', 'nullable', 'string', 'max:64'],
             'kabupaten' => ['sometimes', 'nullable', 'string', 'max:100'],
             'sort' => ['sometimes', 'nullable', 'string', 'max:32'],
+<<<<<<< HEAD
             'dapatMelakukan' => ['sometimes', 'nullable', 'string', 'max:100'],
             'memilikiFasilitas' => ['sometimes', 'nullable', 'string', 'max:100'],
+=======
+>>>>>>> ee7c4b41627891394572865c2960230988e32b45
         ]);
     }
 
@@ -231,6 +284,17 @@ class DestinationController extends Controller
             || ($filters['kabupaten'] ?? '') !== ''
             || ($filters['dapatMelakukan'] ?? '') !== ''
             || ($filters['memilikiFasilitas'] ?? '') !== ''
+            || ($filters['sort'] ?? 'name') !== 'name';
+    }
+
+    /**
+     * @param  array{q?: string, jenis?: string, kabupaten?: string, sort?: string}  $filters
+     */
+    private function hasActiveFilters(array $filters): bool
+    {
+        return ($filters['q'] ?? '') !== ''
+            || ($filters['jenis'] ?? '') !== ''
+            || ($filters['kabupaten'] ?? '') !== ''
             || ($filters['sort'] ?? 'name') !== 'name';
     }
 }

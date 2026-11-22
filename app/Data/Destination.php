@@ -106,6 +106,7 @@ final readonly class Destination
             $attributions = require __DIR__.'/destination_images.php';
         }
 
+<<<<<<< HEAD
         $attribution = $attributions[$this->id] ?? null;
         if ($attribution === null) {
             return null;
@@ -128,6 +129,9 @@ final readonly class Destination
         $sourceFile = str_replace('_', ' ', rawurldecode(substr($sourcePath, strlen($sourcePrefix))));
 
         return $mediaFile === $sourceFile ? $attribution : null;
+=======
+        return $attributions[$this->id] ?? null;
+>>>>>>> ee7c4b41627891394572865c2960230988e32b45
     }
 
     /**
@@ -157,7 +161,11 @@ final readonly class Destination
             return self::formatPrice((string) min(array_map(floatval(...), $numeric)));
         }
 
+<<<<<<< HEAD
         return isset($this->prices[0]) ? self::formatPrice($this->prices[0]) : (string) config('ontology.unknown_label');
+=======
+        return isset($this->prices[0]) ? self::formatPrice($this->prices[0]) : '—';
+>>>>>>> ee7c4b41627891394572865c2960230988e32b45
     }
 
     /**
@@ -173,10 +181,19 @@ final readonly class Destination
     private static function formatPrice(string $price): string
     {
         if (! is_numeric($price)) {
+<<<<<<< HEAD
             return Str::lower(trim($price)) === 'gratis' ? 'Gratis' : $price;
         }
 
         return IndonesianFormat::currency((float) $price);
+=======
+            return Str::lower(trim($price)) === 'gratis' ? 'Free' : $price;
+        }
+
+        $amount = (float) $price;
+
+        return $amount <= 0.0 ? 'Free' : 'Rp '.number_format($amount, 0, ',', '.');
+>>>>>>> ee7c4b41627891394572865c2960230988e32b45
     }
 
     private function mediaWithWidth(string $url, int $width): string

@@ -24,6 +24,7 @@
     ];
     $placeholder = asset('images/placeholders/'.($placeholderSlugs[$destination->primaryType()] ?? 'destinasi').'.svg');
     $hasContact = $destination->phone !== '' || $destination->email !== '' || $destination->instagram !== '';
+<<<<<<< HEAD
     $dataNamespace = config('ontology.namespaces.data');
     $scheduleResource = is_string($dataNamespace)
         ? rtrim($dataNamespace, '/').'/jadwal-'.$destination->id
@@ -37,6 +38,12 @@
     typeof="schema:TouristAttraction ws:DestinasiWisata"
     resource="{{ $linkedData->iri }}"
 >
+=======
+@endphp
+
+@section('content')
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full overflow-x-clip">
+>>>>>>> ee7c4b41627891394572865c2960230988e32b45
 
     <!-- Breadcrumb -->
     <div class="text-[11px] text-gray-500 font-medium mb-4 flex flex-wrap items-center gap-2">
@@ -57,9 +64,14 @@
                     'class' => ($typeClasses[$type] ?? 'bg-brand-primary text-white').' text-[10px] font-bold px-3 py-1 rounded-full flex items-center gap-1',
                 ])
             @endforeach
+<<<<<<< HEAD
             <span class="bg-gray-100 text-gray-700 text-[10px] font-bold px-3 py-1 rounded-full flex items-center gap-1">⭐ {{ $destination->ratingLabel() }}@if ($destination->rating !== null) / 5 @endif</span>
             @if ($destination->rating !== null)
                 <meta property="ws:ratingPengunjung" content="{{ json_encode($destination->rating, JSON_PRESERVE_ZERO_FRACTION) }}" datatype="xsd:decimal">
+=======
+            @if ($destination->rating !== null)
+                <span class="bg-gray-100 text-gray-700 text-[10px] font-bold px-3 py-1 rounded-full flex items-center gap-1">⭐ {{ $destination->ratingLabel() }} / 5</span>
+>>>>>>> ee7c4b41627891394572865c2960230988e32b45
             @endif
             @if ($destination->hasCoordinates())
                 <span class="bg-[#e8f5e9] text-[#0f5132] text-[10px] font-bold px-3 py-1 rounded-full border border-[#0f5132]/20">📍 Memiliki koordinat</span>
@@ -71,7 +83,11 @@
 
         <div class="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-6">
             <div class="min-w-0">
+<<<<<<< HEAD
                 <h1 class="text-4xl md:text-5xl font-serif font-bold text-gray-900 mb-2 leading-tight" property="schema:name ws:namaDestinasi">{{ $destination->name }}</h1>
+=======
+                <h1 class="text-4xl md:text-5xl font-serif font-bold text-gray-900 mb-2 leading-tight">{{ $destination->name }}</h1>
+>>>>>>> ee7c4b41627891394572865c2960230988e32b45
                 @if ($destination->alternativeName !== '' && $destination->alternativeName !== $destination->name)
                     <p class="text-lg text-gray-500 italic mb-2">{{ $destination->alternativeName }}</p>
                 @endif
@@ -88,8 +104,13 @@
                     class="bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-1 shadow-sm"
                     data-share-title="{{ $destination->name }}"
                     data-share-text="{{ $destination->shortDescription }}"
+<<<<<<< HEAD
                 >Bagikan</button>
                 <a href="{{ $destination->mapsUrl() }}" target="_blank" rel="noopener noreferrer" class="bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-1 shadow-sm">📍 Google Maps</a>
+=======
+                >Share</button>
+                <a href="{{ $destination->mapsUrl() }}" target="_blank" rel="noopener" class="bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 px-4 py-2 rounded-lg text-xs font-bold flex items-center gap-1 shadow-sm">📍 Google Maps</a>
+>>>>>>> ee7c4b41627891394572865c2960230988e32b45
                 <p id="share-status" class="sr-only" role="status" aria-live="polite"></p>
             </div>
         </div>
@@ -109,7 +130,11 @@
     <!-- Gallery -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10 md:h-[520px]">
         <div class="md:col-span-2 relative rounded-2xl overflow-hidden h-72 md:h-full min-h-0 bg-gray-200 skeleton-shimmer">
+<<<<<<< HEAD
             <img src="{{ $destination->media === '' ? $destination->imageUrl(1600) : $seo->imageUrl }}" @if (! $seo->isPlaceholderImage) property="schema:image" @endif class="absolute inset-0 w-full h-full object-cover transition-opacity duration-300" alt="{{ $destination->name }}" onload="this.closest('.skeleton-shimmer')?.classList.remove('skeleton-shimmer')" onerror="this.closest('.skeleton-shimmer')?.classList.remove('skeleton-shimmer')">
+=======
+            <img src="{{ $destination->imageUrl(1600) }}" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-300" alt="{{ $destination->name }}" onload="this.closest('.skeleton-shimmer')?.classList.remove('skeleton-shimmer')" onerror="this.closest('.skeleton-shimmer')?.classList.remove('skeleton-shimmer')">
+>>>>>>> ee7c4b41627891394572865c2960230988e32b45
             @include('partials.image-attribution', ['destination' => $destination])
             <div class="absolute bottom-0 left-0 w-full p-6 bg-gradient-to-t from-black/80 to-transparent text-white">
                 <div class="min-w-0">
@@ -123,10 +148,17 @@
             @if ($related->isNotEmpty())
                 <div class="flex items-end justify-between gap-3 mb-3">
                     <div>
+<<<<<<< HEAD
                         <p class="text-[10px] font-bold text-brand-accent uppercase tracking-widest">Rekomendasi</p>
                         <h2 class="text-lg font-serif font-bold text-gray-900 leading-tight">Anda mungkin juga menyukai</h2>
                     </div>
                     <a href="{{ route('destinations', ['jenis' => $destination->primaryType()]) }}" class="text-[11px] font-bold text-brand-accent hover:underline whitespace-nowrap">Lihat lainnya</a>
+=======
+                        <p class="text-[10px] font-bold text-brand-accent uppercase tracking-widest">Recommendations</p>
+                        <h2 class="text-lg font-serif font-bold text-gray-900 leading-tight">You may also like</h2>
+                    </div>
+                    <a href="{{ route('destinations', ['jenis' => $destination->primaryType()]) }}" class="text-[11px] font-bold text-brand-accent hover:underline whitespace-nowrap">See more</a>
+>>>>>>> ee7c4b41627891394572865c2960230988e32b45
                 </div>
             @endif
 
@@ -144,10 +176,17 @@
 
             @for ($index = $related->take(3)->count(); $index < 3; $index++)
                 <div class="relative rounded-2xl overflow-hidden h-28 md:h-auto min-h-0 bg-gray-200">
+<<<<<<< HEAD
                     <img src="{{ $placeholder }}" class="absolute inset-0 w-full h-full object-cover" alt="Gambar pengganti media {{ $destination->primaryType() }}">
                     <div class="absolute bottom-0 left-0 w-full p-3 bg-gradient-to-t from-black/80 to-transparent text-white">
                         <p class="text-[10px] font-bold truncate">{{ $destination->name }}</p>
                         <p class="text-[9px] text-gray-300">Media tambahan belum tercatat</p>
+=======
+                    <img src="{{ $placeholder }}" class="absolute inset-0 w-full h-full object-cover" alt="Placeholder for {{ $destination->primaryType() }} media">
+                    <div class="absolute bottom-0 left-0 w-full p-3 bg-gradient-to-t from-black/80 to-transparent text-white">
+                        <p class="text-[10px] font-bold truncate">{{ $destination->name }}</p>
+                        <p class="text-[9px] text-gray-300">Additional media not recorded</p>
+>>>>>>> ee7c4b41627891394572865c2960230988e32b45
                     </div>
                 </div>
             @endfor
@@ -165,11 +204,16 @@
     <!-- Content Grid -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
 
+<<<<<<< HEAD
         <!-- Sidebar (ringkasan pengunjung paling atas) -->
+=======
+        <!-- Sidebar (Visitor Snapshot paling atas) -->
+>>>>>>> ee7c4b41627891394572865c2960230988e32b45
         <aside class="space-y-6 lg:order-2 lg:sticky lg:top-24 min-w-0">
             <div class="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm">
                 <div class="flex justify-between items-start mb-4 gap-4">
                     <div class="min-w-0">
+<<<<<<< HEAD
                         <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-1">Ringkasan pengunjung</p>
                         <h3 class="text-xl font-serif font-bold text-gray-900 leading-snug">{{ $destination->name }}</h3>
                     </div>
@@ -197,13 +241,44 @@
 
                 <a href="{{ $destination->mapsUrl() }}" target="_blank" rel="noopener noreferrer" class="block text-center bg-brand-dark hover:bg-gray-800 text-white font-bold text-sm py-3 rounded-lg transition mb-3">
                     📍 Buka di Google Maps
+=======
+                        <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider mb-1">Visitor Snapshot</p>
+                        <h3 class="text-xl font-serif font-bold text-gray-900 leading-snug">{{ $destination->name }}</h3>
+                    </div>
+                    @if ($destination->rating !== null)
+                        <div class="text-right flex-shrink-0">
+                            <p class="text-[10px] text-gray-400">Rating</p>
+                            <p class="font-bold text-brand-primary">⭐ {{ $destination->ratingLabel() }}</p>
+                        </div>
+                    @endif
+                </div>
+
+                <div class="space-y-2 text-xs text-gray-600 mb-5">
+                    <div class="flex justify-between gap-4 border-b border-gray-100 pb-2"><span>Category</span><span class="font-bold text-gray-900 text-right">{{ implode(', ', $destination->types) }}</span></div>
+                    <div class="flex justify-between gap-4 border-b border-gray-100 pb-2"><span>Province</span><span class="font-bold text-gray-900 text-right">{{ $destination->province() }}</span></div>
+                    <div class="flex justify-between gap-4 border-b border-gray-100 pb-2"><span>Ontology ID</span><span class="font-bold text-gray-900 text-right">ID {{ $destination->id }}</span></div>
+                    @if ($destination->openingHours !== '')
+                        <div class="flex justify-between gap-4 border-b border-gray-100 pb-2"><span>Opening hours</span><span class="font-bold text-gray-900 text-right">{{ $destination->openingHours }}</span></div>
+                    @endif
+                    @if ($destination->prices !== [])
+                        <div class="flex justify-between gap-4"><span>Entry from</span><span class="font-bold text-gray-900 text-right">{{ $destination->priceLabel() }}</span></div>
+                    @endif
+                </div>
+
+                <a href="{{ $destination->mapsUrl() }}" target="_blank" rel="noopener" class="block text-center bg-brand-dark hover:bg-gray-800 text-white font-bold text-sm py-3 rounded-lg transition mb-3">
+                    📍 Open in Google Maps
+>>>>>>> ee7c4b41627891394572865c2960230988e32b45
                 </a>
                 <a href="{{ route('destinations', ['jenis' => $destination->primaryType()]) }}" class="block text-center bg-brand-light border border-brand-primary/15 text-brand-dark font-bold text-sm py-3 rounded-lg hover:bg-gray-100 transition">
                     More {{ $destination->primaryType() }} destinations
                 </a>
 
                 <div class="flex justify-center text-[10px] text-gray-500 bg-gray-50 py-2 rounded-lg border border-gray-100 mt-4 text-center">
+<<<<<<< HEAD
                     🛡️ Bantuan darurat: <a href="tel:112" class="font-bold underline underline-offset-2 hover:text-brand-primary">Nomor 112 nasional</a>
+=======
+                    🛡️ Emergency assistance: <a href="tel:112" class="font-bold underline underline-offset-2 hover:text-brand-primary">National 112</a>
+>>>>>>> ee7c4b41627891394572865c2960230988e32b45
                 </div>
             </div>
         </aside>
@@ -245,6 +320,7 @@
                     </div>
                     @if ($destination->hasCoordinates())
                         <div>
+<<<<<<< HEAD
                             <p class="text-[10px] text-gray-400 font-bold uppercase mb-1">Koordinat</p>
                             <p class="font-bold text-sm text-gray-900">{{ \App\Support\IndonesianFormat::number($destination->latitude, 4) }}, {{ \App\Support\IndonesianFormat::number($destination->longitude, 4) }}</p>
                             <p class="text-[10px] text-gray-500">Garis lintang, garis bujur</p>
@@ -259,6 +335,20 @@
                         <p class="font-bold text-sm text-gray-900">{{ $destination->ratingLabel() }}@if ($destination->rating !== null) / 5 @endif</p>
                         <p class="text-[10px] text-gray-500">Rata-rata pengunjung</p>
                     </div>
+=======
+                            <p class="text-[10px] text-gray-400 font-bold uppercase mb-1">Coordinates</p>
+                            <p class="font-bold text-sm text-gray-900">{{ number_format($destination->latitude, 4) }}, {{ number_format($destination->longitude, 4) }}</p>
+                            <p class="text-[10px] text-gray-500">Latitude, longitude</p>
+                        </div>
+                    @endif
+                    @if ($destination->rating !== null)
+                        <div>
+                            <p class="text-[10px] text-gray-400 font-bold uppercase mb-1">Rating</p>
+                            <p class="font-bold text-sm text-gray-900">{{ $destination->ratingLabel() }} / 5</p>
+                            <p class="text-[10px] text-gray-500">Visitor average</p>
+                        </div>
+                    @endif
+>>>>>>> ee7c4b41627891394572865c2960230988e32b45
                 </div>
             </div>
 
@@ -278,6 +368,7 @@
             <!-- Visitor Information -->
             <div class="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm">
                 <div class="mb-6">
+<<<<<<< HEAD
                     <h2 class="text-2xl font-serif font-bold text-gray-900 mb-1">Informasi pengunjung</h2>
                     <p class="text-xs text-gray-500">Jam operasional, tiket masuk, dan kanal kontak resmi.</p>
                 </div>
@@ -296,6 +387,20 @@
                             <p class="text-[10px] text-gray-500">Jadwal dapat berubah saat hari libur atau perubahan operasional.</p>
                         @endif
                     </div>
+=======
+                    <h2 class="text-2xl font-serif font-bold text-gray-900 mb-1">Visitor Information</h2>
+                    <p class="text-xs text-gray-500">Operational hours, ticketing, and official contact channels.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    @if ($destination->openingHours !== '')
+                        <div class="border border-gray-100 bg-gray-50 rounded-xl p-4">
+                            <p class="font-bold text-sm text-gray-900 mb-1 flex items-center gap-2">🕒 Operational Hours</p>
+                            <p class="text-xs text-gray-700 font-bold mb-1">{{ $destination->openingHours }}</p>
+                            <p class="text-[10px] text-gray-500">Schedules may change during public holidays or extreme weather.</p>
+                        </div>
+                    @endif
+>>>>>>> ee7c4b41627891394572865c2960230988e32b45
 
                     <div class="border border-gray-100 bg-gray-50 rounded-xl p-4">
                         <p class="font-bold text-sm text-gray-900 mb-1 flex items-center gap-2">🎟️ Harga tiket</p>
@@ -313,6 +418,7 @@
 
                     @if ($hasContact)
                         <div class="border border-gray-100 bg-gray-50 rounded-xl p-4">
+<<<<<<< HEAD
                             <p class="font-bold text-sm text-gray-900 mb-1 flex items-center gap-2">📞 Kontak resmi</p>
                             <div class="space-y-1 text-xs text-gray-700">
                                 @if ($destination->phone !== '')
@@ -323,6 +429,18 @@
                                 @endif
                                 @if ($destination->instagram !== '')
                                     <p><a href="{{ $destination->instagram }}" property="ws:urlInstagram" content="{{ $destination->instagram }}" target="_blank" rel="noopener" class="font-bold hover:text-brand-primary break-all">Profil Instagram</a></p>
+=======
+                            <p class="font-bold text-sm text-gray-900 mb-1 flex items-center gap-2">📞 Official Contact</p>
+                            <div class="space-y-1 text-xs text-gray-700">
+                                @if ($destination->phone !== '')
+                                    <p><a href="{{ $phoneHref }}" class="font-bold hover:text-brand-primary">{{ $destination->phone }}</a></p>
+                                @endif
+                                @if ($destination->email !== '')
+                                    <p><a href="mailto:{{ $destination->email }}" class="font-bold hover:text-brand-primary break-all">{{ $destination->email }}</a></p>
+                                @endif
+                                @if ($destination->instagram !== '')
+                                    <p><a href="{{ $destination->instagram }}" target="_blank" rel="noopener" class="font-bold hover:text-brand-primary break-all">Instagram profile</a></p>
+>>>>>>> ee7c4b41627891394572865c2960230988e32b45
                                 @endif
                             </div>
                         </div>
@@ -330,7 +448,11 @@
 
                     @if ($destination->address !== '' || $destination->location !== '')
                         <div class="border border-gray-100 bg-gray-50 rounded-xl p-4">
+<<<<<<< HEAD
                             <p class="font-bold text-sm text-gray-900 mb-1 flex items-center gap-2">📍 Alamat</p>
+=======
+                            <p class="font-bold text-sm text-gray-900 mb-1 flex items-center gap-2">📍 Address</p>
+>>>>>>> ee7c4b41627891394572865c2960230988e32b45
                             <p class="text-xs text-gray-700 font-bold mb-1">{{ $destination->address !== '' ? $destination->address : $destination->location }}</p>
                             @if ($destination->location !== '')
                                 <p class="text-[10px] text-gray-500">{{ $destination->location }}</p>
@@ -390,6 +512,7 @@
             <div class="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm">
                 <div class="flex justify-between items-end gap-4 mb-4">
                     <div class="min-w-0">
+<<<<<<< HEAD
                         <h2 class="text-2xl font-serif font-bold text-gray-900 mb-1">Lokasi &amp; akses</h2>
                         @if ($destination->address !== '')
                             <p class="text-xs text-gray-500" property="schema:address">{{ $destination->address }}</p>
@@ -414,21 +537,34 @@
                         <a href="{{ $destination->mapsUrl() }}" target="_blank" rel="noopener noreferrer" class="text-brand-accent hover:underline text-xs font-bold flex items-center gap-1 whitespace-nowrap">Buka di Google Maps</a>
                         <a href="{{ $destination->directionsUrl() }}" target="_blank" rel="noopener noreferrer" class="text-brand-accent hover:underline text-xs font-bold flex items-center gap-1 whitespace-nowrap">Petunjuk arah</a>
                     </div>
+=======
+                        <h2 class="text-2xl font-serif font-bold text-gray-900 mb-1">Location &amp; Access</h2>
+                        <p class="text-xs text-gray-500">{{ $destination->address !== '' ? $destination->address : $destination->location }}</p>
+                    </div>
+                    <a href="{{ $destination->mapsUrl() }}" target="_blank" rel="noopener" class="text-brand-accent hover:underline text-xs font-bold flex items-center gap-1 whitespace-nowrap">Open in Google Maps</a>
+>>>>>>> ee7c4b41627891394572865c2960230988e32b45
                 </div>
 
                 @if ($destination->hasCoordinates())
                     <div
                         class="rounded-xl overflow-hidden h-64 border border-gray-200 bg-gray-100 relative z-0"
                         id="detail-map"
+<<<<<<< HEAD
                         data-id="{{ $destination->id }}"
+=======
+>>>>>>> ee7c4b41627891394572865c2960230988e32b45
                         data-latitude="{{ json_encode($destination->latitude) }}"
                         data-longitude="{{ json_encode($destination->longitude) }}"
                         data-name="{{ $destination->name }}"
                         data-location="{{ $destination->location }}"
+<<<<<<< HEAD
                         data-detail-url="{{ route('destination.detail', $destination->id) }}"
                         data-google-maps-url="{{ $destination->mapsUrl() }}"
                         data-directions-url="{{ $destination->directionsUrl() }}"
                         aria-label="Peta lokasi {{ $destination->name }}"
+=======
+                        aria-label="Map showing {{ $destination->name }}"
+>>>>>>> ee7c4b41627891394572865c2960230988e32b45
                     ></div>
                 @else
                     <div class="rounded-xl overflow-hidden h-64 border border-gray-200 bg-gray-100 flex items-center justify-center text-sm text-gray-500">
@@ -444,6 +580,7 @@
                 @endif
             </div>
 
+<<<<<<< HEAD
             @if ($nearbyDestinations->isNotEmpty())
                 @php
                     $neighborResources = collect($linkedData->neighbors)->keyBy('destinationId');
@@ -470,12 +607,15 @@
                 </div>
             @endif
 
+=======
+>>>>>>> ee7c4b41627891394572865c2960230988e32b45
             <!-- Related -->
             <!-- Other Categories -->
 @if (!empty($otherTypes))
 <div class="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm">
     <div class="flex justify-between items-end gap-4 mb-6">
         <div>
+<<<<<<< HEAD
             <p class="text-xs font-bold text-brand-accent uppercase tracking-widest mb-1">Jelajahi lebih banyak</p>
             <h2 class="text-2xl font-serif font-bold text-gray-900">Temukan pengalaman lainnya</h2>
             <p class="text-xs text-gray-500 mt-1">Selain {{ implode(', ', $destination->types) }}: coba juga {{ implode(', ', $otherTypes) }}.</p>
@@ -485,6 +625,17 @@
 
     @if ($crossCategory->isEmpty())
         <p class="text-sm text-gray-500">Tidak ada destinasi dari kategori lain dalam ontologi.</p>
+=======
+            <p class="text-xs font-bold text-brand-accent uppercase tracking-widest mb-1">Explore More</p>
+            <h2 class="text-2xl font-serif font-bold text-gray-900">Discover other kinds of experiences</h2>
+            <p class="text-xs text-gray-500 mt-1">Beyond {{ implode(', ', $destination->types) }}: try {{ implode(', ', $otherTypes) }}.</p>
+        </div>
+        <a href="{{ route('destinations', ['jenis' => $otherTypes[0]]) }}" class="text-xs font-bold text-brand-accent hover:underline whitespace-nowrap">View category</a>
+    </div>
+
+    @if ($crossCategory->isEmpty())
+        <p class="text-sm text-gray-500">No destinations from other categories found in the ontology.</p>
+>>>>>>> ee7c4b41627891394572865c2960230988e32b45
     @else
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             @foreach ($crossCategory as $item)
@@ -497,6 +648,7 @@
         </div>
     </div>
 </div>
+<<<<<<< HEAD
 @endsection
 
 @push('scripts')
@@ -506,3 +658,6 @@
         };
     </script>
 @endpush
+=======
+@endsection
+>>>>>>> ee7c4b41627891394572865c2960230988e32b45

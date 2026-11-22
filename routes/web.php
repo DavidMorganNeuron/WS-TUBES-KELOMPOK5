@@ -29,11 +29,16 @@ Route::get('/destinations/{id}/rdf.{format}', DestinationRdfController::class)
     ->middleware('throttle:60,1')
     ->name('destination.rdf');
 
+Route::get('/destinations/live', [DestinationController::class, 'live'])->name('destinations.live');
+
+Route::get('/destinations/suggest', [DestinationController::class, 'suggest'])->name('destinations.suggest');
+
 Route::get('/destinations/{id}', [DestinationController::class, 'show'])
     ->where('id', 'ws-\d{3}')
     ->middleware('throttle:60,1')
     ->name('destination.detail');
 
+<<<<<<< HEAD
 Route::get('/map', [MapController::class, 'index'])
     ->middleware('throttle:60,1')
     ->name('map');
@@ -45,6 +50,11 @@ Route::get('/map/live', [MapController::class, 'live'])
 Route::post('/routes/compute', [RouteController::class, 'compute'])
     ->middleware('throttle:20,1')
     ->name('routes.compute');
+=======
+Route::get('/map', [MapController::class, 'index'])->name('map');
+
+Route::get('/map/live', [MapController::class, 'live'])->name('map.live');
+>>>>>>> ee7c4b41627891394572865c2960230988e32b45
 
 Route::post('/chatbot/send', [ChatbotController::class, 'chat'])
     ->middleware('throttle:10,1')

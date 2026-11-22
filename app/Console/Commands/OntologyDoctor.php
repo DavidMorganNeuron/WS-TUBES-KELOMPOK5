@@ -27,6 +27,17 @@ use Throwable;
 #[Description('Memeriksa konfigurasi, koneksi Fuseki, ontologi v3, cache, dan snapshot Wikidata')]
 final class OntologyDoctor extends Command
 {
+<<<<<<< HEAD
+=======
+    protected $signature = 'ontology:doctor
+        {id=ws-148 : ID destinasi yang diperiksa}
+        {--file= : File Turtle yang diperiksa (default: ONTOLOGY_TTL_PATH)}
+        {--property=hargaMasuk : Properti yang dibandingkan antara Fuseki dan aplikasi}
+        {--forget-cache : Hapus cache ontologi sebelum membandingkan}';
+
+    protected $description = 'Mendiagnosis ketidaksesuaian data antara file Turtle, Fuseki, dan tampilan aplikasi';
+
+>>>>>>> ee7c4b41627891394572865c2960230988e32b45
     public function handle(
         FusekiClient $client,
         OntologyInspector $inspector,
@@ -236,10 +247,16 @@ final class OntologyDoctor extends Command
         }
 
         try {
+<<<<<<< HEAD
             $expectedRegions = $catalog->load()['regions'];
             $snapshot = $regions->loadSnapshot(allowStale: true);
         } catch (InvalidArgumentException|RuntimeException $exception) {
             $this->components->error('Snapshot detail Wikidata gagal dibaca atau tidak valid: '.$exception->getMessage());
+=======
+            $result = $linter->lint($resolved);
+        } catch (Throwable $exception) {
+            $this->components->error($exception->getMessage());
+>>>>>>> ee7c4b41627891394572865c2960230988e32b45
 
             return false;
         }
@@ -359,6 +376,7 @@ final class OntologyDoctor extends Command
             $rows,
         ));
     }
+<<<<<<< HEAD
 
     /**
      * @return list<string>|null
@@ -431,4 +449,6 @@ final class OntologyDoctor extends Command
 
         return base_path($path);
     }
+=======
+>>>>>>> ee7c4b41627891394572865c2960230988e32b45
 }

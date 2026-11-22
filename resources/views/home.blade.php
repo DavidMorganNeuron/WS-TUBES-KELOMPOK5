@@ -1,6 +1,17 @@
 @extends('layouts.app')
 
 @php
+<<<<<<< HEAD
+=======
+    $typeLabels = [
+        'Alam' => 'Nature',
+        'Budaya' => 'Heritage',
+        'Religi' => 'Religious',
+        'Bahari' => 'Marine',
+        'Kuliner' => 'Culinary',
+        'Buatan' => 'Man-made',
+    ];
+>>>>>>> ee7c4b41627891394572865c2960230988e32b45
     $topKabupaten = $facets['kabupaten'];
     arsort($topKabupaten);
     $topKabupaten = array_slice($topKabupaten, 0, 8, true);
@@ -17,16 +28,27 @@
         </span>
         <div class="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-6">
             <div>
+<<<<<<< HEAD
                 <h1 class="text-4xl md:text-5xl font-serif font-bold text-gray-900 mb-4">Jelajahi destinasi Sumatera Utara</h1>
                 <p class="text-gray-600 text-lg max-w-2xl">
                     {{ \App\Support\IndonesianFormat::number($facets['total']) }} destinasi pilihan dari ontologi pariwisata Sumatera Utara.
+=======
+                <h1 class="text-4xl md:text-5xl font-serif font-bold text-gray-900 mb-4">Explore North Sumatra Destinations</h1>
+                <p class="text-gray-600 text-lg max-w-2xl">
+                    {{ number_format($facets['total']) }} destinations curated from the tourism ontology, covering volcanic highlands, Batak heritage, and the Lake Toba caldera.
+>>>>>>> ee7c4b41627891394572865c2960230988e32b45
                 </p>
             </div>
             <form action="{{ route('destinations') }}" method="GET" class="flex w-full lg:w-auto gap-2" data-live-suggest data-suggest-url="{{ route('destinations.suggest') }}" autocomplete="off" role="search">
                 <div class="relative flex-grow lg:w-72">
                     <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" aria-hidden="true">🔍</span>
+<<<<<<< HEAD
                     <input type="text" name="q" placeholder="Cari destinasi..." class="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm outline-none focus:border-brand-primary" autocomplete="off" aria-label="Cari destinasi" aria-autocomplete="list" aria-haspopup="listbox" aria-controls="dashboard-search-suggestions" aria-expanded="false">
                     <div id="dashboard-search-suggestions" data-suggest-panel class="absolute left-0 right-0 top-full z-50 mt-2 hidden overflow-hidden rounded-xl border border-gray-200 bg-white shadow-xl" role="listbox" aria-label="Saran destinasi"></div>
+=======
+                    <input type="text" name="q" placeholder="Search destinations..." class="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm outline-none focus:border-brand-primary" autocomplete="off" aria-label="Search destinations" aria-autocomplete="list" aria-haspopup="listbox" aria-controls="dashboard-search-suggestions" aria-expanded="false">
+                    <div id="dashboard-search-suggestions" data-suggest-panel class="absolute left-0 right-0 top-full z-50 mt-2 hidden overflow-hidden rounded-xl border border-gray-200 bg-white shadow-xl" role="listbox" aria-label="Destination suggestions"></div>
+>>>>>>> ee7c4b41627891394572865c2960230988e32b45
                     <p data-suggest-status class="sr-only" role="status" aria-live="polite"></p>
                 </div>
                 <button type="submit" class="bg-brand-dark hover:bg-gray-800 text-white text-sm font-bold px-5 py-2.5 rounded-xl transition">Cari</button>
@@ -38,9 +60,15 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
         <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex justify-between items-start">
             <div>
+<<<<<<< HEAD
                 <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Total destinasi</p>
                 <h3 class="text-2xl font-bold text-gray-900 mb-1">{{ \App\Support\IndonesianFormat::number($facets['total']) }}</h3>
                 <p class="text-sm text-gray-500">Tersebar di {{ \App\Support\IndonesianFormat::number(count($facets['kabupaten'])) }} kabupaten/kota</p>
+=======
+                <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Total Destinations</p>
+                <h3 class="text-2xl font-bold text-gray-900 mb-1">{{ number_format($facets['total']) }}</h3>
+                <p class="text-sm text-gray-500">Across {{ number_format(count($facets['kabupaten'])) }} regencies &amp; cities</p>
+>>>>>>> ee7c4b41627891394572865c2960230988e32b45
             </div>
             <div class="bg-brand-light p-3 rounded-xl text-brand-primary">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
@@ -109,7 +137,11 @@
                             <span>🎟️ {{ $featured->priceLabel() }}</span>
                         </div>
                         <a href="{{ route('destination.detail', $featured->id) }}" class="bg-brand-accent hover:bg-orange-800 text-white text-sm font-bold px-5 py-2.5 rounded-full transition">
+<<<<<<< HEAD
                             Lihat destinasi
+=======
+                            Explore Destination
+>>>>>>> ee7c4b41627891394572865c2960230988e32b45
                         </a>
                     </div>
                 </div>
@@ -121,7 +153,11 @@
                         <p class="text-xs font-bold text-brand-accent uppercase tracking-widest mb-1">Pilihan kurasi</p>
                         <h2 class="text-3xl font-serif font-bold text-gray-900">Lima destinasi dengan penilaian tertinggi</h2>
                     </div>
+<<<<<<< HEAD
                     <a href="{{ route('destinations', ['sort' => 'rating']) }}" class="text-xs font-bold text-brand-accent hover:underline whitespace-nowrap">Lihat semua</a>
+=======
+                    <a href="{{ route('destinations', ['sort' => 'rating']) }}" class="text-xs font-bold text-brand-accent hover:underline whitespace-nowrap">View all</a>
+>>>>>>> ee7c4b41627891394572865c2960230988e32b45
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -131,6 +167,43 @@
                 </div>
             </div>
 
+<<<<<<< HEAD
+=======
+            <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8">
+                <div class="flex justify-between items-end gap-4 mb-6">
+                    <div>
+                        <p class="text-xs font-bold text-brand-accent uppercase tracking-widest mb-1">Category Spotlight</p>
+                        <h2 class="text-3xl font-serif font-bold text-gray-900">One destination from every type</h2>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    @foreach ($categoryHighlights as $category)
+                        <a href="{{ route('destinations', ['jenis' => $category['type']]) }}" class="category-spotlight-card group border border-gray-100 rounded-2xl p-5 bg-[#fafaf9] hover:bg-brand-light/60 hover:border-brand-primary/20 transition">
+                            <div class="flex justify-between items-center mb-3">
+                                <span class="text-[10px] font-bold uppercase tracking-wider bg-brand-dark text-white px-2 py-1 rounded">{{ $typeLabels[$category['type']] ?? $category['type'] }}</span>
+                                <span class="text-[10px] font-bold text-gray-500">{{ $category['count'] }} destinations</span>
+                            </div>
+                            @if ($category['destination'])
+                                <div class="flex gap-3 items-center">
+                                    <div class="relative w-14 h-14 rounded-xl bg-gray-200 skeleton-shimmer overflow-hidden flex-shrink-0">
+                                        <img src="{{ $category['destination']->imageUrl() }}" alt="{{ $category['destination']->name }}" class="w-full h-full object-cover transition-opacity duration-300" loading="lazy" onload="this.closest('.skeleton-shimmer')?.classList.remove('skeleton-shimmer')" onerror="this.closest('.skeleton-shimmer')?.classList.remove('skeleton-shimmer')">
+                                        @include('partials.image-attribution', ['destination' => $category['destination']])
+                                    </div>
+                                    <div class="min-w-0">
+                                        <h4 class="font-bold text-sm text-gray-900 truncate group-hover:text-brand-primary">{{ $category['destination']->name }}</h4>
+                                        <p class="text-[10px] text-gray-500 truncate">{{ $category['destination']->location }}</p>
+                                        <p class="text-[10px] text-brand-primary font-bold mt-1">⭐ {{ $category['destination']->ratingLabel() }}</p>
+                                    </div>
+                                </div>
+                            @else
+                                <p class="text-xs text-gray-500">No destination has been added to this category yet.</p>
+                            @endif
+                        </a>
+                    @endforeach
+                </div>
+            </div>
+>>>>>>> ee7c4b41627891394572865c2960230988e32b45
         </div>
 
         <!-- Sidebar -->
@@ -147,8 +220,13 @@
                         @endphp
                         <a href="{{ route('destinations', ['jenis' => $type]) }}" class="block group">
                             <div class="flex justify-between text-xs font-bold text-gray-700 mb-1">
+<<<<<<< HEAD
                                 <span class="group-hover:text-brand-primary">{{ $type }}</span>
                                 <span>{{ \App\Support\IndonesianFormat::number($count) }}</span>
+=======
+                                <span class="group-hover:text-brand-primary">{{ $typeLabels[$type] ?? $type }}</span>
+                                <span>{{ $count }}</span>
+>>>>>>> ee7c4b41627891394572865c2960230988e32b45
                             </div>
                             <div class="w-full bg-gray-100 rounded-full h-2">
                                 <div class="bg-brand-primary h-2 rounded-full" style="width: {{ $percentage }}%"></div>
@@ -182,6 +260,13 @@
                         <a href="{{ route('destinations', ['kabupaten' => $kabupaten]) }}" class="flex justify-between items-center text-sm bg-gray-50 hover:bg-brand-light border border-gray-100 rounded-xl px-4 py-3 transition">
                             <span class="font-bold text-gray-700">{{ $kabupaten }}</span>
                             <span class="text-xs font-bold bg-white border border-gray-200 px-2 py-1 rounded">{{ \App\Support\IndonesianFormat::number($count) }}</span>
+                        </a>
+                    @endforeach
+
+                    @foreach ($topKabupaten as $kabupaten => $count)
+                        <a href="{{ route('destinations', ['kabupaten' => $kabupaten]) }}" class="flex justify-between items-center text-sm bg-gray-50 hover:bg-brand-light border border-gray-100 rounded-xl px-4 py-3 transition">
+                            <span class="font-bold text-gray-700">{{ $kabupaten }}</span>
+                            <span class="text-xs font-bold bg-white border border-gray-200 px-2 py-1 rounded">{{ $count }}</span>
                         </a>
                     @endforeach
                 </div>

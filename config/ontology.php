@@ -14,6 +14,7 @@ return [
 
     'driver' => env('ONTOLOGY_DRIVER', 'fuseki'),
 
+<<<<<<< HEAD
     'ttl_path' => env('ONTOLOGY_V3_TTL_PATH', 'database/ontology/wisata_sumut_v3.ttl'),
 
     'v2_source_path' => env('ONTOLOGY_V2_TTL_PATH', env('ONTOLOGY_TTL_PATH', 'database/ontology/wisata_sumut_v2.ttl')),
@@ -111,6 +112,9 @@ return [
         'candidate_report_path' => 'docs/kandidat-tautan-wikidata.md',
         'allow_stale' => (bool) env('WIKIDATA_ALLOW_STALE', false),
     ],
+=======
+    'ttl_path' => env('ONTOLOGY_TTL_PATH', 'database/ontology/wisata_sumut_v2.ttl'),
+>>>>>>> ee7c4b41627891394572865c2960230988e32b45
 
     'cache_ttl' => (int) env('ONTOLOGY_CACHE_TTL', 600),
 

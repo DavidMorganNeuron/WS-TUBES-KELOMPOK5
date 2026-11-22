@@ -116,6 +116,99 @@ final class OntologyValidate extends Command
         return self::SUCCESS;
     }
 
+<<<<<<< HEAD
+=======
+    /**
+     * @param  array<string, string>  $row
+     */
+    private function validateRow(array $row): void
+    {
+        $id = $row['idDestinasi'] ?? '(tanpa ID)';
+        $types = array_values(array_filter(array_map(
+            fn (string $value): string => $this->cleanValue($value),
+            explode('|', $row['jenisDestinasi'] ?? ''),
+        )));
+
+        if (preg_match('/^ws-\d{3}$/', $id) !== 1) {
+            $this->errors[] = "{$id}: format ID harus ws-000.";
+        }
+
+        if (($row['namaDestinasi'] ?? '') === '') {
+            $this->errors[] = "{$id}: namaDestinasi wajib diisi.";
+        }
+
+        if ($types === []) {
+            $this->errors[] = "{$id}: jenisDestinasi wajib diisi.";
+        }
+
+        foreach ($types as $type) {
+            if (! in_array($type, DestinationRepository::TYPES, true)) {
+                $this->errors[] = "{$id}: jenisDestinasi tidak dikenal ({$type}).";
+            }
+        }
+
+        if (($row['beradaDi'] ?? '') === '') {
+            $this->errors[] = "{$id}: beradaDi wajib diisi.";
+        }
+
+        $this->validateCoordinate($id, $row['lintang'] ?? '', -90, 90, 'lintang');
+        $this->validateCoordinate($id, $row['bujur'] ?? '', -180, 180, 'bujur');
+
+        $rating = $this->cleanValue($row['ratingPengunjung'] ?? '');
+
+        if ($rating !== '' && (! is_numeric($rating) || (float) $rating < 0 || (float) $rating > 5)) {
+            $this->errors[] = "{$id}: ratingPengunjung harus berupa angka 0 sampai 5.";
+        }
+
+        $media = array_values(array_filter(array_map(
+            fn (string $value): string => $this->cleanValue($value),
+            explode('|', $row['memilikiMedia'] ?? ''),
+        )));
+
+        if (count($media) > 1) {
+            $this->errors[] = "{$id}: memilikiMedia bersifat functional, hanya boleh satu nilai.";
+        }
+
+        foreach ($media as $url) {
+            if (filter_var($url, FILTER_VALIDATE_URL) === false) {
+                $this->errors[] = "{$id}: memilikiMedia bukan URL yang valid ({$url}).";
+            }
+        }
+
+        $instagram = $this->cleanValue($row['instagramResmi'] ?? '');
+
+        if ($instagram !== '' && filter_var($instagram, FILTER_VALIDATE_URL) === false) {
+            $this->errors[] = "{$id}: instagramResmi bukan URL yang valid ({$instagram}).";
+        }
+
+        $email = $this->cleanValue($row['emailResmi'] ?? '');
+
+        if ($email !== '' && filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
+            $this->errors[] = "{$id}: emailResmi bukan alamat email yang valid ({$email}).";
+        }
+    }
+
+    private function cleanValue(string $value): string
+    {
+        $value = trim($value);
+
+        return in_array($value, ['-', '(kosong)'], true) ? '' : $value;
+    }
+
+    private function validateCoordinate(string $id, string $value, float $minimum, float $maximum, string $label): void
+    {
+        $value = $this->cleanValue($value);
+
+        if ($value === '') {
+            return;
+        }
+
+        if (! is_numeric($value) || (float) $value < $minimum || (float) $value > $maximum) {
+            $this->errors[] = "{$id}: {$label} harus berupa angka antara {$minimum} dan {$maximum}.";
+        }
+    }
+
+>>>>>>> ee7c4b41627891394572865c2960230988e32b45
     private function resolvePath(string $path): string
     {
         if (preg_match('/^[A-Za-z]:[\\\\\\/]/', $path) === 1 || str_starts_with($path, DIRECTORY_SEPARATOR)) {

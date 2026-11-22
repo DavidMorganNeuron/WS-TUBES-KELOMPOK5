@@ -2,13 +2,17 @@
 
 namespace Tests\Feature;
 
+<<<<<<< HEAD
 use App\Services\Ontology\DestinationRepository;
+=======
+>>>>>>> ee7c4b41627891394572865c2960230988e32b45
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
 class ChatbotTest extends TestCase
 {
+<<<<<<< HEAD
     public function test_chatbot_uses_local_search_when_the_api_key_is_missing(): void
     {
         config()->set('services.gemini.key', '');
@@ -21,6 +25,15 @@ class ChatbotTest extends TestCase
             ->assertJsonStructure(['reply', 'destinations']);
         $this->assertStringContainsString('dataset lokal', $response->json('reply'));
         Http::assertNothingSent();
+=======
+    public function test_chatbot_reports_when_the_api_key_is_missing(): void
+    {
+        config()->set('services.gemini.key', '');
+
+        $this->postJson('/chatbot/send', ['message' => 'Halo'])
+            ->assertStatus(503)
+            ->assertJsonPath('reply', 'WayFinder AI belum siap digunakan. Silakan hubungi pengelola situs.');
+>>>>>>> ee7c4b41627891394572865c2960230988e32b45
     }
 
     public function test_chatbot_validates_message_length_and_history_shape(): void
@@ -35,6 +48,7 @@ class ChatbotTest extends TestCase
             'message' => 'Halo',
             'history' => [['role' => 'system', 'text' => 'ignored']],
         ])->assertStatus(422);
+<<<<<<< HEAD
 
         $this->postJson('/chatbot/send', [
             'message' => 'Halo',
@@ -47,12 +61,18 @@ class ChatbotTest extends TestCase
             'history' => [['role' => 'user', 'text' => str_repeat('a', 4001)]],
         ])->assertStatus(422)
             ->assertJsonValidationErrors('history.0.text');
+=======
+>>>>>>> ee7c4b41627891394572865c2960230988e32b45
     }
 
     public function test_chatbot_sends_the_key_in_a_header_and_forwards_conversation_history(): void
     {
         config()->set('services.gemini.key', 'test-key');
+<<<<<<< HEAD
         config()->set('services.gemini.model', 'gemini-3.5-flash-lite');
+=======
+        config()->set('services.gemini.model', 'gemini-2.5-flash-lite');
+>>>>>>> ee7c4b41627891394572865c2960230988e32b45
 
         Http::fake([
             'generativelanguage.googleapis.com/*' => Http::response([
@@ -62,6 +82,7 @@ class ChatbotTest extends TestCase
             ]),
         ]);
 
+<<<<<<< HEAD
         $history = [];
         for ($index = 0; $index < 20; $index++) {
             $history[] = [
@@ -82,10 +103,22 @@ class ChatbotTest extends TestCase
                     '*' => ['id', 'name', 'latitude', 'longitude', 'location'],
                 ],
             ]);
+=======
+        $this->postJson('/chatbot/send', [
+            'message' => 'Ceritakan Danau Toba',
+            'history' => [
+                ['role' => 'user', 'text' => 'Halo'],
+                ['role' => 'model', 'text' => 'Hai! Ada yang bisa dibantu?'],
+            ],
+        ])
+            ->assertOk()
+            ->assertJsonPath('reply', 'Danau Toba adalah danau vulkanik.');
+>>>>>>> ee7c4b41627891394572865c2960230988e32b45
 
         Http::assertSent(function (Request $request): bool {
             $payload = $request->data();
 
+<<<<<<< HEAD
             return $request->url() === 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent'
                 && $request->hasHeader('x-goog-api-key', 'test-key')
                 && $payload['contents'][0]['role'] === 'user'
@@ -99,6 +132,18 @@ class ChatbotTest extends TestCase
     }
 
     public function test_chatbot_uses_local_search_when_the_upstream_service_fails(): void
+=======
+            return $request->url() === 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent'
+                && $request->hasHeader('x-goog-api-key', 'test-key')
+                && $payload['contents'][0]['role'] === 'user'
+                && $payload['contents'][1]['role'] === 'model'
+                && $payload['contents'][2]['parts'][0]['text'] === 'Ceritakan Danau Toba'
+                && str_contains($payload['system_instruction']['parts'][0]['text'], 'KONTEKS ONTOLOGI');
+        });
+    }
+
+    public function test_chatbot_returns_a_generic_message_when_the_upstream_service_fails(): void
+>>>>>>> ee7c4b41627891394572865c2960230988e32b45
     {
         config()->set('services.gemini.key', 'test-key');
 
@@ -106,6 +151,7 @@ class ChatbotTest extends TestCase
             'generativelanguage.googleapis.com/*' => Http::response(['error' => 'secret upstream detail'], 500),
         ]);
 
+<<<<<<< HEAD
         $response = $this->postJson('/chatbot/send', [
             'message' => 'Buatkan itinerary 3 hari ke Danau Toba',
         ]);
@@ -296,13 +342,26 @@ class ChatbotTest extends TestCase
         Http::assertNothingSent();
     }
 
+=======
+        $response = $this->postJson('/chatbot/send', ['message' => 'Halo']);
+
+        $response->assertStatus(502);
+        $response->assertJsonPath('reply', 'WayFinder AI sedang sibuk. Silakan coba lagi sebentar lagi.');
+        $this->assertStringNotContainsString('secret upstream detail', $response->getContent());
+    }
+
+>>>>>>> ee7c4b41627891394572865c2960230988e32b45
     public function test_chatbot_is_rate_limited(): void
     {
         config()->set('services.gemini.key', '');
         $this->withServerVariables(['REMOTE_ADDR' => '203.0.113.55']);
 
         for ($request = 0; $request < 10; $request++) {
+<<<<<<< HEAD
             $this->postJson('/chatbot/send', ['message' => 'Halo'])->assertOk();
+=======
+            $this->postJson('/chatbot/send', ['message' => 'Halo'])->assertStatus(503);
+>>>>>>> ee7c4b41627891394572865c2960230988e32b45
         }
 
         $this->postJson('/chatbot/send', ['message' => 'Halo'])->assertStatus(429);
