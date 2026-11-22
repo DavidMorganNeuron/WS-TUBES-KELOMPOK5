@@ -286,7 +286,9 @@ const initLiveDestinations = () => {
     const debouncedUpdate = debounce(() => update());
 
     input?.addEventListener('input', debouncedUpdate);
-    form.querySelectorAll('select').forEach((select) => select.addEventListener('change', () => update()));
+    Array.from(form.elements)
+        .filter((element) => element instanceof HTMLSelectElement)
+        .forEach((select) => select.addEventListener('change', () => update()));
     form.addEventListener('submit', (event) => {
         event.preventDefault();
         update();
@@ -335,13 +337,12 @@ const initLiveDestinations = () => {
         pillContainer.querySelectorAll('a[data-jenis]').forEach((element) => {
             const isMatch = element.dataset.jenis === jenis;
 
-            if (isMatch) {
-                element.className = jenis === ''
-                    ? 'text-xs font-bold px-3 py-1.5 rounded-full transition bg-brand-dark text-white'
-                    : 'text-xs font-bold px-3 py-1.5 rounded-full transition bg-brand-primary text-white';
-            } else {
-                element.className = 'text-xs font-medium px-3 py-1.5 rounded-full transition bg-white border border-gray-200 text-gray-600 hover:border-gray-300';
-            }
+            element.classList.toggle('border-emerald-900', isMatch);
+            element.classList.toggle('border-transparent', ! isMatch);
+            element.classList.toggle('font-semibold', isMatch);
+            element.classList.toggle('font-medium', ! isMatch);
+            element.classList.toggle('text-emerald-950', isMatch);
+            element.classList.toggle('text-slate-600', ! isMatch);
         });
 
         update(null, true);
@@ -427,7 +428,6 @@ const initLiveMap = () => {
     const debouncedUpdate = debounce(update);
 
     input?.addEventListener('input', debouncedUpdate);
-    form.querySelector('input[name="exact"]')?.addEventListener('change', update);
     form.addEventListener('submit', (event) => {
         event.preventDefault();
         update();
@@ -456,11 +456,13 @@ const initLiveMap = () => {
         mapPillContainer.querySelectorAll('a[data-jenis]').forEach((element) => {
             const isMatch = element.dataset.jenis === jenis;
 
-            if (isMatch) {
-                element.className = 'text-xs font-bold px-4 py-1.5 rounded-full whitespace-nowrap transition bg-brand-dark text-white';
-            } else {
-                element.className = 'text-xs font-bold px-4 py-1.5 rounded-full whitespace-nowrap transition bg-white border border-gray-200 text-gray-700 hover:border-gray-300';
-            }
+            element.classList.toggle('bg-brand-dark', isMatch);
+            element.classList.toggle('text-white', isMatch);
+            element.classList.toggle('bg-white', ! isMatch);
+            element.classList.toggle('border', ! isMatch);
+            element.classList.toggle('border-gray-200', ! isMatch);
+            element.classList.toggle('text-gray-700', ! isMatch);
+            element.classList.toggle('hover:border-gray-300', ! isMatch);
         });
 
         update();

@@ -32,7 +32,10 @@ class DestinationPagesTest extends TestCase
         $response = $this->get('/');
 
         $response->assertOk();
-        $response->assertSee('Dasbor ontologi langsung');
+        $response->assertDontSee('Dasbor ontologi langsung');
+        $response->assertDontSee('bg-green-500 inline-block mr-1', false);
+        $response->assertDontSee('Siap ditampilkan di peta');
+        $response->assertDontSee('Destinasi dengan koordinat');
         $response->assertSee(number_format($this->repository()->facets()['total']));
         $response->assertDontSee('Acehnese');
         $response->assertDontSee('Serambi');
@@ -51,6 +54,9 @@ class DestinationPagesTest extends TestCase
         $response->assertSee('Lewati ke konten utama');
         $response->assertSee('WayFinder');
         $response->assertDontSee('Sumatera Heritage &amp; Trails');
+        $response->assertSee('id="destination-search-form"', false);
+        $response->assertSee('placeholder="Cari destinasi wisata di Sumatera Utara..."', false);
+        $response->assertDontSee('>Kategori</button>', false);
     }
 
     public function test_chatbot_opens_as_a_resizable_popup_from_the_navigation(): void
@@ -82,20 +88,76 @@ class DestinationPagesTest extends TestCase
 
         $response->assertOk();
         $response->assertSee('Jelajahi Destinasi Sumatera Utara');
+        $response->assertSeeInOrder([
+            'Beranda</a> <span aria-hidden="true">›</span>',
+            '<span class="text-brand-primary font-bold">Destinasi</span>',
+        ], false);
+        $response->assertDontSee('Direktori Destinasi');
+        $response->assertSee('data-live-destinations', false);
+        $response->assertSee('form="destination-search-form"', false);
+        $response->assertDontSee('Cari nama objek wisata, kaldera, atau pulau...');
         $filterOptions = $this->repository()->filterOptions();
         $response->assertSee('<select name="dapatMelakukan"', false);
         $response->assertDontSee('<select name="memilikiFasilitas"', false);
         $response->assertSee('<option value="" hidden', false);
-        $response->assertSee('>Urutan bawaan</option>', false);
+        $response->assertSee('>Urutan</option>', false);
         $response->assertDontSee('Urutan otomatis');
         $this->assertNotEmpty($filterOptions['activities']);
         $response->assertSee('value="'.e($filterOptions['activities'][0]).'"', false);
         $response->assertDontSee('Paling relevan');
         $response->assertDontSee('Tanpa koreksi otomatis');
         $response->assertDontSee('Menampilkan 1');
+        $categoryPillsStart = strpos($response->getContent(), 'data-category-pills');
+        $this->assertNotFalse($categoryPillsStart);
+        $categoryPillsEnd = strpos($response->getContent(), '</div>', $categoryPillsStart);
+        $this->assertNotFalse($categoryPillsEnd);
+        $categoryPills = substr($response->getContent(), $categoryPillsStart, $categoryPillsEnd - $categoryPillsStart);
+        foreach (['Alam', 'Budaya', 'Religi', 'Bahari', 'Kuliner', 'Buatan'] as $type) {
+            $this->assertStringContainsString($type, $categoryPills);
+            $this->assertStringNotContainsString($type.' (', $categoryPills);
+        }
+        $response->assertSee('Hapus filter');
+        $response->assertDontSee('Hapus saringan');
         $destinations = $this->repository()->search(['sort' => 'name']);
         $response->assertSeeInOrder($destinations->take(2)->pluck('name')->all());
         $response->assertDontSee('name="provinsi"', false);
+    }
+
+    public function test_destination_navbar_search_and_filter_subbar_preserve_filter_state(): void
+    {
+        $repository = $this->repository();
+        $kabupaten = array_key_first($repository->facets()['kabupaten']);
+        $activity = $repository->filterOptions()['activities'][0];
+        $filters = [
+            'q' => 'danau',
+            'jenis' => 'Alam',
+            'kabupaten' => $kabupaten,
+            'sort' => 'rating',
+            'dapatMelakukan' => $activity,
+        ];
+
+        $response = $this->get(route('destinations', $filters));
+
+        $response->assertOk();
+        $this->assertMatchesRegularExpression('/<input\s+type="text"\s+name="q"\s+value="danau"/', $response->getContent());
+        $response->assertSee('type="hidden" name="jenis" value="Alam"', false);
+        $response->assertSee('<select name="sort" form="destination-search-form"', false);
+        $response->assertSee('<select name="kabupaten" form="destination-search-form"', false);
+        $response->assertSee('<select name="dapatMelakukan" form="destination-search-form"', false);
+        $response->assertSee('value="'.e($kabupaten).'" selected', false);
+        $response->assertSee('value="'.e($activity).'" selected', false);
+        $response->assertSee('href="'.e(route('destinations', array_merge($filters, ['jenis' => 'Bahari']))).'"', false);
+    }
+
+    public function test_navbar_search_from_another_page_keeps_supported_filters(): void
+    {
+        $response = $this->get('/map?q=danau&jenis=Bahari');
+
+        $response->assertOk();
+        $response->assertSee('action="'.route('destinations').'"', false);
+        $response->assertSee('name="q" value="danau"', false);
+        $response->assertSee('type="hidden" name="jenis" value="Bahari"', false);
+        $response->assertDontSee('data-live-destinations', false);
     }
 
     public function test_destinations_page_can_be_filtered_by_type_and_search_query(): void
@@ -170,8 +232,16 @@ class DestinationPagesTest extends TestCase
 
         $response->assertOk();
         $response->assertSee($destination->name);
-        $response->assertSee('property="ws:idDestinasi"', false);
-        $response->assertSee($destination->id);
+        $response->assertSeeInOrder([
+            'Beranda</a> <span>›</span>',
+            'Destinasi</a> <span>›</span>',
+            '<span class="text-brand-primary font-bold">'.$destination->name.'</span>',
+        ], false);
+        $response->assertDontSee($destination->province().'</a> <span>›</span>', false);
+        $response->assertSee('property="ws:idDestinasi" content="'.$destination->id.'"', false);
+        $response->assertDontSee('ID ontologi');
+        $response->assertDontSee('Media ontologi');
+        $response->assertDontSee('Data RDF:');
         if ($destination->priceLabels() !== []) {
             $response->assertSee($destination->priceLabels()[0]);
         }
@@ -550,10 +620,52 @@ class DestinationPagesTest extends TestCase
         $response->assertSee('WayFinderMapConfig');
         $response->assertSee('ws-002');
         $response->assertSee('titik pada peta');
+        $response->assertSee('class="flex items-center gap-2" data-live-map', false);
+        $response->assertDontSee('name="exact"', false);
+        $response->assertDontSee('Tanpa koreksi otomatis');
+        $response->assertSee('Hapus filter');
+        $response->assertDontSee('Hapus saringan');
         $response->assertSee('data-map-all');
         $response->assertSee('>SATUAN</button>', false);
         $response->assertDontSee('unpkg.com');
         $response->assertDontSee('Serambi');
+
+        $categoryPillsStart = strpos($response->getContent(), 'data-map-category-pills');
+        $this->assertNotFalse($categoryPillsStart);
+        $categoryPillsEnd = strpos($response->getContent(), '</div>', $categoryPillsStart);
+        $this->assertNotFalse($categoryPillsEnd);
+        $categoryPills = substr($response->getContent(), $categoryPillsStart, $categoryPillsEnd - $categoryPillsStart);
+        $this->assertStringContainsString('Semua', $categoryPills);
+        $this->assertStringNotContainsString('Semua (', $categoryPills);
+        foreach ([
+            'Alam' => '#15803d',
+            'Budaya' => '#92400e',
+            'Religi' => '#374151',
+            'Bahari' => '#1d4ed8',
+            'Kuliner' => '#facc15',
+            'Buatan' => '#7e22ce',
+        ] as $type => $color) {
+            $this->assertStringContainsString($type, $categoryPills);
+            $this->assertStringContainsString('style="background-color: '.$color.'"', $categoryPills);
+            $this->assertStringNotContainsString($type.' (', $categoryPills);
+        }
+    }
+
+    public function test_map_page_filters_by_category_and_preserves_the_active_category_indicator(): void
+    {
+        $response = $this->get('/map?jenis=Bahari');
+
+        $response->assertOk();
+        $response->assertSee('Pantai Bali Lestari');
+        $response->assertDontSee('Aek Sijorni');
+        $response->assertSee('data-jenis="Bahari"', false);
+        $response->assertSee('style="background-color: #1d4ed8"', false);
+        $response->assertSee('flex items-center gap-1 transition bg-brand-dark text-white', false);
+
+        $liveResponse = $this->getJson(route('map.live', ['jenis' => 'Bahari']));
+        $liveResponse->assertOk();
+        $this->assertStringContainsString('Pantai Bali Lestari', $liveResponse->json('html'));
+        $this->assertStringNotContainsString('Aek Sijorni', $liveResponse->json('html'));
     }
 
     public function test_map_page_includes_the_in_app_route_planner_and_origin_options(): void

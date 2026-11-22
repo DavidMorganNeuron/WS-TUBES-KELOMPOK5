@@ -11,10 +11,6 @@
 
     <!-- Header -->
     <div class="mb-10">
-        <span class="inline-block bg-brand-light border border-brand-primary/20 text-brand-primary text-xs font-bold px-3 py-1 rounded-full mb-4">
-            <span class="w-2 h-2 rounded-full bg-green-500 inline-block mr-1"></span>
-            Dasbor ontologi langsung
-        </span>
         <div class="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-6">
             <div>
                 <h1 class="text-4xl md:text-5xl font-serif font-bold text-gray-900 mb-4">Jelajahi destinasi Sumatera Utara</h1>
@@ -35,7 +31,7 @@
     </div>
 
     <!-- Stat Cards -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
         <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex justify-between items-start">
             <div>
                 <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Total destinasi</p>
@@ -67,16 +63,6 @@
             <div class="bg-yellow-50 p-3 rounded-xl text-yellow-600">⭐</div>
         </div>
 
-        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex justify-between items-start">
-            <div>
-                <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Siap ditampilkan di peta</p>
-                <h3 class="text-2xl font-bold text-gray-900 mb-1">{{ \App\Support\IndonesianFormat::number($facets['with_coordinates']) }}</h3>
-                <p class="text-sm text-gray-500">Destinasi dengan koordinat</p>
-            </div>
-            <div class="bg-brand-light p-3 rounded-xl text-brand-primary">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
-            </div>
-        </div>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">

@@ -50,7 +50,7 @@
         <p class="text-2xl mb-2">🔎</p>
         <p class="text-sm font-bold text-gray-900 mb-1">Tidak ada destinasi yang sesuai</p>
         <p class="text-xs text-gray-500 mb-4">Coba gunakan kata kunci atau kategori lain.</p>
-        <a href="{{ route('map') }}" class="inline-block bg-brand-accent text-white text-xs font-bold px-4 py-2 rounded-full">Hapus saringan</a>
+        <a href="{{ route('map') }}" class="inline-block bg-brand-accent text-white text-xs font-bold px-4 py-2 rounded-full">Hapus filter</a>
     </div>
 @endforelse
 

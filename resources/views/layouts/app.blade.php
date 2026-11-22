@@ -1,17 +1,8 @@
 @inject('navigationRepository', 'App\Services\Ontology\DestinationRepository')
 @php
     $navFacets = $navigationRepository->facets();
-    $navTypeLabels = [
-        'Alam' => 'Wisata Alam',
-        'Budaya' => 'Wisata Budaya',
-        'Religi' => 'Wisata Religi',
-        'Bahari' => 'Wisata Bahari',
-        'Kuliner' => 'Wisata Kuliner',
-        'Buatan' => 'Wisata Buatan',
-    ];
-    $activeJenis = request()->routeIs('destinations') ? request('jenis') : null;
-    $availableTypes = collect($navTypeLabels)
-        ->filter(fn (string $label, string $jenis): bool => ($navFacets['types'][$jenis] ?? 0) > 0);
+    $isDestinationIndex = request()->routeIs('destinations');
+    $destinationSearchFilters = ['jenis', 'kabupaten', 'sort', 'dapatMelakukan', 'memilikiFasilitas'];
 @endphp
 <!DOCTYPE html>
 <html lang="id">
@@ -52,43 +43,61 @@
 
     <!-- NAVBAR -->
     <header class="bg-white border-b border-gray-200 sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-3">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex min-h-20 flex-wrap items-center gap-x-4 gap-y-3 py-3 xl:flex-nowrap">
             <!-- Logo -->
-            <a href="{{ route('home') }}" class="flex items-center gap-2 text-brand-primary font-serif font-bold text-base sm:text-xl min-w-0">
+            <a href="{{ route('home') }}" class="order-1 flex min-w-0 items-center gap-2 text-brand-primary font-serif font-bold text-base sm:text-xl">
                 <svg class="w-8 h-8 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2L2 22h20L12 2zm0 4.5l6.5 13.5h-13L12 6.5z"/></svg>
                 <span class="hidden sm:inline truncate">WayFinder</span>
                 <span class="sm:hidden truncate">WayFinder</span>
             </a>
 
-            <!-- Menu Tengah -->
-            <nav class="hidden lg:flex items-center gap-8 text-sm font-medium text-gray-600" aria-label="Navigasi utama">
-                <a href="{{ route('home') }}" class="hover:text-brand-primary {{ request()->routeIs('home') ? 'border-b-2 border-brand-accent pb-1 text-brand-text' : '' }}">Beranda</a>
+            <form
+                id="destination-search-form"
+                action="{{ route('destinations') }}"
+                method="GET"
+                class="order-3 flex w-full max-w-md flex-1 items-center gap-2 rounded-full border border-slate-300 bg-white px-4 py-2 shadow-sm focus-within:border-emerald-900 focus-within:ring-2 focus-within:ring-emerald-900/10 xl:order-2"
+                @if ($isDestinationIndex)
+                    data-live-destinations data-live-url="{{ route('destinations.live') }}"
+                @endif
+                autocomplete="off"
+                role="search"
+                aria-label="Cari destinasi wisata"
+            >
+                @if ($isDestinationIndex)
+                    @if (request()->filled('jenis'))
+                        <input type="hidden" name="jenis" value="{{ request('jenis') }}">
+                    @endif
+                @else
+                    @foreach ($destinationSearchFilters as $filterKey)
+                        @php($filterValue = request()->query($filterKey))
+                        @if (is_string($filterValue) && $filterValue !== '')
+                            <input type="hidden" name="{{ $filterKey }}" value="{{ $filterValue }}">
+                        @endif
+                    @endforeach
+                @endif
 
-                <a href="{{ route('destinations') }}" class="hover:text-brand-primary {{ request()->routeIs('destinations', 'destination.detail') ? 'border-b-2 border-brand-accent pb-1 text-brand-text' : '' }}">Destinasi</a>
-
-                <!-- Dropdown Jenis Wisata (Categories) -->
-                <div class="relative group">
-                    <button type="button" aria-haspopup="true" class="hover:text-brand-primary focus:outline-none {{ in_array($activeJenis, $availableTypes->keys()->all(), true) ? 'border-b-2 border-brand-accent pb-1 text-brand-text' : '' }}">
-                        Kategori
-                    </button>
-
-                    <div class="absolute left-0 top-full pt-3 hidden group-hover:block group-focus-within:block">
-                        <div class="w-56 bg-white border border-gray-200 rounded-xl shadow-lg py-2">
-                            @foreach ($availableTypes as $jenis => $label)
-                                <a href="{{ route('destinations', ['jenis' => $jenis]) }}" class="flex items-center justify-between px-4 py-2 hover:bg-brand-light hover:text-brand-primary {{ $activeJenis === $jenis ? 'bg-brand-light text-brand-primary font-semibold' : '' }}">
-                                    {{ $label }}
-                                    <span class="text-xs text-brand-muted">{{ \App\Support\IndonesianFormat::number($navFacets['types'][$jenis]) }}</span>
-                                </a>
-                            @endforeach
-                        </div>
-                    </div>
-                </div>
-
-                <a href="{{ route('map') }}" class="hover:text-brand-primary {{ request()->routeIs('map') ? 'border-b-2 border-brand-accent pb-1 text-brand-text' : '' }}">Peta</a>
-            </nav>
+                <svg class="h-5 w-5 shrink-0 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <circle cx="11" cy="11" r="7" stroke-width="2"/>
+                    <path stroke-linecap="round" stroke-width="2" d="m20 20-4-4"/>
+                </svg>
+                <input
+                    type="text"
+                    name="q"
+                    value="{{ request('q') }}"
+                    placeholder="Cari destinasi wisata di Sumatera Utara..."
+                    class="min-w-0 flex-1 border-0 bg-transparent p-0 text-sm text-slate-900 placeholder:text-slate-500 focus:outline-none focus:ring-0"
+                    aria-label="Cari destinasi wisata di Sumatera Utara"
+                >
+            </form>
 
             <!-- Tombol Kanan -->
-            <div class="flex items-center gap-2 sm:gap-4 flex-shrink-0">
+            <div class="order-2 ml-auto flex flex-shrink-0 items-center gap-2 sm:gap-4 xl:order-3 xl:ml-0">
+                <nav class="hidden items-center gap-6 text-sm font-medium text-gray-600 xl:flex" aria-label="Navigasi utama">
+                    <a href="{{ route('home') }}" class="hover:text-brand-primary {{ request()->routeIs('home') ? 'border-b-2 border-brand-accent pb-1 text-brand-text' : '' }}">Beranda</a>
+                    <a href="{{ route('destinations') }}" class="hover:text-brand-primary {{ request()->routeIs('destinations', 'destination.detail') ? 'border-b-2 border-brand-accent pb-1 text-brand-text' : '' }}">Destinasi</a>
+                    <a href="{{ route('map') }}" class="hover:text-brand-primary {{ request()->routeIs('map') ? 'border-b-2 border-brand-accent pb-1 text-brand-text' : '' }}">Peta</a>
+                </nav>
+
                 <button id="btn-theme-toggle" type="button" class="flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-600 transition hover:bg-gray-50 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-primary" aria-label="Aktifkan mode gelap" aria-pressed="false" title="Aktifkan mode gelap">
                     <svg data-theme-icon="moon" class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
                     <svg data-theme-icon="sun" class="hidden h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4" stroke-width="2"/><path stroke-linecap="round" stroke-width="2" d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg>
@@ -98,26 +107,18 @@
                     <span class="hidden sm:inline">Asisten AI</span>
                 </button>
 
-                <button id="btn-mobile-menu" type="button" class="lg:hidden w-10 h-10 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 flex items-center justify-center" aria-controls="mobile-menu" aria-expanded="false" aria-label="Buka menu navigasi">
+                <button id="btn-mobile-menu" type="button" class="xl:hidden w-10 h-10 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 flex items-center justify-center" aria-controls="mobile-menu" aria-expanded="false" aria-label="Buka menu navigasi">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
                 </button>
             </div>
         </div>
 
         <!-- MOBILE MENU -->
-        <div id="mobile-menu" class="hidden lg:hidden border-t border-gray-200 bg-white" aria-hidden="true">
+        <div id="mobile-menu" class="hidden xl:hidden border-t border-gray-200 bg-white" aria-hidden="true">
             <nav class="max-w-7xl mx-auto px-4 sm:px-6 py-4 space-y-1 text-sm font-medium text-gray-700" aria-label="Navigasi seluler">
                 <a href="{{ route('home') }}" class="block rounded-lg px-3 py-2 hover:bg-brand-light {{ request()->routeIs('home') ? 'bg-brand-light text-brand-primary' : '' }}">Beranda</a>
                 <a href="{{ route('destinations') }}" class="block rounded-lg px-3 py-2 hover:bg-brand-light {{ request()->routeIs('destinations', 'destination.detail') ? 'bg-brand-light text-brand-primary' : '' }}">Destinasi</a>
                 <a href="{{ route('map') }}" class="block rounded-lg px-3 py-2 hover:bg-brand-light {{ request()->routeIs('map') ? 'bg-brand-light text-brand-primary' : '' }}">Peta</a>
-
-                <p class="px-3 pt-3 pb-1 text-[10px] font-bold uppercase tracking-wider text-gray-400">Kategori</p>
-                @foreach ($availableTypes as $jenis => $label)
-                    <a href="{{ route('destinations', ['jenis' => $jenis]) }}" class="flex items-center justify-between rounded-lg px-3 py-2 hover:bg-brand-light {{ $activeJenis === $jenis ? 'bg-brand-light text-brand-primary' : '' }}">
-                        <span>{{ $label }}</span>
-                        <span class="text-xs text-gray-400">{{ \App\Support\IndonesianFormat::number($navFacets['types'][$jenis]) }}</span>
-                    </a>
-                @endforeach
             </nav>
         </div>
     </header>

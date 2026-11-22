@@ -47,28 +47,26 @@
                 <button type="button" data-toggle-sidebar="false" class="md:hidden w-8 h-8 rounded-full border border-gray-200 text-gray-500 hover:bg-gray-50" aria-label="Tutup daftar destinasi">✕</button>
             </div>
 
-            <form action="{{ route('map') }}" method="GET" class="relative" data-live-map data-live-url="{{ route('map.live') }}" autocomplete="off" role="search" aria-label="Cari destinasi di peta">
+            <form action="{{ route('map') }}" method="GET" class="flex items-center gap-2" data-live-map data-live-url="{{ route('map.live') }}" autocomplete="off" role="search" aria-label="Cari destinasi di peta">
                 @if ($activeType !== '')
                     <input type="hidden" name="jenis" value="{{ $activeType }}">
                 @endif
-                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" aria-hidden="true">🔍</span>
-                <input type="text" name="q" value="{{ $activeQuery }}" placeholder="Cari destinasi yang ditampilkan..." class="w-full pl-10 pr-20 py-2.5 bg-white border border-gray-200 rounded-xl text-sm font-medium outline-none focus:border-brand-primary" autocomplete="off" aria-label="Cari destinasi yang ditampilkan di peta">
-                <label class="mt-2 inline-flex items-center gap-2 text-xs font-medium text-gray-600">
-                    <input type="checkbox" name="exact" value="1" @checked(($filters['exact'] ?? false)) class="rounded border-gray-300 text-brand-primary focus:ring-brand-primary">
-                    Tanpa koreksi otomatis
-                </label>
-                <button type="submit" class="absolute right-1.5 top-1/2 -translate-y-1/2 bg-brand-dark hover:bg-gray-800 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg">Cari</button>
+                <div class="relative min-w-0 flex-1">
+                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" aria-hidden="true">🔍</span>
+                    <input type="text" name="q" value="{{ $activeQuery }}" placeholder="Cari destinasi yang ditampilkan..." class="w-full pl-10 pr-3 py-2.5 bg-white border border-gray-200 rounded-xl text-sm font-medium outline-none focus:border-brand-primary" autocomplete="off" aria-label="Cari destinasi yang ditampilkan di peta">
+                </div>
+                <button type="submit" class="shrink-0 bg-brand-dark hover:bg-gray-800 text-white text-xs font-bold px-4 py-2.5 rounded-xl">Cari</button>
             </form>
             <p id="map-live-status" class="sr-only" role="status" aria-live="polite"></p>
 
             <div class="flex gap-2 overflow-x-auto pb-1" data-map-category-pills>
                 <a href="{{ $urlFor(['jenis' => null]) }}" data-jenis="" class="text-xs font-bold px-4 py-1.5 rounded-full whitespace-nowrap transition {{ $activeType === '' ? 'bg-brand-dark text-white' : 'bg-white border border-gray-200 text-gray-700 hover:border-gray-300' }}">
-                    Semua ({{ \App\Support\IndonesianFormat::number($facets['total']) }})
+                    Semua
                 </a>
                 @foreach ($types as $type)
                     <a href="{{ $urlFor(['jenis' => $type]) }}" data-jenis="{{ $type }}" class="text-xs font-bold px-4 py-1.5 rounded-full whitespace-nowrap flex items-center gap-1 transition {{ $activeType === $type ? 'bg-brand-dark text-white' : 'bg-white border border-gray-200 text-gray-700 hover:border-gray-300' }}">
                         <span class="w-2 h-2 rounded-full" style="background-color: {{ $typeColors[$type] }}"></span>
-                        {{ $type }} ({{ \App\Support\IndonesianFormat::number($facets['types'][$type] ?? 0) }})
+                        {{ $type }}
                     </a>
                 @endforeach
             </div>
@@ -139,7 +137,7 @@
 
         <div data-map-browser-footer class="p-3 bg-white border-t border-gray-200 flex justify-between items-center text-xs font-bold">
             <span class="text-green-600 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-green-500 animate-pulse" aria-hidden="true"></span> <span id="map-marker-count">{{ \App\Support\IndonesianFormat::number(count($markers)) }}</span> titik pada peta</span>
-            <a href="{{ route('map') }}" class="text-gray-500 hover:text-gray-900">Hapus saringan</a>
+            <a href="{{ route('map') }}" class="text-gray-500 hover:text-gray-900">Hapus filter</a>
         </div>
     </div>
 

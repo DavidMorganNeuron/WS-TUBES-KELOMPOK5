@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Cache;
 
 final class SparqlDestinationSource implements DestinationSource
 {
+    private const DETAILS_BATCH_SIZE = 50;
+
     public function __construct(
         private readonly FusekiClient $client,
         private readonly DestinationQueryBuilder $queryBuilder,
@@ -531,8 +533,14 @@ SPARQL;
             return collect();
         }
 
-        $details = $this->selectCached($this->queryBuilder->details($ids));
-        $destinations = $this->rowMapper->destinations($details);
+        $destinations = collect();
+        foreach (array_chunk($ids, self::DETAILS_BATCH_SIZE) as $idBatch) {
+            $details = $this->selectCached($this->queryBuilder->details($idBatch));
+            foreach ($this->rowMapper->destinations($details) as $id => $destination) {
+                $destinations->put($id, $destination);
+            }
+        }
+
         $ordered = collect();
         foreach ($ids as $id) {
             if ($destinations->has($id)) {

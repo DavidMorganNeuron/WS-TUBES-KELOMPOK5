@@ -5,7 +5,7 @@
         <p class="text-4xl mb-4">🔎</p>
         <h2 class="text-2xl font-serif font-bold text-gray-900 mb-2">Tidak ada destinasi yang sesuai dengan saringan</h2>
         <p class="text-sm text-gray-500 mb-6">Coba hapus kategori, pilih kabupaten atau kota lain, atau gunakan kata kunci yang lebih umum.</p>
-        <a href="{{ route('destinations') }}" class="inline-block bg-brand-accent hover:bg-orange-800 text-white text-sm font-bold px-5 py-2.5 rounded-full transition">Hapus semua saringan</a>
+        <a href="{{ route('destinations') }}" class="inline-block bg-brand-accent hover:bg-orange-800 text-white text-sm font-bold px-5 py-2.5 rounded-full transition">Hapus semua filter</a>
     </div>
 @else
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">

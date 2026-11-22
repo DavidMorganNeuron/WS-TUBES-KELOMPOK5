@@ -78,6 +78,36 @@ class SparqlDestinationSourceTest extends TestCase
         Http::assertSentCount(2);
     }
 
+    public function test_all_destinations_loads_details_in_bounded_batches(): void
+    {
+        $ids = array_map(static fn (int $number): string => sprintf('ws-%03d', $number), range(1, 101));
+        Http::fake(function (Request $request) use ($ids) {
+            $query = (string) ($request->data()['query'] ?? '');
+
+            if (str_contains($query, 'GROUP_CONCAT')) {
+                preg_match_all('~<http://pariwisatasumut\\.org/resource/(ws-\\d{3})>~', $query, $matches);
+
+                return Http::response($this->response(array_map(
+                    fn (string $id): array => $this->destinationRow($id, 'Destination '.$id),
+                    $matches[1],
+                )));
+            }
+
+            return Http::response($this->response(array_map(
+                static fn (string $id): array => [
+                    'idDestinasi' => ['type' => 'literal', 'value' => $id],
+                ],
+                $ids,
+            )));
+        });
+
+        $destinations = app(DestinationRepository::class)->all();
+
+        $this->assertCount(101, $destinations);
+        $this->assertSame($ids, $destinations->pluck('id')->all());
+        Http::assertSentCount(4);
+    }
+
     public function test_facets_are_mapped_from_a_single_sparql_request(): void
     {
         $queries = [];
