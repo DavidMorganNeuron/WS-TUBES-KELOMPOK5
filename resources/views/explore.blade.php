@@ -42,9 +42,8 @@
                 <a href="{{ route('map') }}" class="bg-white border border-gray-200 text-gray-800 text-xs font-bold px-4 py-2 rounded-full shadow-sm hover:bg-gray-50 flex items-center gap-2">
                     Buka Peta
                 </a>
-            </div>
+            @endforeach
         </div>
-    </div>
 
     <!-- Filter Bar -->
     <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 mb-8 space-y-4">
@@ -83,6 +82,9 @@
                     @endforeach
                 </select>
             </div>
+            <a id="destination-reset" href="{{ route('destinations') }}" class="rounded-full border border-slate-300 px-3 py-2 text-sm font-medium text-slate-600 transition hover:border-emerald-900 hover:text-emerald-950 {{ $hasActiveFilters ? '' : 'hidden' }}">Hapus filter</a>
+        </div>
+    </section>
 
         </form>
 

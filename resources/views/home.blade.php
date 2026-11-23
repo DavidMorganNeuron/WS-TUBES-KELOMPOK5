@@ -35,7 +35,7 @@
     </div>
 
     <!-- Stat Cards -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
         <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex justify-between items-start">
             <div>
                 <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Total destinasi</p>

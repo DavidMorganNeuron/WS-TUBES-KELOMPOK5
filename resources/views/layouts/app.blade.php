@@ -52,9 +52,9 @@
 
     <!-- NAVBAR -->
     <header class="bg-white border-b border-gray-200 sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-3">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex min-h-20 flex-wrap items-center gap-x-4 gap-y-3 py-3 xl:flex-nowrap">
             <!-- Logo -->
-            <a href="{{ route('home') }}" class="flex items-center gap-2 text-brand-primary font-serif font-bold text-base sm:text-xl min-w-0">
+            <a href="{{ route('home') }}" class="order-1 flex min-w-0 items-center gap-2 text-brand-primary font-serif font-bold text-base sm:text-xl">
                 <svg class="w-8 h-8 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2L2 22h20L12 2zm0 4.5l6.5 13.5h-13L12 6.5z"/></svg>
                 <span class="hidden sm:inline truncate">WayFinder</span>
                 <span class="sm:hidden truncate">WayFinder</span>

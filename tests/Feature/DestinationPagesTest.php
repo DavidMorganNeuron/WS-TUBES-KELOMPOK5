@@ -98,6 +98,43 @@ class DestinationPagesTest extends TestCase
         $response->assertDontSee('name="provinsi"', false);
     }
 
+    public function test_destination_navbar_search_and_filter_subbar_preserve_filter_state(): void
+    {
+        $repository = $this->repository();
+        $kabupaten = array_key_first($repository->facets()['kabupaten']);
+        $activity = $repository->filterOptions()['activities'][0];
+        $filters = [
+            'q' => 'danau',
+            'jenis' => 'Alam',
+            'kabupaten' => $kabupaten,
+            'sort' => 'rating',
+            'dapatMelakukan' => $activity,
+        ];
+
+        $response = $this->get(route('destinations', $filters));
+
+        $response->assertOk();
+        $this->assertMatchesRegularExpression('/<input\s+type="text"\s+name="q"\s+value="danau"/', $response->getContent());
+        $response->assertSee('type="hidden" name="jenis" value="Alam"', false);
+        $response->assertSee('<select name="sort" form="destination-search-form"', false);
+        $response->assertSee('<select name="kabupaten" form="destination-search-form"', false);
+        $response->assertSee('<select name="dapatMelakukan" form="destination-search-form"', false);
+        $response->assertSee('value="'.e($kabupaten).'" selected', false);
+        $response->assertSee('value="'.e($activity).'" selected', false);
+        $response->assertSee('href="'.e(route('destinations', array_merge($filters, ['jenis' => 'Bahari']))).'"', false);
+    }
+
+    public function test_navbar_search_from_another_page_keeps_supported_filters(): void
+    {
+        $response = $this->get('/map?q=danau&jenis=Bahari');
+
+        $response->assertOk();
+        $response->assertSee('action="'.route('destinations').'"', false);
+        $response->assertSee('name="q" value="danau"', false);
+        $response->assertSee('type="hidden" name="jenis" value="Bahari"', false);
+        $response->assertDontSee('data-live-destinations', false);
+    }
+
     public function test_destinations_page_can_be_filtered_by_type_and_search_query(): void
     {
         $this->get('/destinations?jenis=Bahari')
@@ -554,6 +591,90 @@ class DestinationPagesTest extends TestCase
         $response->assertSee('>SATUAN</button>', false);
         $response->assertDontSee('unpkg.com');
         $response->assertDontSee('Serambi');
+
+        $categoryPillsStart = strpos($response->getContent(), 'data-map-category-pills');
+        $this->assertNotFalse($categoryPillsStart);
+        $categoryPillsEnd = strpos($response->getContent(), '</div>', $categoryPillsStart);
+        $this->assertNotFalse($categoryPillsEnd);
+        $categoryPills = substr($response->getContent(), $categoryPillsStart, $categoryPillsEnd - $categoryPillsStart);
+        $this->assertStringContainsString('Semua', $categoryPills);
+        $this->assertStringNotContainsString('Semua (', $categoryPills);
+        foreach ([
+            'Alam' => '#15803d',
+            'Budaya' => '#92400e',
+            'Religi' => '#374151',
+            'Bahari' => '#1d4ed8',
+            'Kuliner' => '#facc15',
+            'Buatan' => '#7e22ce',
+        ] as $type => $color) {
+            $this->assertStringContainsString($type, $categoryPills);
+            $this->assertStringContainsString('style="background-color: '.$color.'"', $categoryPills);
+            $this->assertStringNotContainsString($type.' (', $categoryPills);
+        }
+    }
+
+    public function test_map_page_filters_by_category_and_preserves_the_active_category_indicator(): void
+    {
+        $response = $this->get('/map?jenis=Bahari');
+
+        $response->assertOk();
+        $response->assertSee('Pantai Bali Lestari');
+        $response->assertDontSee('Aek Sijorni');
+        $response->assertSee('data-jenis="Bahari"', false);
+        $response->assertSee('style="background-color: #1d4ed8"', false);
+        $response->assertSee('flex items-center gap-1 transition bg-brand-dark text-white', false);
+
+        $liveResponse = $this->getJson(route('map.live', ['jenis' => 'Bahari']));
+        $liveResponse->assertOk();
+        $this->assertStringContainsString('Pantai Bali Lestari', $liveResponse->json('html'));
+        $this->assertStringNotContainsString('Aek Sijorni', $liveResponse->json('html'));
+    }
+
+    public function test_map_page_includes_the_in_app_route_planner_and_origin_options(): void
+    {
+        $this->get('/map')
+            ->assertOk()
+            ->assertSee('id="map-route-panel"', false)
+            ->assertSee('id="route-origin-select"', false)
+            ->assertSee('data-route-mode="DRIVE"', false)
+            ->assertSee('data-route-mode="TWO_WHEELER"', false)
+            ->assertSee('data-route-mode="WALK"', false)
+            ->assertSee('data-route-current-location', false)
+            ->assertSee('data-route-swap', false)
+            ->assertSee('data-route-reset', false)
+            ->assertSee('title="Kembali ke daftar destinasi"', false)
+            ->assertSee('M6 6l12 12M18 6L6 18', false)
+            ->assertSee('data-route-destination="', false)
+            ->assertSee('routeComputeUrl', false);
+    }
+
+    public function test_map_legend_starts_at_top_left_and_contains_marker_mode_control(): void
+    {
+        $response = $this->get('/map');
+
+        $response->assertOk()
+            ->assertSeeInOrder([
+                'id="map" role="region"',
+                'data-map-legend',
+                'data-map-legend-handle',
+                'data-map-all',
+                '>SATUAN</button>',
+            ], false)
+            ->assertSee('top-4 left-4 z-[1000]', false)
+            ->assertSee('cursor-grab active:cursor-grabbing select-none touch-none', false)
+            ->assertSee('⋮⋮', false)
+            ->assertDontSee('data-map-fit')
+            ->assertDontSee('title="Buka direktori destinasi"', false);
+    }
+
+    public function test_map_page_passes_the_configured_google_maps_key_to_its_browser_config(): void
+    {
+        config()->set('services.google_maps.key', 'public-test-key');
+
+        $this->get('/map')
+            ->assertOk()
+            ->assertSee('googleMapsKey')
+            ->assertSee('public-test-key');
     }
 
     public function test_map_page_includes_the_in_app_route_planner_and_origin_options(): void
